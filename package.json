@@ -1,0 +1,14 @@
+{
+  "name" : "triple-sec",
+  "version" : "0.0.0",
+  "description" : "A CommonJS-compliant system for secure encryption of smallish secrets",
+  "homepage" : "https://github.com/maxtaco/triple-sec",
+  "repository" : { 
+    "type" : "git",
+     "url" : "https://github.com/maxtaco/triple-sec.git"
+  },
+  "licenses": [{
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+  }]
+}
