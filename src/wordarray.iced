@@ -72,6 +72,46 @@ exports.WordArray = class WordArray
   clone : ->
     new WordArray @words[0...], @sigBytes
 
+  #--------------
+
+  to_buffer : () ->
+    out = new Buffer @sigBytes
+    p = 0
+    for w in @words when (@sigBytes - p) >= 4
+      out.writeUInt32BE w, p
+      p += 4
+    while p < @sigBytes
+      out[p] = (@words[p >>> 2] >>> (24 - (p % 4) * 8)) & 0xff
+      p++
+    out
+
+  #--------------
+
+  to_utf8 : () -> @to_buffer().toString 'utf8'
+  to_hex : () -> @to_buffer.toString 'hex'
+
+  #--------------
+  
+  @from_buffer : (b) ->
+    words = []
+    p = 0
+    while (b.length - p) >= 4
+      words.push b.readUInt32BE p
+      p += 4
+    if p < b.length
+      last = 0
+      while p < b.length
+        last |= (b[p] << (24 - (p%4) * 8))
+        console.log "Shift #{b[p]} over to #{(24 - (p%4)*8)} bits -> #{last}"
+        p++
+      words.push last
+    new WordArray words, b.length
+
+  #--------------
+
+  @from_utf8 : (s) -> WordArray.from_buffer new Buffer(s, 'utf8')
+  @from_hex : (s) -> WordArray.from_buffer new Buffer(s, 'hex')
+  
 #=======================================================================
 
 exports.X64Word = class X64Word

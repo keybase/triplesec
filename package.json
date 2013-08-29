@@ -7,6 +7,18 @@
     "type" : "git",
      "url" : "https://github.com/maxtaco/triple-sec.git"
   },
+  "devDependencies" : {
+    "browserify" : "*",
+    "icsify" : "*",
+    "iced-utils" : "*",
+    "iced-test" : "*",
+    "iced-coffee-script" : "*",
+    "colors" : "*",
+    "deep-equal" : "*"
+  },
+  "dependencies" : {
+    "purepack" : "*"
+  },
   "licenses": [{
       "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"

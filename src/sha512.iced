@@ -122,7 +122,7 @@ exports.SHA521 = class SHA512 extends Hasher
 
     # Rounds
     for i in [0...80]
-      // Shortcut
+      # Shortcut
       Wi = W[i]
 
       # Extend message
@@ -154,11 +154,11 @@ exports.SHA521 = class SHA512 extends Hasher
         Wi16l = Wi16.low
 
         Wil = gamma0l + Wi7l
-        Wih = gamma0h + Wi7h + ((Wil >>> 0) < (gamma0l >>> 0) ? 1 : 0)
+        Wih = gamma0h + Wi7h + (if (Wil >>> 0) < (gamma0l >>> 0) then 1 else 0)
         Wil = Wil + gamma1l
-        Wih = Wih + gamma1h + ((Wil >>> 0) < (gamma1l >>> 0) ? 1 : 0)
+        Wih = Wih + gamma1h + (if (Wil >>> 0) < (gamma1l >>> 0) then 1 else 0)
         Wil = Wil + Wi16l
-        Wih = Wih + Wi16h + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0)
+        Wih = Wih + Wi16h + (if (Wil >>> 0) < (Wi16l >>> 0) then 1 else 0)
 
         Wi.high = Wih
         Wi.low  = Wil
@@ -179,17 +179,17 @@ exports.SHA521 = class SHA512 extends Hasher
       Kil = Ki.low
 
       t1l = hl + sigma1l
-      t1h = hh + sigma1h + ((t1l >>> 0) < (hl >>> 0) ? 1 : 0)
+      t1h = hh + sigma1h + (if (t1l >>> 0) < (hl >>> 0) then 1 else 0)
       t1l = t1l + chl
-      t1h = t1h + chh + ((t1l >>> 0) < (chl >>> 0) ? 1 : 0)
+      t1h = t1h + chh + (if (t1l >>> 0) < (chl >>> 0) then 1 else 0)
       t1l = t1l + Kil
-      t1h = t1h + Kih + ((t1l >>> 0) < (Kil >>> 0) ? 1 : 0)
+      t1h = t1h + Kih + (if (t1l >>> 0) < (Kil >>> 0) then 1 else 0)
       t1l = t1l + Wil
-      t1h = t1h + Wih + ((t1l >>> 0) < (Wil >>> 0) ? 1 : 0)
+      t1h = t1h + Wih + (if (t1l >>> 0) < (Wil >>> 0) then 1 else 0)
 
       # t2 = sigma0 + maj
       t2l = sigma0l + majl
-      t2h = sigma0h + majh + ((t2l >>> 0) < (sigma0l >>> 0) ? 1 : 0)
+      t2h = sigma0h + majh + (if (t2l >>> 0) < (sigma0l >>> 0) then 1 else 0)
 
       # Update working variables
       hh = gh
@@ -199,7 +199,7 @@ exports.SHA521 = class SHA512 extends Hasher
       fh = eh
       fl = el
       el = (dl + t1l) | 0
-      eh = (dh + t1h + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0
+      eh = (dh + t1h + (if (el >>> 0) < (dl >>> 0) then 1 else 0)) | 0
       dh = ch
       dl = cl
       ch = bh
@@ -207,25 +207,25 @@ exports.SHA521 = class SHA512 extends Hasher
       bh = ah
       bl = al
       al = (t1l + t2l) | 0
-      ah = (t1h + t2h + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0
+      ah = (t1h + t2h + (if (al >>> 0) < (t1l >>> 0) then 1 else 0)) | 0
     
     # Intermediate hash value
     H0l = H0.low  = (H0l + al)
-    H0.high = (H0h + ah + ((H0l >>> 0) < (al >>> 0) ? 1 : 0))
+    H0.high = (H0h + ah + (if (H0l >>> 0) < (al >>> 0) then 1 else 0))
     H1l = H1.low  = (H1l + bl)
-    H1.high = (H1h + bh + ((H1l >>> 0) < (bl >>> 0) ? 1 : 0))
+    H1.high = (H1h + bh + (if (H1l >>> 0) < (bl >>> 0) then 1 else 0))
     H2l = H2.low  = (H2l + cl)
-    H2.high = (H2h + ch + ((H2l >>> 0) < (cl >>> 0) ? 1 : 0))
+    H2.high = (H2h + ch + (if (H2l >>> 0) < (cl >>> 0) then 1 else 0))
     H3l = H3.low  = (H3l + dl)
-    H3.high = (H3h + dh + ((H3l >>> 0) < (dl >>> 0) ? 1 : 0))
+    H3.high = (H3h + dh + (if (H3l >>> 0) < (dl >>> 0) then 1 else 0))
     H4l = H4.low  = (H4l + el)
-    H4.high = (H4h + eh + ((H4l >>> 0) < (el >>> 0) ? 1 : 0))
+    H4.high = (H4h + eh + (if (H4l >>> 0) < (el >>> 0) then 1 else 0))
     H5l = H5.low  = (H5l + fl)
-    H5.high = (H5h + fh + ((H5l >>> 0) < (fl >>> 0) ? 1 : 0))
+    H5.high = (H5h + fh + (if (H5l >>> 0) < (fl >>> 0) then 1 else 0))
     H6l = H6.low  = (H6l + gl)
-    H6.high = (H6h + gh + ((H6l >>> 0) < (gl >>> 0) ? 1 : 0))
+    H6.high = (H6h + gh + (if (H6l >>> 0) < (gl >>> 0) then 1 else 0))
     H7l = H7.low  = (H7l + hl)
-    H7.high = (H7h + hh + ((H7l >>> 0) < (hl >>> 0) ? 1 : 0))
+    H7.high = (H7h + hh + (if (H7l >>> 0) < (hl >>> 0) then 1 else 0))
  
 
   _doFinalize: () ->
