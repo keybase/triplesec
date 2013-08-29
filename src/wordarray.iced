@@ -102,7 +102,6 @@ exports.WordArray = class WordArray
       last = 0
       while p < b.length
         last |= (b[p] << (24 - (p%4) * 8))
-        console.log "Shift #{b[p]} over to #{(24 - (p%4)*8)} bits -> #{last}"
         p++
       words.push last
     new WordArray words, b.length
