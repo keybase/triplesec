@@ -6,7 +6,7 @@
 
 class Global
 
-  convert : (raw) -> (new X64Word(v,raw[i+1]) for v,i in raw)
+  convert : (raw) -> (new X64Word(raw[i],raw[i+1]) for i in [0...raw.length] by 2)
   
   constructor : ->
     @K = @convert [
@@ -51,13 +51,13 @@ class Global
       0x4cc5d4be, 0xcb3e42b6, 0x597f299c, 0xfc657e2a,
       0x5fcb6fab, 0x3ad6faec, 0x6c44198c, 0x4a475817
     ]
-    @I = @convert [
+    @I = new X64WordArray @convert [
       0x6a09e667, 0xf3bcc908, 0xbb67ae85, 0x84caa73b,
       0x3c6ef372, 0xfe94f82b, 0xa54ff53a, 0x5f1d36f1,
       0x510e527f, 0xade682d1, 0x9b05688c, 0x2b3e6c1f,
       0x1f83d9ab, 0xfb41bd6b, 0x5be0cd19, 0x137e2179
     ]
-    @W = new X64WordArray(new X64Word(0,0) for i in [0...80])
+    @W = (new X64Word(0,0) for i in [0...80])
 
 #=======================================================================
 
@@ -74,7 +74,7 @@ exports.SHA512 = class SHA512 extends Hasher
 
   _doProcessBlock : (M, offset) ->
     # Shortcuts
-    H = this._hash.words
+    H = @_hash.words
     W = glbl.W
 
     H0 = H[0]
@@ -208,7 +208,7 @@ exports.SHA512 = class SHA512 extends Hasher
       bl = al
       al = (t1l + t2l) | 0
       ah = (t1h + t2h + (if (al >>> 0) < (t1l >>> 0) then 1 else 0)) | 0
-    
+
     # Intermediate hash value
     H0l = H0.low  = (H0l + al)
     H0.high = (H0h + ah + (if (H0l >>> 0) < (al >>> 0) then 1 else 0))
@@ -238,7 +238,7 @@ exports.SHA512 = class SHA512 extends Hasher
     dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32)
     dataWords[(((nBitsLeft + 128) >>> 10) << 5) + 30] = Math.floor(nBitsTotal / 0x100000000)
     dataWords[(((nBitsLeft + 128) >>> 10) << 5) + 31] = nBitsTotal
-    data.sigBytes = dataWords.length * 4
+    @_data.sigBytes = dataWords.length * 4
 
     # Hash final blocks
     @_process()

@@ -37,7 +37,7 @@ exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm
   # @example
   #     bufferedBlockAlgorithm._append(wordArray);
   _append : (data) ->
-    @_data.append data
+    @_data.concat data
     @_nDataBytes += data.sigBytes
 
   #

@@ -85,7 +85,7 @@ exports.WordArray = class WordArray
   #--------------
 
   to_utf8 : () -> @to_buffer().toString 'utf8'
-  to_hex : () -> @to_buffer.toString 'hex'
+  to_hex : () -> @to_buffer().toString 'hex'
 
   #--------------
   
@@ -156,7 +156,7 @@ exports.X64WordArray = class X64WordArray
     new WordArray v, @sigBytes
 
   clone : -> 
-    new WordArray (w.clone for w in @words), @word.sigBytes
+    new X64WordArray (w.clone() for w in @words), @sigBytes
 
 #=======================================================================
 
