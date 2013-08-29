@@ -5,6 +5,8 @@
 ##   https://code.google.com/p/crypto-js/
 ##
 
+#=======================================================================
+
 exports.WordArray = class WordArray
 
   # Initializes a newly created word array.
@@ -69,3 +71,56 @@ exports.WordArray = class WordArray
   #
   clone : ->
     new WordArray @words[0...], @sigBytes
+
+#=======================================================================
+
+exports.X64Word = class X64Word
+  constructor : (@high, @low) ->
+  clone : -> new X64Word @high, @low
+
+#=======================================================================
+
+# An array of 64-bit words
+#  @property {Array} words The array of CryptoJS.x64.Word objects.
+#  @property {number} sigBytes The number of significant bytes in this word array.
+exports.X64WordArray = class X64WordArray
+
+  #
+  # @param {array} words (optional) an array of X64Word objects.
+  # @param {number} sigbytes (optional) the number of significant bytes in the words.
+  #
+  # @example
+  #
+  #     wordarray = new X64WordArray()
+  #
+  #     wordarray = new X64WordArray([
+  #         new X64Word(0x00010203, 0x04050607),
+  #         new X64Word (0x18191a1b, 0x1c1d1e1f)
+  #     ])
+  #     wordarray = new X64WordArray([
+  #         new X64Word(0x00010203, 0x04050607),
+  #         new X64Word (0x18191a1b, 0x1c1d1e1f)
+  #     ],10)
+  #
+  #
+  constructor : (words, @sigBytes) ->
+    @words = words or []
+    @sigBytes = @words.length * 8 unless @sigBytes
+
+  #
+  # Converts this 64-bit word array to a 32-bit word array.
+  #
+  # @return {CryptoJS.lib.WordArray} This word array's data as a 32-bit word array.
+  #
+  toX32 : ->
+    v = []
+    for w in @words
+      v.push w.high
+      v.push w.low
+    new WordArray v, @sigBytes
+
+  clone : -> 
+    new WordArray (w.clone for w in @words), @word.sigBytes
+
+#=======================================================================
+

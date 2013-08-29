@@ -5,7 +5,9 @@
 ##   https://code.google.com/p/crypto-js/
 ##
 
-{WordArray} = require 'wordarray'
+{WordArray} = require './wordarray'
+
+#=======================================================================
 
 #
 # Abstract buffered block algorithm template.
@@ -92,25 +94,30 @@ exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm
   #
   # @return {Object} The clone.
   #
+  copy_to : (out) ->
+    out._data = @_data.clone()
+    out._nDataBytes = @_nDataBytes
+
   clone : ->
-    ret = new BufferedBlockAlgorithm()
-    ret._data = @_data.clone()
-    ret._nDataBytes = @_nDataBytes
-    ret
+    obj = new BufferedBlockAlgorithm()
+    @copy_to obj
+    obj
+
+#=======================================================================
 
 #
 # Abstract hasher template.
 #
-# @property {number} blockSize The number of 32-bit words this hasher operates on. Default: 16 (512 bits)
+# @property {number} blockSize The number of 32-bit words this hasher 
+#   operates on. Default: 16 (512 bits)
 #
 exports.Hasher = class Hasher extends BufferedBlockAlgorithm
-
-  blockSize: 512/32
 
   #
   # Initializes a newly created hasher.
   # 
-  # @param {Object} cfg (Optional) The configuration options to use for this hash computation.
+  # @param {Object} cfg (Optional) The configuration options to use 
+  #    for this hash computation.
   # 
   constructor : (@cfg) ->
     super()
@@ -137,7 +144,8 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
 
   #
   # Finalizes the hash computation.
-  # Note that the finalize operation is effectively a destructive, read-once operation.
+  # Note that the finalize operation is effectively a destructive, 
+  #  read-once operation.
   #
   # @param {WordArray} messageUpdate (Optional) A final message update.
   #
