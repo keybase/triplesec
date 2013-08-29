@@ -5,7 +5,7 @@
 # 
 out = []
 f = () ->
-    out.push [ { msg : Msg } , {md : MD} ]
+    out.push { msg : Msg , md : MD} 
 
 Len = "0"
 Msg = "00"
@@ -524,4 +524,5 @@ Msg = "fd2203e467574e834ab07c9097ae164532f24be1eb5d88f1af7748ceff0d2c67a21f4e409
 MD = "a21b1077d52b27ac545af63b32746c6e3c51cb0cb9f281eb9f3580a6d4996d5c9917d2a6e484627a9d5a06fa1b25327a9d710e027387fc3e07d7c4d14c6086cc"
 f()
 
-console.log JSON.stringify out
+console.log "exports.data = #{JSON.stringify out, null, 4};"
+

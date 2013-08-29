@@ -1,5 +1,5 @@
 
-{WordArray} = require '../../src/wordarray'
+{WordArray} = require '../../lib/wordarray'
 
 compare = (T, s) ->
   s2 = new WordArray.from_utf8(s).to_utf8()

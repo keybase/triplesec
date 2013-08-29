@@ -65,7 +65,7 @@ glbl = new Global()
 
 #=======================================================================
 
-exports.SHA521 = class SHA512 extends Hasher
+exports.SHA512 = class SHA512 extends Hasher
 
   blockSize : 1024/32
 
