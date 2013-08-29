@@ -51,10 +51,7 @@ exports.WordArray = class WordArray
         @words[(@sigBytes + i) >>> 2] |= thatByte << (24 - ((@sigBytes + i) % 4) * 8)
     else
       @words = @words.concat thatWords
-
     @sigBytes += thatSigBytes
-
-    # Chainable
     @
 
   # 

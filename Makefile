@@ -17,17 +17,22 @@ $(BUILD_STAMP): \
 
 build: $(BUILD_STAMP)
 
-test-server: 
+test-server: test-data
 	$(ICED) test/run.iced
 
-test-browser-buffer:
+test-browser-buffer: test-data
 	$(ICED) test/run.iced -b 
 
 test/browser/test.js: test/browser/main.iced $(BUILD_STAMP)
 	$(BROWSERIFY) -t icsify $< > $@
 
-test-browser: test/browser/test.js
+test-browser: test/browser/test.js test-data
 	@echo "Please visit in your favorite browser --> file://$(WD)/test/browser/index.html"
+
+test-data: test/data/sha512_short.json
+
+test/data/sha512_short.json: test/gen/gen_sha512_short.iced
+	$(ICED) $< > $@
 
 test: test-server test-browser-buffer test-browser
 
