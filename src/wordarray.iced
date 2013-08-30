@@ -5,6 +5,8 @@
 ##   https://code.google.com/p/crypto-js/
 ##
 
+util = require './util'
+
 #=======================================================================
 
 exports.WordArray = class WordArray
@@ -75,6 +77,7 @@ exports.WordArray = class WordArray
     out = new Buffer @sigBytes
     p = 0
     for w in @words when (@sigBytes - p) >= 4
+      w = util.fixup_uint32 w
       out.writeUInt32BE w, p
       p += 4
     while p < @sigBytes
