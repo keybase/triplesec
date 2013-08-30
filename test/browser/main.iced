@@ -1,7 +1,7 @@
 
 mods =  
   sha512 : require '../files/sha512.iced'
-  #wordarray : require '../files/wordarray.iced'
+  wordarray : require '../files/wordarray.iced'
 
 {BrowserRunner} = require('iced-test')
 
