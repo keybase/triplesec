@@ -9,9 +9,7 @@ do_test_vec = (T, which) ->
   vec = data[which]
   for {msg,md}, i in vec
     input = WordArray.from_hex msg
-    tmp = (new SHA512).update(input).finalize()
-    console.log tmp
-    output = tmp.to_hex()
+    output = (new SHA512).update(input).finalize().to_hex()
     T.equal md, output, "SHA512 #{which} test #{i}"
 
 exports.short = (T,cb) ->

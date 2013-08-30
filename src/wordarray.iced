@@ -101,7 +101,8 @@ exports.WordArray = class WordArray
     if p < b.length
       last = 0
       while p < b.length
-        last |= (b[p] << (24 - (p%4) * 8))
+        ch = b.readUInt8 p
+        last |= (ch << (24 - (p%4) * 8))
         p++
       words.push last
     new WordArray words, b.length
