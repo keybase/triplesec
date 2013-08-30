@@ -8,8 +8,11 @@ f = () ->
     out.push { msg : Msg , md : MD} 
 
 Len = "0"
-Msg = "00"
+Msg = ""
 MD = "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"
+f()
+Msg = "00"
+MD = "b8244d028981d693af7b456af8efa4cad63d282e19ff14942c246e50d9351d22704a802a71c3580b6370de4ceb293c324a8423342557d4e5c38438f0e36910ee"
 f()
 Len = "8"
 Msg = "21"
