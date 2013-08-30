@@ -1,5 +1,6 @@
 
-mods =  {}
+mods =  
+  sha512 : require '../files/sha512.iced'
 
 {BrowserRunner} = require('iced-test')
 

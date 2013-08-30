@@ -2,6 +2,7 @@
 ICED=node_modules/.bin/iced
 BROWSERIFY=node_modules/.bin/browserify
 BUILD_STAMP=build-stamp
+TEST_STAMP=test-stamp
 WD=`pwd`
 
 
@@ -27,19 +28,20 @@ test-browser-buffer: $(TEST_STAMP) $(BUILD_STAMP)
 test/browser/test.js: test/browser/main.iced $(BUILD_STAMP)
 	$(BROWSERIFY) -t icsify $< > $@
 
-test-browser: test/browser/test.js $(TEST_STAMP) $(BUILD_STAMP)
+test-browser: $(TEST_STAMP) $(BUILD_STAMP)
 	@echo "Please visit in your favorite browser --> file://$(WD)/test/browser/index.html"
 
-$(TEST_STAMP): test/data/sha512_short.iced
+$(TEST_STAMP): test/data/sha512_short.js \
+		test/browser/test.js
 	date > $@
 
-test/data/sha512_short.iced: test/gen/gen_sha512_short.iced
+test/data/sha512_short.js: test/gen/gen_sha512_short.iced
 	$(ICED) $< > $@
 
 test: test-server test-browser-buffer test-browser
 
 clean:
-	rm -f lib/*.js $(BUILD_STAMP)
+	rm -f lib/*.js $(BUILD_STAMP) $(TEST_STAMP)
 
 default: build
 all: build
