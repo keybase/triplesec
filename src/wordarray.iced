@@ -81,7 +81,8 @@ exports.WordArray = class WordArray
       out.writeUInt32BE w, p
       p += 4
     while p < @sigBytes
-      out[p] = (@words[p >>> 2] >>> (24 - (p % 4) * 8)) & 0xff
+      ch = (@words[p >>> 2] >>> (24 - (p % 4) * 8)) & 0xff
+      out.writeUInt8 ch, p
       p++
     out
 

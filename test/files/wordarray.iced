@@ -2,7 +2,7 @@
 {WordArray} = require '../../lib/wordarray'
 
 compare = (T, s) ->
-  s2 = new WordArray.from_utf8(s).to_utf8()
+  s2 = WordArray.from_utf8(s).to_utf8()
   T.equal s, s2, "utf8 string: #{s}"
 
 exports.compare_utf8 = (T,cb) ->
