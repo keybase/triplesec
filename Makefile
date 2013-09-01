@@ -14,7 +14,8 @@ $(BUILD_STAMP): \
 	lib/wordarray.js \
 	lib/algbase.js \
 	lib/sha512.js \
-	lib/util.js
+	lib/util.js \
+	lib/hmac.js
 	date > $@
 
 build: $(BUILD_STAMP)

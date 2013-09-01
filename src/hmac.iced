@@ -31,8 +31,8 @@ exports.HMAC = class HMAC
     # XOR keys with pad constants
     for i in [0...@hasherBlockSize]
       @_oKey.words[i] ^= 0x5c5c5c5c
-      @_iKey.Words[i] ^= 0x36363636
-    @_oKey.sigBytes = @_iKey.sigBytes = hasherBlockSizeBytes
+      @_iKey.words[i] ^= 0x36363636
+    @_oKey.sigBytes = @_iKey.sigBytes = @hasherBlockSizeBytes
 
     # Set initial values
     @reset()
