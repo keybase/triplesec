@@ -33,10 +33,13 @@ test-browser: $(TEST_STAMP) $(BUILD_STAMP)
 	@echo "Please visit in your favorite browser --> file://$(WD)/test/browser/index.html"
 
 $(TEST_STAMP): test/data/sha512_short.js \
+		test/data/sha512_long.js \
 		test/browser/test.js
 	date > $@
 
 test/data/sha512_short.js: test/gen/gen_sha512_short.iced
+	$(ICED) $< > $@
+test/data/sha512_long.js: test/gen/gen_sha512_long.iced
 	$(ICED) $< > $@
 
 test: test-server test-browser-buffer test-browser
