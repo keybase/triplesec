@@ -1,3 +1,9 @@
+##
+##
+## Forked from Jeff Mott's CryptoJS
+##
+##   https://code.google.com/p/crypto-js/
+##
 
 {X64Word,X64WordArray} = require './wordarray'
 {Hasher} = require './algbase'

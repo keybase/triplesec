@@ -1,3 +1,10 @@
+##
+##
+## Forked from Jeff Mott's CryptoJS
+##
+##   https://code.google.com/p/crypto-js/
+##
+
 #=======================================================================
 
 class Global
@@ -22,8 +29,8 @@ class Global
       # Compute sbox
       sx = xi ^ (xi << 1) ^ (xi << 2) ^ (xi << 3) ^ (xi << 4)
       sx = (sx >>> 8) ^ (sx & 0xff) ^ 0x63
-      SBOX[x] = sx
-      INV_SBOX[sx] = x
+      @SBOX[x] = sx
+      @INV_SBOX[sx] = x
 
       # Compute multiplication
       x2 = d[x]
@@ -45,8 +52,7 @@ class Global
       @INV_SUB_MIX[3][sx] = t
 
       # Compute next counter
-      if !x then
-        x = xi = 1
+      if x is 0 then x = xi = 1
       else
         x = x2 ^ d[d[d[x8 ^ x2]]]
         xi ^= d[d[xi]]
@@ -59,9 +65,18 @@ G = new Global()
 
 exports.AES = class AES
 
-  #-------------------------
-  
+
   keySize : 256/32
+
+  #-------------------------
+
+  # 
+  # Create a new AES encryption engine
+  #
+  # @param {WordArray} key The encryption key
+  # 
+  constructor : (@_key) ->
+    @_doReset()
 
   #-------------------------
 
@@ -81,7 +96,7 @@ exports.AES = class AES
     for ksRow in [0...ksRows]
       @_keySchedule[ksRow] = if ksRow < keySize then keyWords[ksRow]
       else 
-        t = keySchedule[ksRow - 1]
+        t = @_keySchedule[ksRow - 1]
         if (ksRow % keySize) is 0
           # Rot word
           t = (t << 8) | (t >>> 24)
@@ -111,23 +126,19 @@ exports.AES = class AES
 
   #-------------------------
   
-  encryptBlock : (M, offset) ->
+  encryptBlock : (M, offset = 0) ->
     @_doCryptBlock M, offset, @_keySchedule, G.SUB_MIX, G.SBOX
 
   #-------------------------
   
-  decryptBlock: (M, offset) ->
+  decryptBlock: (M, offset = 0) ->
     # Swap 2nd and 4th rows
-    t = M[offset + 1]
-    M[offset + 1] = M[offset + 3]
-    M[offset + 3] = t
+    [ M[offset + 1], M[offset + 3] ] = [ M[offset + 3], M[offset + 1] ]
 
     @_doCryptBlock M, offset, @_invKeySchedule, G.INV_SUB_MIX, G.INV_SBOX
 
     # Inv swap 2nd and 4th rows
-    t = M[offset + 1]
-    M[offset + 1] = M[offset + 3]
-    M[offset + 3] = t
+    [ M[offset + 1], M[offset + 3] ] = [ M[offset + 3], M[offset + 1] ]
 
   #-------------------------
   

@@ -15,7 +15,8 @@ $(BUILD_STAMP): \
 	lib/algbase.js \
 	lib/sha512.js \
 	lib/util.js \
-	lib/hmac.js
+	lib/hmac.js \
+	lib/aes.js
 	date > $@
 
 build: $(BUILD_STAMP)
