@@ -129,6 +129,7 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
     super()
     # Perform concrete-hasher logic
     @_doReset()
+    @ 
   
   #
   # Updates this hasher with a message.
@@ -158,5 +159,5 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
   #
   finalize : (messageUpdate) ->
     @_append messageUpdate if messageUpdate
-    @_doFinalize();
+    @_doFinalize()
 
