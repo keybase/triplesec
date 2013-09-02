@@ -14,4 +14,8 @@ console.log msg
 tf.decryptBlock msg.words, 0
 console.log msg
 
-x = 
+tf2 = new TwoFish key
+tf2.encryptBlock msg.words, 0
+console.log msg
+tf.decryptBlock msg.words, 0
+console.log msg
