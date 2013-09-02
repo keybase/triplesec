@@ -14,7 +14,8 @@
     "iced-test" : "*",
     "iced-coffee-script" : "*",
     "colors" : "*",
-    "deep-equal" : "*"
+    "deep-equal" : "*",
+    "cryptojs-2fish" : "*"
   },
   "dependencies" : {
     "purepack" : "*"
