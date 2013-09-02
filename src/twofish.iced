@@ -289,12 +289,22 @@ exports.TwoFish = class TwoFish
 
     result
 
-    Fe32_0 = function (x) {
-      return gSBox[0x000 + 2 * (x & 0xff)] ^ gSBox[0x001 + 2 * ((x >>> 8) & 0xff)] ^ gSBox[0x200 + 2 * ((x >>> 16) & 0xff)] ^ gSBox[0x201 + 2 * ((x >>> 24) & 0xff)];
-    },
-    Fe32_3 = function (x) {
-      return gSBox[0x000 + 2 * ((x >>> 24) & 0xff)] ^ gSBox[0x001 + 2 * (x & 0xff)] ^ gSBox[0x200 + 2 * ((x >>> 8) & 0xff)] ^ gSBox[0x201 + 2 * ((x >>> 16) & 0xff)];
-    },
+  #----------------
+
+  Fe32_0 : (x) ->
+    (G.gSBox[0x000 + 2 * (x & 0xff)] ^ 
+     G.gSBox[0x001 + 2 * ((x >>> 8) & 0xff)] ^ 
+     G.gSBox[0x200 + 2 * ((x >>> 16) & 0xff)] ^ 
+     G.gSBox[0x201 + 2 * ((x >>> 24) & 0xff)])
+
+  #----------------
+
+  Fe32_3 : (x) ->
+    (G.gSBox[0x000 + 2 * ((x >>> 24) & 0xff)] ^ 
+     G.gSBox[0x001 + 2 * (x & 0xff)] ^ 
+     G.gSBox[0x200 + 2 * ((x >>> 8) & 0xff)] ^ 
+     G.gSBox[0x201 + 2 * ((x >>> 16) & 0xff)])
+    
     TwoFish = C_algo.TwoFish = BlockCipher.extend({
       _doReset: function () {
         var k32e = [],
