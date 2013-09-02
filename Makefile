@@ -16,7 +16,8 @@ $(BUILD_STAMP): \
 	lib/sha512.js \
 	lib/util.js \
 	lib/hmac.js \
-	lib/aes.js
+	lib/aes.js \
+	lib/twofish.js
 	date > $@
 
 build: $(BUILD_STAMP)

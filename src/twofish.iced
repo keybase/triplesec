@@ -238,8 +238,8 @@ exports.TwoFish = class TwoFish
   Mx_Y : (x) -> x ^ @LFSR1(x) ^ @LFSR2(x) # EF
   RS_rem : (x) -> 
     b = (x >>> 24) & 0xff
-    g2 = (if (b << 1) ^ ((b & 0x80) isnt 0 then G.RS_GF_FDBK else 0)) & 0xff
-    g3 = (if (b >>> 1) ^ ((b & 0x01) isnt 0 then (G.RS_GF_FDBK >>> 1) else 0)) ^ g2
+    g2 = ((b << 1) ^ (if (b & 0x80) isnt 0 then G.RS_GF_FDBK else 0)) & 0xff
+    g3 = ((b >>> 1) ^ (if (b & 0x01) isnt 0 then (G.RS_GF_FDBK >>> 1) else 0)) ^ g2
     ((x << 8) ^ (g3 << 24) ^ (g2 << 16) ^ (g3 << 8) ^ b)
 
   #----------------
@@ -372,22 +372,22 @@ exports.TwoFish = class TwoFish
       for i in [0...256]
         b0 = b1 = b2 = b3 = i
         switch (@k64Cnt & 3)
-        when 1
-          @gSBox[i * 2]         = @gMDS0[(G.P[G.P_01][b0] & 0xff) ^ @getByte(k0, 0)];
-          @gSBox[i * 2 + 1]     = @gMDS1[(G.P[G.P_11][b1] & 0xff) ^ @getByte(k0, 1)];
-          @gSBox[i * 2 + 0x200] = @gMDS2[(G.P[G.P_21][b2] & 0xff) ^ @getByte(k0, 2)];
-          @gSBox[i * 2 + 0x201] = @gMDS3[(G.P[G.P_31][b3] & 0xff) ^ @getByte(k0, 3)];
-        when 0
-          /* 256 bits of key */
-          b0 = (G.P[G.P_04][b0] & 0xff) ^ @getByte(k3, 0)
-          b1 = (G.P[G.P_14][b1] & 0xff) ^ @getByte(k3, 1)
-          b2 = (G.P[G.P_24][b2] & 0xff) ^ @getByte(k3, 2)
-          b3 = (G.P[G.P_34][b3] & 0xff) ^ @getByte(k3, 3)
-        when 3
-          b0 = (G.P[G.P_03][b0] & 0xff) ^ @getByte(k2, 0)
-          b1 = (G.P[G.P_13][b1] & 0xff) ^ @getByte(k2, 1)
-          b2 = (G.P[G.P_23][b2] & 0xff) ^ @getByte(k2, 2)
-          b3 = (G.P[G.P_33][b3] & 0xff) ^ @getByte(k2, 3)
+          when 1
+            @gSBox[i * 2]         = @gMDS0[(G.P[G.P_01][b0] & 0xff) ^ @getByte(k0, 0)];
+            @gSBox[i * 2 + 1]     = @gMDS1[(G.P[G.P_11][b1] & 0xff) ^ @getByte(k0, 1)];
+            @gSBox[i * 2 + 0x200] = @gMDS2[(G.P[G.P_21][b2] & 0xff) ^ @getByte(k0, 2)];
+            @gSBox[i * 2 + 0x201] = @gMDS3[(G.P[G.P_31][b3] & 0xff) ^ @getByte(k0, 3)];
+          when 0
+            # 256 bits of key
+            b0 = (G.P[G.P_04][b0] & 0xff) ^ @getByte(k3, 0)
+            b1 = (G.P[G.P_14][b1] & 0xff) ^ @getByte(k3, 1)
+            b2 = (G.P[G.P_24][b2] & 0xff) ^ @getByte(k3, 2)
+            b3 = (G.P[G.P_34][b3] & 0xff) ^ @getByte(k3, 3)
+          when 3
+            b0 = (G.P[G.P_03][b0] & 0xff) ^ @getByte(k2, 0)
+            b1 = (G.P[G.P_13][b1] & 0xff) ^ @getByte(k2, 1)
+            b2 = (G.P[G.P_23][b2] & 0xff) ^ @getByte(k2, 2)
+            b3 = (G.P[G.P_33][b3] & 0xff) ^ @getByte(k2, 3)
         if (@k64Cnt & 3) isnt 1
           @gSBox[i * 2]         = @gMDS0[(G.P[G.P_01][(G.P[G.P_02][b0] & 0xff) ^ @getByte(k1, 0)] & 0xff) ^ @getByte(k0, 0)]
           @gSBox[i * 2 + 1]     = @gMDS1[(G.P[G.P_11][(G.P[G.P_12][b1] & 0xff) ^ @getByte(k1, 1)] & 0xff) ^ @getByte(k0, 1)]
@@ -414,8 +414,7 @@ exports.TwoFish = class TwoFish
       t1 = @Fe32_3(x1);
       x3 ^= t0 + 2 * t1 + @gSubKeys[k--]
       x2 = (x2 << 1 | x2 >>> 31) ^ (t0 + t1 + @gSubKeys[k--])
-      x3 = x3 >>> 1 | x3 << 31;
-    }
+      x3 = x3 >>> 1 | x3 << 31
 
     M[offset]     = @switchEndianness(x0 ^ @gSubKeys[0])
     M[offset + 1] = @switchEndianness(x1 ^ @gSubKeys[1])

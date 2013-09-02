@@ -1,5 +1,6 @@
 
 {CryptoJS} = require 'cryptojs-2fish'
+{TwoFish} = require '../lib/twofish'
 
 P = (x) -> CryptoJS.enc.Hex.parse x
 
@@ -12,3 +13,5 @@ tf.encryptBlock msg.words, 0
 console.log msg
 tf.decryptBlock msg.words, 0
 console.log msg
+
+x = 
