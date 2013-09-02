@@ -235,11 +235,11 @@ exports.TwoFish = class TwoFish
   #----------------
 
   Mx_X : (x) -> x ^ @LFSR2(x) # 5B
-  Mx_Y : (x) -> x ^ G.LFSR1(x) ^ G.LFSR2(x) # EF
+  Mx_Y : (x) -> x ^ @LFSR1(x) ^ @LFSR2(x) # EF
   RS_rem : (x) -> 
     b = (x >>> 24) & 0xff
     g2 = (if (b << 1) ^ ((b & 0x80) isnt 0 then G.RS_GF_FDBK else 0)) & 0xff
-    g3 = (if (b >>> 1) ^ ((b & 0x01) isnt 0 then (RS_GF_FDBK >>> 1) else 0)) ^ g2
+    g3 = (if (b >>> 1) ^ ((b & 0x01) isnt 0 then (G.RS_GF_FDBK >>> 1) else 0)) ^ g2
     ((x << 8) ^ (g3 << 24) ^ (g2 << 16) ^ (g3 << 8) ^ b)
 
   #----------------
@@ -265,10 +265,10 @@ exports.TwoFish = class TwoFish
     result = null
     switch (@k64Cnt & 3) 
       when 1
-        result = (G.gMDS0[(G.P[G.P_01][b0] & 0xff) ^ @getByte(k0, 0)] ^ 
-                  G.gMDS1[(G.P[G.P_11][b1] & 0xff) ^ @getByte(k0, 1)] ^ 
-                  G.gMDS2[(G.P[G.P_21][b2] & 0xff) ^ @getByte(k0, 2)] ^ 
-                  G.gMDS3[(G.P[G.P_31][b3] & 0xff) ^ @getByte(k0, 3)])
+        result = (@gMDS0[(G.P[G.P_01][b0] & 0xff) ^ @getByte(k0, 0)] ^ 
+                  @gMDS1[(G.P[G.P_11][b1] & 0xff) ^ @getByte(k0, 1)] ^ 
+                  @gMDS2[(G.P[G.P_21][b2] & 0xff) ^ @getByte(k0, 2)] ^ 
+                  @gMDS3[(G.P[G.P_31][b3] & 0xff) ^ @getByte(k0, 3)])
       when 0
         # 256 bits of key 
         b0 = (G.P[G.P_04][b0] & 0xff) ^ @getByte(k3, 0)
@@ -282,202 +282,171 @@ exports.TwoFish = class TwoFish
         b3 = (G.P[G.P_33][b3] & 0xff) ^ @getByte(k2, 3)
 
     unless result?
-        result = (G.gMDS0[(G.P[G.P_01][(G.P[G.P_02][b0] & 0xff) ^ @getByte(k1, 0)] & 0xff) ^ @getByte(k0, 0)] ^ 
-                  G.gMDS1[(G.P[G.P_11][(G.P[G.P_12][b1] & 0xff) ^ @getByte(k1, 1)] & 0xff) ^ @getByte(k0, 1)] ^ 
-                  G.gMDS2[(G.P[G.P_21][(G.P[G.P_22][b2] & 0xff) ^ @getByte(k1, 2)] & 0xff) ^ @getByte(k0, 2)] ^ 
-                  G.gMDS3[(G.P[G.P_31][(G.P[G.P_32][b3] & 0xff) ^ @getByte(k1, 3)] & 0xff) ^ @getByte(k0, 3)])
+        result = (@gMDS0[(G.P[G.P_01][(G.P[G.P_02][b0] & 0xff) ^ @getByte(k1, 0)] & 0xff) ^ @getByte(k0, 0)] ^ 
+                  @gMDS1[(G.P[G.P_11][(G.P[G.P_12][b1] & 0xff) ^ @getByte(k1, 1)] & 0xff) ^ @getByte(k0, 1)] ^ 
+                  @gMDS2[(G.P[G.P_21][(G.P[G.P_22][b2] & 0xff) ^ @getByte(k1, 2)] & 0xff) ^ @getByte(k0, 2)] ^ 
+                  @gMDS3[(G.P[G.P_31][(G.P[G.P_32][b3] & 0xff) ^ @getByte(k1, 3)] & 0xff) ^ @getByte(k0, 3)])
 
     result
 
   #----------------
 
   Fe32_0 : (x) ->
-    (G.gSBox[0x000 + 2 * (x & 0xff)] ^ 
-     G.gSBox[0x001 + 2 * ((x >>> 8) & 0xff)] ^ 
-     G.gSBox[0x200 + 2 * ((x >>> 16) & 0xff)] ^ 
-     G.gSBox[0x201 + 2 * ((x >>> 24) & 0xff)])
+    (@gSBox[0x000 + 2 * (x & 0xff)] ^ 
+     @gSBox[0x001 + 2 * ((x >>> 8) & 0xff)] ^ 
+     @gSBox[0x200 + 2 * ((x >>> 16) & 0xff)] ^ 
+     @gSBox[0x201 + 2 * ((x >>> 24) & 0xff)])
 
   #----------------
 
   Fe32_3 : (x) ->
-    (G.gSBox[0x000 + 2 * ((x >>> 24) & 0xff)] ^ 
-     G.gSBox[0x001 + 2 * (x & 0xff)] ^ 
-     G.gSBox[0x200 + 2 * ((x >>> 8) & 0xff)] ^ 
-     G.gSBox[0x201 + 2 * ((x >>> 16) & 0xff)])
+    (@gSBox[0x000 + 2 * ((x >>> 24) & 0xff)] ^ 
+     @gSBox[0x001 + 2 * (x & 0xff)] ^ 
+     @gSBox[0x200 + 2 * ((x >>> 8) & 0xff)] ^ 
+     @gSBox[0x201 + 2 * ((x >>> 16) & 0xff)])
     
-    TwoFish = C_algo.TwoFish = BlockCipher.extend({
-      _doReset: function () {
-        var k32e = [],
-          k32o = [],
-          sBoxKeys = [],
-          i, p, q, A, B, k0, k1, k2, k3,
-          b0, b1, b2, b3, m1 = [],
-          mX = [],
-          mY = [],
-          j;
-        @k64Cnt = @_key.words.length / 2;
+  #----------------
 
-        // calculate the MDS matrix
+  _doReset : () ->
+    k32e = []
+    k32o = []
+    sBoxKeys = []
+    m1 = []
+    mX = []
+    mY = []
 
-        for (i = 0; i < 256; i += 1) {
-          j = P[0][i] & 0xff;
-          m1[0] = j;
-          mX[0] = Mx_X(j) & 0xff;
-          mY[0] = Mx_Y(j) & 0xff;
+    @k64Cnt = @_key.words.length / 2;
+    throw "Key size less than 64 bits" if @k64Cnt < 1
+    throw "Key size larger than 256 bits" if @k64Cnt > 4
 
-          j = P[1][i] & 0xff;
-          m1[1] = j;
-          mX[1] = Mx_X(j) & 0xff;
-          mY[1] = Mx_Y(j) & 0xff;
+    # calculate the MDS matrix
+    for i in [0...256]
+      j = G.P[0][i] & 0xff
+      m1[0] = j
+      mX[0] = @Mx_X(j) & 0xff
+      mY[0] = @Mx_Y(j) & 0xff
 
-          gMDS0[i] = m1[P_00] | mX[P_00] << 8 | mY[P_00] << 16 | mY[P_00] << 24;
+      j = G.P[1][i] & 0xff
+      m1[1] = j
+      mX[1] = @Mx_X(j) & 0xff
+      mY[1] = @Mx_Y(j) & 0xff
 
-          gMDS1[i] = mY[P_10] | mY[P_10] << 8 | mX[P_10] << 16 | m1[P_10] << 24;
+      @gMDS0[i] = m1[P_00] | mX[P_00] << 8 | mY[P_00] << 16 | mY[P_00] << 24
+      @gMDS1[i] = mY[P_10] | mY[P_10] << 8 | mX[P_10] << 16 | m1[P_10] << 24
+      @gMDS2[i] = mX[P_20] | mY[P_20] << 8 | m1[P_20] << 16 | mY[P_20] << 24
+      @gMDS3[i] = mX[P_30] | m1[P_30] << 8 | mY[P_30] << 16 | mX[P_30] << 24
 
-          gMDS2[i] = mX[P_20] | mY[P_20] << 8 | m1[P_20] << 16 | mY[P_20] << 24;
+      #
+      # k64Cnt is the number of 8 byte blocks (64 chunks)
+      # that are in the input key.  The input key is a
+      # maximum of 32 bytes (256 bits), so the range
+      # for k64Cnt is 1..4
+      #
+      for i in [0...@k64Cnt]
+        p = i * 2
 
-          gMDS3[i] = mX[P_30] | m1[P_30] << 8 | mY[P_30] << 16 | mX[P_30] << 24;
-        }
+        # to BE
+        k32e[i] = @switchEndianness @_key.words[p]
+        k32o[i] = @switchEndianness @_key.words[p + 1]
 
-        if (k64Cnt < 1) {
-          throw "Key size less than 64 bits";
-        }
+        sBoxKeys[@k64Cnt - 1 - i] = G.RS_MDS_Encode(k32e[i], k32o[i])
 
-        if (k64Cnt > 4) {
-          throw "Key size larger than 256 bits";
-        }
+      for i in [0...40/2]
+        q = i * G.SK_STEP
+        A = @F32(q, k32e)
+        B = @F32(q + G.SK_BUMP, k32o)
+        B = B << 8 | B >>> 24
+        A += B
+        gSubKeys[i * 2] = A
+        A += B
+        gSubKeys[i * 2 + 1] = A << G.SK_ROTL | A >>> (32 - G.SK_ROTL)
 
-        /*
-         * k64Cnt is the number of 8 byte blocks (64 chunks)
-         * that are in the input key.  The input key is a
-         * maximum of 32 bytes (256 bits), so the range
-         * for k64Cnt is 1..4
-         */
-        for (i = 0; i < k64Cnt; i++) {
-          p = i * 2;
+      #
+      # fully expand the table for speed
+      # 
+      k0 = sBoxKeys[0]
+      k1 = sBoxKeys[1]
+      k2 = sBoxKeys[2]
+      k3 = sBoxKeys[3]
+      @gSBox = []
+      for i in [0...256]
+        b0 = b1 = b2 = b3 = i
+        switch (@k64Cnt & 3)
+        when 1
+          @gSBox[i * 2]         = @gMDS0[(G.P[G.P_01][b0] & 0xff) ^ @getByte(k0, 0)];
+          @gSBox[i * 2 + 1]     = @gMDS1[(G.P[G.P_11][b1] & 0xff) ^ @getByte(k0, 1)];
+          @gSBox[i * 2 + 0x200] = @gMDS2[(G.P[G.P_21][b2] & 0xff) ^ @getByte(k0, 2)];
+          @gSBox[i * 2 + 0x201] = @gMDS3[(G.P[G.P_31][b3] & 0xff) ^ @getByte(k0, 3)];
+        when 0
+          /* 256 bits of key */
+          b0 = (G.P[G.P_04][b0] & 0xff) ^ @getByte(k3, 0)
+          b1 = (G.P[G.P_14][b1] & 0xff) ^ @getByte(k3, 1)
+          b2 = (G.P[G.P_24][b2] & 0xff) ^ @getByte(k3, 2)
+          b3 = (G.P[G.P_34][b3] & 0xff) ^ @getByte(k3, 3)
+        when 3
+          b0 = (G.P[G.P_03][b0] & 0xff) ^ @getByte(k2, 0)
+          b1 = (G.P[G.P_13][b1] & 0xff) ^ @getByte(k2, 1)
+          b2 = (G.P[G.P_23][b2] & 0xff) ^ @getByte(k2, 2)
+          b3 = (G.P[G.P_33][b3] & 0xff) ^ @getByte(k2, 3)
+        if (@k64Cnt & 3) isnt 1
+          @gSBox[i * 2]         = @gMDS0[(G.P[G.P_01][(G.P[G.P_02][b0] & 0xff) ^ @getByte(k1, 0)] & 0xff) ^ @getByte(k0, 0)]
+          @gSBox[i * 2 + 1]     = @gMDS1[(G.P[G.P_11][(G.P[G.P_12][b1] & 0xff) ^ @getByte(k1, 1)] & 0xff) ^ @getByte(k0, 1)]
+          @gSBox[i * 2 + 0x200] = @gMDS2[(G.P[G.P_21][(G.P[G.P_22][b2] & 0xff) ^ @getByte(k1, 2)] & 0xff) ^ @getByte(k0, 2)]
+          @gSBox[i * 2 + 0x201] = @gMDS3[(G.P[G.P_31][(G.P[G.P_32][b3] & 0xff) ^ @getByte(k1, 3)] & 0xff) ^ @getByte(k0, 3)]
 
-          // to BE
-          k32e[i] = switchEndianness(this._key.words[p]);
-          k32o[i] = switchEndianness(this._key.words[p + 1]);
+  #----------------
 
-          sBoxKeys[k64Cnt - 1 - i] = RS_MDS_Encode(k32e[i], k32o[i]);
-        }
+  decryptBlock : (M, offset) ->
+    x2 = @switchEndianness(M[offset])     ^ @gSubKeys[4]
+    x3 = @switchEndianness(M[offset + 1]) ^ @gSubKeys[5]
+    x0 = @switchEndianness(M[offset + 2]) ^ @gSubKeys[6]
+    x1 = @switchEndianness(M[offset + 3]) ^ @gSubKeys[7]
+    k = 8 + 2 * 16 - 1
 
-        for (i = 0; i < 40 / 2; i++) {
-          q = i * SK_STEP;
-          A = F32(q, k32e);
-          B = F32(q + SK_BUMP, k32o);
-          B = B << 8 | B >>> 24;
-          A += B;
-          gSubKeys[i * 2] = A;
-          A += B;
-          gSubKeys[i * 2 + 1] = A << SK_ROTL | A >>> (32 - SK_ROTL);
-        }
+    for r in [0...16] by 2 
+      t0 = @Fe32_0(x2)
+      t1 = @Fe32_3(x3)
+      x1 ^= t0 + 2 * t1 + @gSubKeys[k--]
+      x0 = (x0 << 1 | x0 >>> 31) ^ (t0 + t1 + @gSubKeys[k--])
+      x1 = x1 >>> 1 | x1 << 31
 
-        /*
-         * fully expand the table for speed
-         */
-        k0 = sBoxKeys[0];
-        k1 = sBoxKeys[1];
-        k2 = sBoxKeys[2];
-        k3 = sBoxKeys[3];
-        gSBox = [];
-        for (i = 0; i < 256; i++) {
-          b0 = b1 = b2 = b3 = i;
-          switch (k64Cnt & 3) {
-          case 1:
-            gSBox[i * 2] = gMDS0[(P[P_01][b0] & 0xff) ^ getByte(k0, 0)];
-            gSBox[i * 2 + 1] = gMDS1[(P[P_11][b1] & 0xff) ^ getByte(k0, 1)];
-            gSBox[i * 2 + 0x200] = gMDS2[(P[P_21][b2] & 0xff) ^ getByte(k0, 2)];
-            gSBox[i * 2 + 0x201] = gMDS3[(P[P_31][b3] & 0xff) ^ getByte(k0, 3)];
-            break;
-          case 0:
-            /* 256 bits of key */
-            b0 = (P[P_04][b0] & 0xff) ^ getByte(k3, 0);
-            b1 = (P[P_14][b1] & 0xff) ^ getByte(k3, 1);
-            b2 = (P[P_24][b2] & 0xff) ^ getByte(k3, 2);
-            b3 = (P[P_34][b3] & 0xff) ^ getByte(k3, 3);
-          case 3:
-            b0 = (P[P_03][b0] & 0xff) ^ getByte(k2, 0);
-            b1 = (P[P_13][b1] & 0xff) ^ getByte(k2, 1);
-            b2 = (P[P_23][b2] & 0xff) ^ getByte(k2, 2);
-            b3 = (P[P_33][b3] & 0xff) ^ getByte(k2, 3);
-          case 2:
-            gSBox[i * 2] = gMDS0[(P[P_01]
-            [(P[P_02][b0] & 0xff) ^ getByte(k1, 0)] & 0xff) ^ getByte(k0, 0)];
-            gSBox[i * 2 + 1] = gMDS1[(P[P_11]
-            [(P[P_12][b1] & 0xff) ^ getByte(k1, 1)] & 0xff) ^ getByte(k0, 1)];
-            gSBox[i * 2 + 0x200] = gMDS2[(P[P_21]
-            [(P[P_22][b2] & 0xff) ^ getByte(k1, 2)] & 0xff) ^ getByte(k0, 2)];
-            gSBox[i * 2 + 0x201] = gMDS3[(P[P_31]
-            [(P[P_32][b3] & 0xff) ^ getByte(k1, 3)] & 0xff) ^ getByte(k0, 3)];
-            break;
-          }
-        }
-        return;
-      },
-      decryptBlock: function (M, offset) {
-        var x2 = switchEndianness(M[offset]) ^ gSubKeys[4],
-          x3 = switchEndianness(M[offset + 1]) ^ gSubKeys[5],
-          x0 = switchEndianness(M[offset + 2]) ^ gSubKeys[6],
-          x1 = switchEndianness(M[offset + 3]) ^ gSubKeys[7],
-          k = 8 + 2 * 16 - 1,
-          t0, t1, r;
-        for (r = 0; r < 16; r += 2) {
-          t0 = Fe32_0(x2);
-          t1 = Fe32_3(x3);
-          x1 ^= t0 + 2 * t1 + gSubKeys[k--];
-          x0 = (x0 << 1 | x0 >>> 31) ^ (t0 + t1 + gSubKeys[k--]);
-          x1 = x1 >>> 1 | x1 << 31;
+      t0 = @Fe32_0(x0);
+      t1 = @Fe32_3(x1);
+      x3 ^= t0 + 2 * t1 + @gSubKeys[k--]
+      x2 = (x2 << 1 | x2 >>> 31) ^ (t0 + t1 + @gSubKeys[k--])
+      x3 = x3 >>> 1 | x3 << 31;
+    }
 
-          t0 = Fe32_0(x0);
-          t1 = Fe32_3(x1);
-          x3 ^= t0 + 2 * t1 + gSubKeys[k--];
-          x2 = (x2 << 1 | x2 >>> 31) ^ (t0 + t1 + gSubKeys[k--]);
-          x3 = x3 >>> 1 | x3 << 31;
-        }
+    M[offset]     = @switchEndianness(x0 ^ @gSubKeys[0])
+    M[offset + 1] = @switchEndianness(x1 ^ @gSubKeys[1])
+    M[offset + 2] = @switchEndianness(x2 ^ @gSubKeys[2])
+    M[offset + 3] = @switchEndianness(x3 ^ @gSubKeys[3])
 
-        M[offset] = switchEndianness(x0 ^ gSubKeys[0]);
-        M[offset + 1] = switchEndianness(x1 ^ gSubKeys[1]);
-        M[offset + 2] = switchEndianness(x2 ^ gSubKeys[2]);
-        M[offset + 3] = switchEndianness(x3 ^ gSubKeys[3]);
-      },
-      encryptBlock: function (M, offset) {
-        var x0 = switchEndianness(M[offset]) ^ gSubKeys[0],
-          x1 = switchEndianness(M[offset + 1]) ^ gSubKeys[1],
-          x2 = switchEndianness(M[offset + 2]) ^ gSubKeys[2],
-          x3 = switchEndianness(M[offset + 3]) ^ gSubKeys[3],
-          k = 8,
-          t0, t1, r;
-        for (r = 0; r < 16; r += 2) {
-          t0 = Fe32_0(x0);
-          t1 = Fe32_3(x1);
-          x2 ^= t0 + t1 + gSubKeys[k++];
-          x2 = x2 >>> 1 | x2 << 31;
-          x3 = (x3 << 1 | x3 >>> 31) ^ (t0 + 2 * t1 + gSubKeys[k++]);
+  #----------------
 
-          t0 = Fe32_0(x2);
-          t1 = Fe32_3(x3);
-          x0 ^= t0 + t1 + gSubKeys[k++];
-          x0 = x0 >>> 1 | x0 << 31;
-          x1 = (x1 << 1 | x1 >>> 31) ^ (t0 + 2 * t1 + gSubKeys[k++]);
-        }
+  encryptBlock : (M, offset) ->
+    x0 = @switchEndianness(M[offset])     ^ @gSubKeys[0]
+    x1 = @switchEndianness(M[offset + 1]) ^ @gSubKeys[1]
+    x2 = @switchEndianness(M[offset + 2]) ^ @gSubKeys[2]
+    x3 = @switchEndianness(M[offset + 3]) ^ @gSubKeys[3]
+    k = 8
+    for r in [0...16] by 2
+      t0 = @Fe32_0(x0)
+      t1 = @Fe32_3(x1)
+      x2 ^= t0 + t1 + @gSubKeys[k++]
+      x2 = x2 >>> 1 | x2 << 31
+      x3 = (x3 << 1 | x3 >>> 31) ^ (t0 + 2 * t1 + @gSubKeys[k++])
 
-        M[offset] = switchEndianness(x2 ^ gSubKeys[4]);
-        M[offset + 1] = switchEndianness(x3 ^ gSubKeys[5]);
-        M[offset + 2] = switchEndianness(x0 ^ gSubKeys[6]);
-        M[offset + 3] = switchEndianness(x1 ^ gSubKeys[7]);
-      }
-    });
+      t0 = @Fe32_0(x2)
+      t1 = @Fe32_3(x3)
+      x0 ^= t0 + t1 + @gSubKeys[k++]
+      x0 = x0 >>> 1 | x0 << 31
+      x1 = (x1 << 1 | x1 >>> 31) ^ (t0 + 2 * t1 + @gSubKeys[k++])
 
-  /**
-   * Shortcut functions to the cipher's object interface.
-   *
-   * @example
-   *
-   *     var ciphertext = CryptoJS.TwoFish.encrypt(message, key, cfg);
-   *     var plaintext  = CryptoJS.TwoFish.decrypt(ciphertext, key, cfg);
-   */
-  C.TwoFish = BlockCipher._createHelper(TwoFish);
+    M[offset]     = @switchEndianness(x2 ^ @gSubKeys[4])
+    M[offset + 1] = @switchEndianness(x3 ^ @gSubKeys[5])
+    M[offset + 2] = @switchEndianness(x0 ^ @gSubKeys[6])
+    M[offset + 3] = @switchEndianness(x1 ^ @gSubKeys[7])
 
-}());
+#==========================================================
+
