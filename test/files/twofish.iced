@@ -2,6 +2,7 @@
 data = {}
 
 data.ecb_tbl = require('../data/twofish_ecb_tbl').data
+data.ecb_e_m = require('../data/twofish_ecb_e_m').data
 
 {TwoFish} = require '../../lib/twofish'
 {WordArray} = require '../../lib/wordarray'
@@ -22,4 +23,7 @@ do_test_vec = (T, which) ->
 
 exports.ecb_tbl = (T, cb) ->
   do_test_vec T, 'ecb_tbl'
+  cb()
+exports.ecb_e_m = (T, cb) ->
+  do_test_vec T, 'ecb_e_m'
   cb()
