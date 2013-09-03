@@ -2,6 +2,8 @@
 # Copied from:
 # 
 #   https://gist.github.com/dchest/4582374
+#   http://cr.yp.to/snuffle/salsa20/ref/salsa20.c
+#
 #   
 
 {WordArray} = require './wordarray'
@@ -11,13 +13,39 @@
 
 exports.Salsa20 = class Salsa20
 
+  sigma : WordArray.from_buffer_le(new Buffer("expand 32-byte k"), 16)
+  tau : WordArray.from_buffer_le(new Buffer("expand 16-byte-k"), 16)
+
   #--------------
 
   constructor : (@key, @nonce) ->
+    @input = []
+    @_fix_key()
     # Constants.
     @rounds = 20   # number of Salsa rounds
     @sigma = new WordArray [0x61707865, 0x3320646e, 0x79622d32, 0x6b206574], 4*4
     @_reset()
+
+  key_setup : () ->
+    for i in [0...4]
+      @input[i+1] = @key.words[i]
+    [C,A] = if @key.sigBytes is 32 then [ Salsa20.sigma, @key.words[4...] ]
+    else [ Salsa20.tau, @key.words ]
+    for i in [0...4]
+      @input[i+11] = A[i]
+    for i in [0...4]
+      @input[i*5] = C.words[i]
+
+  _fix_key : () ->
+    keysize = 32
+    b = @key.to_buffer()
+    n = b.length
+    if n < keysize
+      rem = (keysize - n)
+      b2 = new Buffer (0x0 for i in [0...rem])
+      b3 = Buffer.concat [b, b2]
+      console.log b3
+      @key = WordArray.from_buffer b3
 
   _reset : () ->
     @counter = new Counter { len : 2 }

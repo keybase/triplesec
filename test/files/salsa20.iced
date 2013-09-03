@@ -25,3 +25,5 @@ run_tests = (T, which, cb) ->
 
 exports.key256 = (T, cb) ->
   run_tests T, 'key256', cb
+#exports.key128 = (T, cb) ->
+#  run_tests T, 'key128', cb
