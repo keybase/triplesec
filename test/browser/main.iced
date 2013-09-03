@@ -4,6 +4,7 @@ mods =
   wordarray : require '../files/wordarray.iced'
   hmac : require '../files/hmac.iced'
   aes : require '../files/aes.iced'
+  twofish : require '../files/twofish.iced'
 
 {BrowserRunner} = require('iced-test')
 
