@@ -1,5 +1,8 @@
 
-{data} = require('../data/salsa20')
+data = 
+  key128 : require('../data/salsa20_key128').data
+  key256 : require('../data/salsa20_key256').data
+
 {Salsa20} = require '../../lib/salsa20'
 {WordArray} = require '../../lib/wordarray'
 
@@ -15,7 +18,10 @@ test_case = (T, i, test) ->
     i = part.hi + 1
     T.equal bytes.toString('hex'), part.bytes.toLowerCase(), "Case #{i}: #{test.desc}"
 
-exports.run_tests = (T, cb) ->
-  for test,i in data
+run_tests = (T, which, cb) ->
+  for test,i in data[which]
     test_case T, i, test
   cb()
+
+exports.key256 = (T, cb) ->
+  run_tests T, 'key256', cb

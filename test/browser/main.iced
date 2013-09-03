@@ -5,6 +5,7 @@ mods =
   hmac : require '../files/hmac.iced'
   aes : require '../files/aes.iced'
   twofish : require '../files/twofish.iced'
+  salsa20 : require '../files/salsa20.iced'
 
 {BrowserRunner} = require('iced-test')
 
