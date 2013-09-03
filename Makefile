@@ -18,7 +18,8 @@ $(BUILD_STAMP): \
 	lib/hmac.js \
 	lib/aes.js \
 	lib/twofish.js \
-	lib/ctr.js
+	lib/ctr.js \
+	lib/salsa20.js
 	date > $@
 
 build: $(BUILD_STAMP)

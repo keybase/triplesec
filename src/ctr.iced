@@ -28,6 +28,19 @@ exports.Counter = class Counter
 
   #---------------------------
 
+  # increment little-endian style, meaning, increment the leftmost byte
+  # first, and then go left-to-right
+  inc_le : () ->
+    go = true
+    i = 0
+    while go and i < @_value.words.length
+      if ((++@_value.words[i]) > Counter.WORD_MAX) then @_value.words[i] = 0
+      else go = false
+      i++
+    true
+
+  #---------------------------
+
   get : () -> @_value
   
 #=========================================
