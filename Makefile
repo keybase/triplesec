@@ -39,6 +39,7 @@ test-browser: $(TEST_STAMP) $(BUILD_STAMP)
 $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha512_long.js \
 		test/data/twofish_ecb_tbl.js \
+		test/data/salsa20.js \
 		test/browser/test.js 
 	date > $@
 
