@@ -1,7 +1,7 @@
 
 data = {}
 
-data.ecb_ival = require('../data/twofish_ecb_ival').data
+data.ecb_tbl = require('../data/twofish_ecb_tbl').data
 
 {TwoFish} = require '../../lib/twofish'
 {WordArray} = require '../../lib/wordarray'
@@ -20,6 +20,6 @@ do_test_vec = (T, which) ->
     ptext_hex = block.to_hex()
     T.equal ptext_hex, d.plaintext, "Test vector #{i} dec: #{JSON.stringify d}"
 
-exports.ecb_ival = (T, cb) ->
-  do_test_vec T, 'ecb_ival'
+exports.ecb_tbl = (T, cb) ->
+  do_test_vec T, 'ecb_tbl'
   cb()
