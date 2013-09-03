@@ -332,7 +332,7 @@ exports.TwoFish = class TwoFish
 
   #----------------
 
-  decryptBlock : (M, offset) ->
+  decryptBlock : (M, offset = 0) ->
     x2 = @switchEndianness(M[offset])     ^ @gSubKeys[4]
     x3 = @switchEndianness(M[offset + 1]) ^ @gSubKeys[5]
     x0 = @switchEndianness(M[offset + 2]) ^ @gSubKeys[6]
@@ -359,7 +359,7 @@ exports.TwoFish = class TwoFish
 
   #----------------
 
-  encryptBlock : (M, offset) ->
+  encryptBlock : (M, offset = 0) ->
     x0 = @switchEndianness(M[offset])     ^ @gSubKeys[0]
     x1 = @switchEndianness(M[offset + 1]) ^ @gSubKeys[1]
     x2 = @switchEndianness(M[offset + 2]) ^ @gSubKeys[2]

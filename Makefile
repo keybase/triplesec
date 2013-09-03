@@ -36,12 +36,15 @@ test-browser: $(TEST_STAMP) $(BUILD_STAMP)
 
 $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha512_long.js \
-		test/browser/test.js
+		test/data/twofish_ecb_ival.js \
+		test/browser/test.js 
 	date > $@
 
 test/data/sha512_short.js: test/gen/gen_sha512_short.iced
 	$(ICED) $< > $@
 test/data/sha512_long.js: test/gen/gen_sha512_long.iced
+	$(ICED) $< > $@
+test/data/twofish_ecb_ival.js: test/gen/gen_twofish_ecb_ival.iced
 	$(ICED) $< > $@
 
 test: test-server test-browser-buffer test-browser
