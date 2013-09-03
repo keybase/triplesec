@@ -109,9 +109,27 @@ exports.WordArray = class WordArray
     new WordArray words, b.length
 
   #--------------
+  
+  @from_buffer_le : (b) ->
+    words = []
+    p = 0
+    while (b.length - p) >= 4
+      words.push b.readUInt32LE p
+      p += 4
+    if p < b.length
+      last = 0
+      while p < b.length
+        ch = b.readUInt8 p
+        last |= (ch << ((p%4) * 8))
+        p++
+      words.push last
+    new WordArray words, b.length
+
+  #--------------
 
   @from_utf8 : (s) -> WordArray.from_buffer new Buffer(s, 'utf8')
   @from_hex : (s) -> WordArray.from_buffer new Buffer(s, 'hex')
+  @from_hex_le = (s) -> WordArray.from_buffer_le new Buffer(s, 'hex')
   
 #=======================================================================
 
