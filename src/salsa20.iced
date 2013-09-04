@@ -28,6 +28,9 @@ exports.Salsa20 = class Salsa20
   #--------------
 
   constructor : (@key, @nonce) ->
+    throw "Bad key/none lengths" unless (
+             ((@key.sigBytes is 16) and (@nonce.sigBytes is 8)) or
+             ((@key.sigBytes is 32) and (@nonce.sigBytes in [8,24])))
     @input = []
     @key_setup()
     @iv_setup()
@@ -87,14 +90,14 @@ exports.Salsa20 = class Salsa20
   # and puts the result into this.block.
   _generateBlock : ->
     @counter_setup()
-    v = @_transform @input
+    v = @_core @input
     asum v, @input
     for e,i in v
       @block.writeUInt32LE fixup_uint32(e), (i*4)
 
   #--------------
 
-  _transform : (v) ->
+  _core : (v) ->
     [ x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15 ] = v
 
     for i in [0...@rounds] by 2
