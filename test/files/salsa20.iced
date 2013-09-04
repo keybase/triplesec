@@ -1,3 +1,4 @@
+crypto = require 'crypto'
 
 data = 
   key128 : require('../data/salsa20_key128').data
@@ -26,7 +27,7 @@ run_tests = (T, which, cb) ->
 exports.key256 = (T, cb) ->
   run_tests T, 'key256', cb
 exports.key128 = (T, cb) ->
-  run_tests T, 'key128', cb#
+  run_tests T, 'key128', cb
 
 exports.nonce192 = (T, cb) ->
   # From here:
@@ -48,4 +49,31 @@ exports.nonce192 = (T, cb) ->
   stream = new Salsa20 key, nonce
   bytes = stream.getBytes(v.ciphertext.length).toString('hex')
   T.equal bytes, ctext, "test from salsa20.go"
+  cb()
+
+exports.test_slicing = (T,cb) ->
+  v = data.key256[data.key256.length - 1]
+  key = WordArray.from_hex_le v.key
+  iv = WordArray.from_hex_le v.IV
+  n = 64
+  stream = new Salsa20 key, iv
+  reference = (stream.getBytes().toString('hex') for i in [0...n]).join('')
+  stream = new Salsa20 key, iv
+  big = stream.getBytes(n*n).toString('hex')
+  T.equal big, reference, 'all at once works'
+  stream = new Salsa20 key, iv
+  sz = 8
+  nibbles = (stream.getBytes(sz).toString('hex') for i in [0...(n*64/sz)]).join('')
+  T.equal big, nibbles, 'works in small nibbles'
+  stream = new Salsa20 key, iv
+  odd = (stream.getBytes(7).toString('hex') for i in [0...100]).join('')
+  T.equal odd, reference[0...(odd.length)], "on odd boundaries of 7"
+  stream = new Salsa20 key, iv
+  odd = (stream.getBytes(17).toString('hex') for i in [0...100]).join('')
+  T.equal odd, reference[0...(odd.length)], "on odd boundaries of 17"
+  for i in [0...10]
+    stream = new Salsa20 key, iv
+    seq = crypto.prng(19)
+    rand = (stream.getBytes(i).toString('hex') for i in seq).join('')
+    T.equal rand, reference[0...(rand.length)], "on random boundaries"
   cb()

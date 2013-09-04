@@ -83,35 +83,43 @@ exports.Salsa20 = class Salsa20
 
   _reset : () ->
     @counter = new Counter { len : 2 }
-    @block = new Buffer @block_size
     @_i = @block_size
 
   #--------------
 
   # getBytes returns the next numberOfBytes bytes of stream.
-  getBytes : (needed) ->
+  getBytes : (needed = @block_size) ->
     v = []
     bsz = @block_size
-    while needed > 0
-      if @_i is bsz
-        @_generateBlock()
-        @counter.inc_le()
-        @_i = 0
-      n = Math.min needed, (bsz - @_i)
-      v.push (if (n is bsz) then @block else @block[(@_i)...(@_i + n)])
-      @_i += n
-      needed -= n
-    Buffer.concat v
+
+    # special-case the common-case
+    if (@_i is bsz) and (needed is bsz)
+      @_generateBlock()
+
+    else
+
+      while needed > 0
+        if @_i is bsz
+          @_generateBlock()
+          @_i = 0
+        n = Math.min needed, (bsz - @_i)
+        v.push (if (n is bsz) then @block else @block[(@_i)...(@_i + n)])
+        @_i += n
+        needed -= n
+      Buffer.concat v
 
   #--------------
 
   # _generateBlock generates 64 bytes from key, nonce, and counter,
   # and puts the result into this.block.
   _generateBlock : ->
+    @block = new Buffer @block_size
     @counter_setup()
     v = @_core @input
     asum v, @input
+    @counter.inc_le()
     @output_block @block, v
+    @block
 
   #--------------
 
