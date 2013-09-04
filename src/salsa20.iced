@@ -21,7 +21,7 @@ asum = (out, v) ->
 exports.Salsa20 = class Salsa20
 
   sigma : WordArray.from_buffer_le(new Buffer("expand 32-byte k"), 16)
-  tau : WordArray.from_buffer_le(new Buffer("expand 16-byte-k"), 16)
+  tau : WordArray.from_buffer_le(new Buffer("expand 16-byte k"), 16)
   block_size : 64
   rounds : 20
 
