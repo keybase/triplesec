@@ -20,39 +20,52 @@ asum = (out, v) ->
 
 exports.Salsa20 = class Salsa20
 
-  sigma : WordArray.from_buffer_le(new Buffer("expand 32-byte k"), 16)
-  tau : WordArray.from_buffer_le(new Buffer("expand 16-byte k"), 16)
+  sigma : WordArray.from_buffer_le new Buffer "expand 32-byte k"
+  tau : WordArray.from_buffer_le new Buffer "expand 16-byte k"
   block_size : 64
   rounds : 20
 
   #--------------
 
   constructor : (@key, @nonce) ->
-    throw "Bad key/none lengths" unless (
+    throw new Error "Bad key/none lengths" unless (
              ((@key.sigBytes is 16) and (@nonce.sigBytes is 8)) or
              ((@key.sigBytes is 32) and (@nonce.sigBytes in [8,24])))
-    @input = []
-    @key_setup()
-    @iv_setup()
+    @nonce_setup() if @nonce.sigBytes is 24
+    @input = @key_iv_setup @nonce, @key
     @_reset()
 
   #--------------
 
-  key_setup : () ->
-    for i in [0...4]
-      @input[i+1] = @key.words[i]
-    [C,A] = if @key.sigBytes is 32 then [ @sigma, @key.words[4...] ]
-    else [ @tau, @key.words ]
-    for i in [0...4]
-      @input[i+11] = A[i]
-    for i in [0...4]
-      @input[i*5] = C.words[i]
+  nonce_setup : () ->
+    @key = @hsalsa20 @nonce.words[0...4], @key
+    @nonce = new WordArray @nonce.words[4...]
 
   #--------------
 
-  iv_setup : () ->
-    @input[6] = @nonce.words[0]
-    @input[7] = @nonce.words[1]
+  hsalsa20 : (nonce, key) ->
+    input = @key_iv_setup nonce, key
+    input[8] = nonce.words[2]
+    input[9] = nonce.words[3]
+    v = @_core input
+    v = (fixup_uint32 w for w in v)
+    new WordArray v
+
+  #--------------
+
+  key_iv_setup : (nonce, key) ->
+    out = []
+    for i in [0...4]
+      out[i+1] = key.words[i]
+    [C,A] = if key.sigBytes is 32 then [ @sigma, key.words[4...] ]
+    else [ @tau, key.words ]
+    for i in [0...4]
+      out[i+11] = A[i]
+    for i in [0...4]
+      out[i*5] = C.words[i]
+    out[6] = nonce.words[0]
+    out[7] = nonce.words[1]
+    out
    
   #--------------
 
@@ -92,8 +105,13 @@ exports.Salsa20 = class Salsa20
     @counter_setup()
     v = @_core @input
     asum v, @input
+    @output_block @block, v
+
+  #--------------
+
+  output_block : (out, v) ->
     for e,i in v
-      @block.writeUInt32LE fixup_uint32(e), (i*4)
+      out.writeUInt32LE fixup_uint32(e), (i*4)
 
   #--------------
 
