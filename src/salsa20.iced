@@ -38,8 +38,10 @@ exports.Salsa20 = class Salsa20
   #--------------
 
   nonce_setup : () ->
-    @key = @hsalsa20 @nonce.words[0...4], @key
-    @nonce = new WordArray @nonce.words[4...]
+    n0 = new WordArray @nonce.words[0...4]
+    n1 = new WordArray @nonce.words[4...]
+    @key = @hsalsa20 n0, @key
+    @nonce = n1
 
   #--------------
 
