@@ -16,6 +16,9 @@ asum = (out, v) ->
   (out[i] += e for e,i in v)
   false
 
+endian_reverse = (x) ->
+  ((x >> 24) & 0xff) | (((x >> 16) & 0xff) << 8) | (((x >> 8) & 0xff) << 16) | ((x & 0xff) << 24)
+
 #====================================================================
 
 exports.Salsa20 = class Salsa20
@@ -28,7 +31,7 @@ exports.Salsa20 = class Salsa20
   #--------------
 
   constructor : (@key, @nonce) ->
-    throw new Error "Bad key/none lengths" unless (
+    throw new Error "Bad key/nonce lengths" unless (
              ((@key.sigBytes is 16) and (@nonce.sigBytes is 8)) or
              ((@key.sigBytes is 32) and (@nonce.sigBytes in [8,24])))
     @nonce_setup() if @nonce.sigBytes is 24
@@ -50,7 +53,8 @@ exports.Salsa20 = class Salsa20
     input[8] = nonce.words[2]
     input[9] = nonce.words[3]
     v = @_core input
-    v = (fixup_uint32 w for w in v)
+    indexes = [ 0, 5, 10, 15, 6, 7, 8, 9]
+    v = (fixup_uint32 v[i] for i in indexes)
     new WordArray v
 
   #--------------

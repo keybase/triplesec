@@ -128,6 +128,7 @@ exports.WordArray = class WordArray
   #--------------
 
   @from_utf8 : (s) -> WordArray.from_buffer new Buffer(s, 'utf8')
+  @from_utf8_le : (s) -> WordArray.from_buffer_le new Buffer(s, 'utf8')
   @from_hex : (s) -> WordArray.from_buffer new Buffer(s, 'hex')
   @from_hex_le = (s) -> WordArray.from_buffer_le new Buffer(s, 'hex')
   
