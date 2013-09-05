@@ -6,6 +6,7 @@ mods =
   aes : require '../files/aes.iced'
   twofish : require '../files/twofish.iced'
   salsa20 : require '../files/salsa20.iced'
+  aes_ctr : require '../files/aes_ctr.iced'
 
 {BrowserRunner} = require('iced-test')
 

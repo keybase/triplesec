@@ -10,7 +10,7 @@ exports.Counter = class Counter
   #---------------------------
 
   constructor : ({ value, len }) ->
-    @_value = if value? then value
+    @_value = if value? then value.clone()
     else
       len = 2 unless len?
       new WordArray (0 for i in[0...len])
@@ -52,8 +52,8 @@ exports.Counter = class Counter
 class KeyStream
 
   constructor : ({@block_cipher, @iv, @len}) ->
-    unless (@iv.length is @block_cipher.blockSize)
-      throw new Error "IV is wrong length"
+    unless (@iv.sigBytes is @block_cipher.blockSize)
+      throw new Error "IV is wrong length (#{@iv.sigBytes})"
 
   generate_input : () ->
     @nblocks = Math.ceil @len / @block_cipher.blockSize
@@ -82,8 +82,8 @@ exports.Cipher = class Cipher
 
   constructor :( { @block_cipher, @iv } ) ->
     @bsiw = @block_cipher.blockSize / 4 # block size in words
-    unless (@seed.length is @block_cipher.blockSize)
-      throw new Error "IV is wrong length"
+    unless (@iv.sigBytes is @block_cipher.blockSize)
+      throw new Error "IV is wrong length (#{@iv.sigBytes})"
     @ctr = new Counter { value : @iv }   
 
   # Encrypt one block's worth of data. Use the next block
@@ -93,9 +93,10 @@ exports.Cipher = class Cipher
   #   @param {number} dst_offset The offset to operate on, in words
   #   @returns {number} the number of blocks encrypted
   encryptBlock : (word_array, dst_offset = 0) ->
-    pad = @ctr.inc().copy()
+    pad = @ctr.copy()
+    @ctr.inc()
     @block_cipher.encryptBlock pad.words
-    n_words = Math.min(word_array.words.length - offset, @bsiw)
+    n_words = Math.min(word_array.words.length - dst_offset, @bsiw)
     word_array.xor pad, { dst_offset, n_words }
     @bsiw
 
@@ -106,8 +107,7 @@ exports.Cipher = class Cipher
 
 #---------------
 
-exports.encrypt = ({block_cipher, iv, input}) ->
+exports.encrypt = encrypt = ({block_cipher, iv, input}) ->
   (new Cipher { block_cipher, iv}).encrypt input
 
 #=========================================
-
