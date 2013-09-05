@@ -5,6 +5,8 @@
 ##   https://code.google.com/p/crypto-js/
 ##
 
+{BlockCipher} = require './algbase'
+
 #=======================================================================
 
 class Global
@@ -63,8 +65,11 @@ G = new Global()
 
 #=======================================================================
 
-exports.AES = class AES
+exports.AES = class AES extends BlockCipher
 
+  # Blocksize in bytes --- Each round transforms 4 32-bit
+  # words, so 16 bytes in total
+  blockSize : 4*4
 
   keySize : 256/32
 

@@ -28,6 +28,8 @@
 # SOFTWARE.
 #
 
+{BlockCipher} = require './algbase'
+
 #==========================================================
 
 class Global
@@ -137,7 +139,11 @@ G = new Global()
 
 #==========================================================
 
-exports.TwoFish = class TwoFish
+exports.TwoFish = class TwoFish extends BlockCipher
+
+  # Blocksize in bytes --- Each round transforms 4 32-bit
+  # words, so 16 bytes in total
+  blockSize : 4*4
 
   constructor : (@_key) ->
     @gMDS0 = []

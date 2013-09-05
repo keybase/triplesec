@@ -161,3 +161,11 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
     @_append messageUpdate if messageUpdate
     @_doFinalize()
 
+#=======================================================================
+
+exports.BlockCipher = class BlockCipher
+  constructor : (key) ->
+  encryptBlock : (M, offset) ->
+    
+#=======================================================================
+
