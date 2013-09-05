@@ -21,7 +21,7 @@ endian_reverse = (x) ->
 
 #====================================================================
 
-exports.Salsa20 = class Salsa20
+class Salsa20Core
 
   sigma : WordArray.from_buffer_le new Buffer "expand 32-byte k"
   tau : WordArray.from_buffer_le new Buffer "expand 16-byte k"
@@ -83,41 +83,6 @@ exports.Salsa20 = class Salsa20
 
   _reset : () ->
     @counter = new Counter { len : 2 }
-    @_i = @block_size
-
-  #--------------
-
-  # getBytes returns the next numberOfBytes bytes of stream.
-  getBytes : (needed = @block_size) ->
-    v = []
-    bsz = @block_size
-
-    # special-case the common-case
-    if (@_i is bsz) and (needed is bsz)
-      @_generateBufferBlock()
-
-    else
-
-      while needed > 0
-        if @_i is bsz
-          @_generateBufferBlock()
-          @_i = 0
-        n = Math.min needed, (bsz - @_i)
-        v.push (if (n is bsz) then @_bufblock else @_bufblock[(@_i)...(@_i + n)])
-        @_i += n
-        needed -= n
-      Buffer.concat v
-
-  #--------------
-
-  # _generateBlock generates 64 bytes from key, nonce, and counter,
-  # and puts the result into this.block.
-  _generateBufferBlock : ->
-    @_bufblock = new Buffer @block_size
-    v = @_generateBlock()
-    for e,i in v
-      @_bufblock.writeUInt32LE fixup_uint32(e), (i*4)
-    @_bufblock
 
   #--------------
 
@@ -169,6 +134,64 @@ exports.Salsa20 = class Salsa20
 
     [ x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15 ]
     
+#====================================================================
+
+exports.Salsa20WordArray = class Salsa20WordArray extends Salsa20Core
+
+  _reset : () ->
+    super()
+
+  getWordArray : (nbytes) ->
+    nblocks = Math.ceil nbytes / @block_size
+    blocks = for i in [0...nblocks]
+      (endian_reverse i for i in @_generateBlock())
+    words = [].concat blocks...
+    new WordArray words, nbytes
+
+#====================================================================
+
+exports.Salsa20 = class Salsa20 extends Salsa20Core
+
+  #--------------
+
+  _reset : () ->
+    super() 
+    @_i = @block_size
+
+  #--------------
+
+  # getBytes returns the next numberOfBytes bytes of stream.
+  getBytes : (needed = @block_size) ->
+    v = []
+    bsz = @block_size
+
+    # special-case the common-case
+    if (@_i is bsz) and (needed is bsz)
+      @_generateBlockBuffer()
+    else
+      while needed > 0
+        if @_i is bsz
+          @_generateBlockBuffer()
+          @_i = 0
+        n = Math.min needed, (bsz - @_i)
+        v.push (if (n is bsz) then @_buf else @_buf[(@_i)...(@_i + n)])
+        @_i += n
+        needed -= n
+      Buffer.concat v
+
+  #--------------
+
+  # _generateBlock generates 64 bytes from key, nonce, and counter,
+  # and puts the result into this.block.
+  _generateBlockBuffer : ->
+    @_buf = new Buffer @block_size
+    v = @_generateBlock()
+    for e,i in v
+      @_buf.writeUInt32LE fixup_uint32(e), (i*4)
+    @_buf
+
+  #--------------
+
 #====================================================================
 
 exports.Cipher = class Cipher
