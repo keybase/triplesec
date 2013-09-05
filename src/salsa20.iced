@@ -9,6 +9,7 @@
 {WordArray} = require './wordarray'
 {Counter} = require './ctr'
 {fixup_uint32} = require './util'
+{StreamCipher} = require './algbase'
 
 #====================================================================
 
@@ -138,14 +139,22 @@ class Salsa20Core
 
 exports.Salsa20WordArray = class Salsa20WordArray extends Salsa20Core
 
+  #--------------
+
   _reset : () ->
     super()
 
+  #--------------
+
   getWordArray : (nbytes) ->
-    nblocks = Math.ceil nbytes / @block_size
-    blocks = for i in [0...nblocks]
-      (endian_reverse i for i in @_generateBlock())
-    words = [].concat blocks...
+    if not nbytes? or nbytes is @block_size
+      words = @_generateBlock()
+    else 
+      nblocks = Math.ceil nbytes / @block_size
+      blocks = (@_generateBlock() for i in [0...nblocks])
+      words = [].concat blocks...
+    for w,i in words
+      words[i] = endian_reverse w
     new WordArray words, nbytes
 
 #====================================================================
@@ -194,8 +203,18 @@ exports.Salsa20 = class Salsa20 extends Salsa20Core
 
 #====================================================================
 
-exports.Cipher = class Cipher
-  constructor : ( { key, iv } ) ->
+exports.Cipher = class Cipher extends StreamCipher
 
+  constructor : ( { key, iv } ) ->
+    super()
+    @salsa = new Salsa20 key, iv
+    @bsiw = @salsa.block_size / 4 # block size in words
+
+  get_pad : () -> @salsa.getWordArray()
+
+#====================================================================
+
+exports.encrypt = encrypt = ({key, iv, input}) ->
+  (new Cipher { key, iv }).encrypt input
 
 #====================================================================

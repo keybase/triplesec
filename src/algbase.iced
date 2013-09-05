@@ -169,3 +169,28 @@ exports.BlockCipher = class BlockCipher
     
 #=======================================================================
 
+exports.StreamCipher = class StreamCipher
+
+  constructor : () ->
+
+  # Encrypt one block's worth of data. Use the next block
+  # in the keystream (order matters here!)
+  #
+  #   @param {WordArray} word_array The WordArray to operator on
+  #   @param {number} dst_offset The offset to operate on, in words
+  #   @returns {number} the number of blocks encrypted
+  encryptBlock : (word_array, dst_offset = 0) ->
+    pad = @ctr.copy()
+    @ctr.inc()
+    @block_cipher.encryptBlock pad.words
+    n_words = Math.min(word_array.words.length - dst_offset, @bsiw)
+    word_array.xor pad, { dst_offset, n_words }
+    @bsiw
+
+  encrypt : (word_array) ->
+    for i in [0...word_array.words.length] by @bsiw
+      @encryptBlock word_array, i
+    word_array
+
+#=======================================================================
+
