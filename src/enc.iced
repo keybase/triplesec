@@ -1,5 +1,4 @@
 
-
 #
 # Encrypt the given data with the given key
 #
@@ -8,4 +7,4 @@
 #
 #  @returns {Buffer} a buffer with the encrypted data
 #
-exports.encrypt = ({ key, data}) ->
+exports.encrypt = ({ key, data} ) ->
