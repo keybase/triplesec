@@ -1,5 +1,5 @@
-{WordArray} = require './lib/wordarray'
-salsa20 = require './lib/salsa20'
+{WordArray} = require '../lib/wordarray'
+salsa20 = require '../lib/salsa20'
 
 key = WordArray.from_utf8 '11112222333344445555666677778888'
 iv = WordArray.from_utf8 'aaaabbbbccccddddeeeeffff'
