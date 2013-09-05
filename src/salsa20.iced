@@ -137,7 +137,7 @@ class Salsa20Core
     
 #====================================================================
 
-exports.Salsa20WordArray = class Salsa20WordArray extends Salsa20Core
+exports.Salsa20WordStream = class Salsa20WordStream extends Salsa20Core
 
   #--------------
 
@@ -207,7 +207,7 @@ exports.Cipher = class Cipher extends StreamCipher
 
   constructor : ( { key, iv } ) ->
     super()
-    @salsa = new Salsa20 key, iv
+    @salsa = new Salsa20WordStream key, iv
     @bsiw = @salsa.block_size / 4 # block size in words
 
   get_pad : () -> @salsa.getWordArray()
