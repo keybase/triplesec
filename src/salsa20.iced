@@ -94,16 +94,16 @@ exports.Salsa20 = class Salsa20
 
     # special-case the common-case
     if (@_i is bsz) and (needed is bsz)
-      @_generateBlock()
+      @_generateBufferBlock()
 
     else
 
       while needed > 0
         if @_i is bsz
-          @_generateBlock()
+          @_generateBufferBlock()
           @_i = 0
         n = Math.min needed, (bsz - @_i)
-        v.push (if (n is bsz) then @block else @block[(@_i)...(@_i + n)])
+        v.push (if (n is bsz) then @_bufblock else @_bufblock[(@_i)...(@_i + n)])
         @_i += n
         needed -= n
       Buffer.concat v
@@ -112,20 +112,21 @@ exports.Salsa20 = class Salsa20
 
   # _generateBlock generates 64 bytes from key, nonce, and counter,
   # and puts the result into this.block.
-  _generateBlock : ->
-    @block = new Buffer @block_size
+  _generateBufferBlock : ->
+    @_bufblock = new Buffer @block_size
+    v = @_generateBlock()
+    for e,i in v
+      @_bufblock.writeUInt32LE fixup_uint32(e), (i*4)
+    @_bufblock
+
+  #--------------
+
+  _generateBlock : () ->
     @counter_setup()
     v = @_core @input
     asum v, @input
     @counter.inc_le()
-    @output_block @block, v
-    @block
-
-  #--------------
-
-  output_block : (out, v) ->
-    for e,i in v
-      out.writeUInt32LE fixup_uint32(e), (i*4)
+    v
 
   #--------------
 
@@ -168,5 +169,10 @@ exports.Salsa20 = class Salsa20
 
     [ x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15 ]
     
+#====================================================================
+
+exports.Cipher = class Cipher
+  constructor : ( { key, iv } ) ->
+
 
 #====================================================================
