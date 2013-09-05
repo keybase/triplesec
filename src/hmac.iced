@@ -38,6 +38,11 @@ exports.HMAC = class HMAC
     @reset()
 
   #
+  # get the output blocksize
+  #
+  get_block_size : () -> @hasher.blockSize
+
+  #
   # Resets this HMAC to its initial state.
   #
   reset : -> @hasher.reset().update @_iKey
