@@ -180,9 +180,7 @@ exports.StreamCipher = class StreamCipher
   #   @param {number} dst_offset The offset to operate on, in words
   #   @returns {number} the number of blocks encrypted
   encryptBlock : (word_array, dst_offset = 0) ->
-    pad = @ctr.copy()
-    @ctr.inc()
-    @block_cipher.encryptBlock pad.words
+    pad = @get_pad()
     n_words = Math.min(word_array.words.length - dst_offset, @bsiw)
     word_array.xor pad, { dst_offset, n_words }
     @bsiw

@@ -92,6 +92,7 @@ exports.Cipher = class Cipher extends StreamCipher
     pad = @ctr.copy()
     @ctr.inc()
     @block_cipher.encryptBlock pad.words
+    pad
 
 #---------------
 
