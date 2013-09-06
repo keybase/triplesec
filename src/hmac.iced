@@ -40,7 +40,7 @@ exports.HMAC = class HMAC
   #
   # get the output blocksize
   #
-  get_block_size : () -> @hasher.blockSize
+  get_output_size : () -> @hasher.output_size
 
   #
   # Resets this HMAC to its initial state.

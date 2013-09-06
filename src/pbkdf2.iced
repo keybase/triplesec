@@ -1,5 +1,6 @@
 
 {HMAC} = require './hmac'
+{WordArray} = require './wordarray'
 
 #=========================================================
 
@@ -10,7 +11,7 @@ exports.PBKDF2 = class PBKDF2
   # @param {number} c the number of iterations
   # @param {number} dkLen the needed length of output data
   #
-  #
+  
   constructor : ({@key, @salt, @c}) ->
     @prf = new HMAC @key
 
@@ -23,19 +24,20 @@ exports.PBKDF2 = class PBKDF2
   #-----------
   
   gen_T_i : (i) ->
-    U = @PRF (@salt.clone().concat new WordArray [i])
+    seed = @salt.clone().concat new WordArray [i]
+    U = @PRF seed
     ret = U.clone()
-    for i in [1..@c]
+    for i in [1...@c]
       U = @PRF U
-      ret.xor U
+      ret.xor U, {}
     ret
 
   #-----------
   
   gen : (len) ->
-    bs = @prf.get_block_size()
-    n = Math.ceil(len/ bs)
-    words = (@gen_T_i i for i in [1..n])
+    bs = @prf.get_output_size()
+    n = Math.ceil(len / bs)
+    words = (@gen_T_i(i).words for i in [1..n])
     flat = [].concat words...
     new WordArray flat, len
 

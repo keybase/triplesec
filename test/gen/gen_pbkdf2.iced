@@ -3,7 +3,7 @@
 
 opts = 
   hasher : CryptoJS.algo.SHA512
-  iterations : 16
+  iterations : 64
   keySize : (512*3)/32
 
 inputs = [
@@ -15,7 +15,10 @@ inputs = [
     salt : "1234abcd9876"
   },{
     password : "let me in!"
-    salt : "012345678"
+    salt : "0123456789"
+  },{
+    password : "password PASSWORD password PASSWORD"
+    salt : "73616c7453414c5473616c7453414c5473616c7453414c54"
   }
 ]  
 
@@ -30,4 +33,9 @@ for {password,salt} in inputs
     d[k] = v.toString CryptoJS.enc.Hex
   data.push d
 
+export_opts = 
+  c : opts.iterations
+  dkLen : opts.keySize * 4
+
 console.log "exports.data = #{JSON.stringify data, null, 4};"
+console.log "exports.opts = #{JSON.stringify export_opts, null, 4};"

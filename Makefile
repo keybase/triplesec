@@ -19,7 +19,8 @@ $(BUILD_STAMP): \
 	lib/aes.js \
 	lib/twofish.js \
 	lib/ctr.js \
-	lib/salsa20.js
+	lib/salsa20.js \
+	lib/pbkdf2.js
 	date > $@
 
 build: $(BUILD_STAMP)
