@@ -1,11 +1,11 @@
 {
-  "name" : "triple-sec",
+  "name" : "triplesec",
   "version" : "0.0.0",
   "description" : "A CommonJS-compliant system for secure encryption of smallish secrets",
-  "homepage" : "https://github.com/maxtaco/triple-sec",
+  "homepage" : "https://github.com/maxtaco/triplesec",
   "repository" : { 
     "type" : "git",
-     "url" : "https://github.com/maxtaco/triple-sec.git"
+     "url" : "https://github.com/maxtaco/triplesec.git"
   },
   "devDependencies" : {
     "browserify" : "*",
