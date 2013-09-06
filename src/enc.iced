@@ -6,13 +6,13 @@ salsa20       = require './salsa20'
 ctr           = require './ctr'
 hmac          = require './hmac'
 {SHA512}      = require './sha512'
-{pack,unpack} = require 'purepack'
 {pbkdf2}      = require './pbkdf2'
 
 #========================================================================
 
 V1 = 
-  n : 1
+  header :
+    [ 0x1c94d7de, 1 ]
   pbkdf2_iters : 1024
 
 #========================================================================
@@ -89,7 +89,7 @@ class Encryptor
   #---------------
 
   sign : ({input, key}) ->
-    input = (new WordArray [ @version.n ]).concat input
+    input = (new WordArray @version.header ).concat input
     hmac.sign { key, input }
 
   #---------------
@@ -104,9 +104,7 @@ class Encryptor
     ct2  = @run_twofish { input : ct1, key : keys.twofish, iv : ivs.twofish }
     ct3  = @run_aes     { input : ct2, key : keys.aes,     iv : ivs.aes     }
     sig  = @sign        { input : ct3, key : keys.hmac                      }
-    obj  = [ @version.n, sig.to_uint8_array(), ct3.to_uint8_array() ]
-    ret  = new Buffer(pack(obj, 'buffer'))
-    ret
+    (new WordArray(@version.header)).concat(sig).concat(ct3).to_buffer()
 
 #========================================================================
 
