@@ -11,8 +11,8 @@ crypto        = require 'crypto'
 
 #========================================================================
 
-exports.V = V1 = 
-  "1" : 
+exports.V = V = 
+  v1 : 
     header :
       [ 0x1c94d7de, 1 ]
     pbkdf2_iters : 1024
@@ -31,7 +31,7 @@ class Encryptor
 
   #---------------
 
-  version : V.1
+  version : V.v1
 
   #---------------
   
