@@ -47,6 +47,7 @@ $(TEST_STAMP): test/data/sha512_short.js \
 	date > $@
 
 test/data/%.js: test/gen/gen_%.iced
+	@mkdir -p test/data
 	$(ICED) $< > $@
 
 test: test-server test-browser-buffer test-browser
