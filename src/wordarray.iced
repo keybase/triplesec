@@ -135,6 +135,18 @@ exports.WordArray = class WordArray
   
   #--------------
 
+  # Important! Don't short-circuit since that enables a
+  # forging attack....
+  equal : (wa) ->
+    ret = true
+    if wa.sigBytes isnt @sigBytes then ret = false
+    else
+      for w,i in @words
+        ret = false unless w is wa.words[i]
+    ret
+
+  #--------------
+
   xor : (wa2, { dst_offset, src_offset, n_words } ) ->
     dst_offset = 0 unless dst_offset
     src_offset = 0 unless src_offset
@@ -147,6 +159,16 @@ exports.WordArray = class WordArray
 
     for i in [0...n_words]
       @words[dst_offset+i] ^= wa2.words[src_offset+i]
+
+  #--------------
+
+  unshift : (n_words) ->
+    if @words.length >= n_words
+      ret = @words.splice 0, n_words
+      @sigBytes -= n_words*4
+      new WordArray ret
+    else
+      null
 
 #=======================================================================
 

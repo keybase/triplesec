@@ -7,35 +7,22 @@ ctr           = require './ctr'
 hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
-crypto        = require 'crypto'
 
 #========================================================================
 
 exports.V = V = 
-  v1 : 
+  "1" : 
     header :
       [ 0x1c94d7de, 1 ]
     pbkdf2_iters : 1024
 
 #========================================================================
 
-#
-# Encrypt the given data with the given key
-#
-#  @param {Buffer} key  A buffer with the keystream data in it
-#  @param {Buffer} salt Salt for key derivation, should be the user's email address
-#  @param {Function} rng Call it with the number of Rando bytes you need
-#
-#
-class Encryptor 
-
-  #---------------
-
-  version : V.v1
+exports.Base = class Base 
 
   #---------------
   
-  constructor : ( { key, salt, @rng } ) ->
+  constructor : ( { key, salt }) ->
     @key = WordArray.from_buffer key
     @salt = WordArray.from_buffer salt
 
@@ -62,15 +49,15 @@ class Encryptor
 
   #---------------
 
-  pick_random_ivs : () ->
-    iv_lens =
-      aes : AES.ivSize
-      twofish : TwoFish.ivSize
-      salsa20 : salsa20.Salsa20.ivSize
-    ivs = {}
-    for k,v of iv_lens
-      ivs[k] = WordArray.from_buffer @rng(v)
-    ivs
+  sign : ({input, key}) ->
+    console.log 'sign it!'
+    console.log key
+    input = (new WordArray @version.header ).concat input
+    console.log input
+    out = hmac.sign { key, input }
+    console.log 'signed -> '
+    console.log out
+    out
 
   #---------------
 
@@ -89,11 +76,38 @@ class Encryptor
     block_cipher = new AES key
     iv.clone().concat ctr.encrypt { block_cipher, iv, input }
 
+#========================================================================
+
+#
+# Encrypt the given data with the given key
+#
+#  @param {Buffer} key  A buffer with the keystream data in it
+#  @param {Buffer} salt Salt for key derivation, should be the user's email address
+#  @param {Function} rng Call it with the number of Rando bytes you need
+#
+#
+class Encryptor extends Base
+
   #---------------
 
-  sign : ({input, key}) ->
-    input = (new WordArray @version.header ).concat input
-    hmac.sign { key, input }
+  version : V[1]
+
+  #---------------
+  
+  constructor : ( { key, salt, @rng } ) ->
+    super { key, salt }
+
+  #---------------
+
+  pick_random_ivs : () ->
+    iv_lens =
+      aes : AES.ivSize
+      twofish : TwoFish.ivSize
+      salsa20 : salsa20.Salsa20.ivSize
+    ivs = {}
+    for k,v of iv_lens
+      ivs[k] = WordArray.from_buffer @rng(v)
+    ivs
 
   #---------------
  
@@ -115,11 +129,3 @@ exports.encrypt = encrypt = ({ key, salt, data, rng}) ->
   (new Encryptor { key, salt, rng}).run(data)
 
 #========================================================================
-
-arg = 
-  key : new Buffer 'this be the password'
-  salt : new Buffer 'max@okcupid.com'
-  data : new Buffer 'this be the secret message!'
-  rng : crypto.rng
-
-console.log encrypt(arg).toString 'hex'

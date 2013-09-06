@@ -8,6 +8,8 @@ exports.HMAC = class HMAC
   # Suggested key sizes....
   @keySize : 512/8
   keySize : HMAC.keySize
+  @outputSize : 512/8
+  outputSize : HMAC.outputSize
 
   #
   # Initializes a newly created HMAC.
