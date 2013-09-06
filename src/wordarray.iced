@@ -90,6 +90,7 @@ exports.WordArray = class WordArray
 
   to_utf8 : () -> @to_buffer().toString 'utf8'
   to_hex : () -> @to_buffer().toString 'hex'
+  to_uint8_array : () -> new Uint8Array @to_buffer()
 
   #--------------
   
