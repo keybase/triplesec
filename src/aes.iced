@@ -69,9 +69,12 @@ exports.AES = class AES extends BlockCipher
 
   # Blocksize in bytes --- Each round transforms 4 32-bit
   # words, so 16 bytes in total
-  blockSize : 4*4
-
-  keySize : 256/32
+  @blockSize : 4*4
+  blockSize : AES.blockSize 
+  @keySize : 256/8
+  keySize : AES.keySize
+  @ivSize : AES.blockSize
+  ivSize : AES.ivSize
 
   #-------------------------
 

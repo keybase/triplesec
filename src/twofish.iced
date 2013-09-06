@@ -143,7 +143,12 @@ exports.TwoFish = class TwoFish extends BlockCipher
 
   # Blocksize in bytes --- Each round transforms 4 32-bit
   # words, so 16 bytes in total
-  blockSize : 4*4
+  @blockSize : 4*4
+  blockSize : TwoFish.blockSize
+  @keySize : 256 / 8
+  keySize : TwoFish.keySize
+  @ivSize : TwoFish.blockSize
+  ivSize : TwoFish.ivSize
 
   constructor : (@_key) ->
     @gMDS0 = []

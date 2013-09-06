@@ -7,6 +7,7 @@ ctr           = require './ctr'
 hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
+crypto        = require 'crypto'
 
 #========================================================================
 
@@ -41,10 +42,10 @@ class Encryptor
 
   pbkdf2 : () ->
     lens = 
-      hmac    : 512 / 8
-      aes     : 256 / 8
-      twofish : 256 / 8
-      salsa20 : 256 / 8
+      hmac    : hmac.HMAC.keySize
+      aes     : AES.keySize
+      twofish : TwoFish.keySize
+      salsa20 : salsa20.Salsa20.keySize
     tot = 0
     for k,v of lens
       tot += v
@@ -62,12 +63,13 @@ class Encryptor
 
   pick_random_ivs : () ->
     iv_lens =
-      aes : 128 / 8
-      twofish : 128 / 8
-      salsa20 : 192 / 8
+      aes : AES.ivSize
+      twofish : TwoFish.ivSize
+      salsa20 : salsa20.Salsa20.ivSize
     ivs = {}
     for k,v of iv_lens
       ivs[k] = WordArray.from_buffer @rng(v)
+    ivs
 
   #---------------
 
@@ -108,8 +110,15 @@ class Encryptor
 
 #========================================================================
 
-exports.encrypt = ({ key, salt, data, rng}) ->
+exports.encrypt = encrypt = ({ key, salt, data, rng}) ->
   (new Encryptor { key, salt, rng}).run(data)
 
 #========================================================================
 
+arg = 
+  key : new Buffer 'this be the password'
+  salt : new Buffer 'max@okcupid.com'
+  data : new Buffer 'this be the secret message!'
+  rng : crypto.rng
+
+console.log encrypt(arg).toString 'hex'

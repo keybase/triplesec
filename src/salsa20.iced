@@ -26,7 +26,16 @@ class Salsa20Core
 
   sigma : WordArray.from_buffer_le new Buffer "expand 32-byte k"
   tau : WordArray.from_buffer_le new Buffer "expand 16-byte k"
-  block_size : 64
+
+  @blockSize : 64
+  blockSize : Salsa20Core.blockSize
+  @keySize : 32
+  keySize : Salsa20Core.keySize
+  @ivSize : 192/8
+  ivSize : Salsa20Core.ivSize
+  
+  #--------------
+
   rounds : 20
 
   #--------------
@@ -147,10 +156,10 @@ exports.Salsa20WordStream = class Salsa20WordStream extends Salsa20Core
   #--------------
 
   getWordArray : (nbytes) ->
-    if not nbytes? or nbytes is @block_size
+    if not nbytes? or nbytes is @blockSize
       words = @_generateBlock()
     else 
-      nblocks = Math.ceil nbytes / @block_size
+      nblocks = Math.ceil nbytes / @blockSize
       blocks = (@_generateBlock() for i in [0...nblocks])
       words = [].concat blocks...
     for w,i in words
@@ -165,14 +174,14 @@ exports.Salsa20 = class Salsa20 extends Salsa20Core
 
   _reset : () ->
     super() 
-    @_i = @block_size
+    @_i = @blockSize
 
   #--------------
 
   # getBytes returns the next numberOfBytes bytes of stream.
-  getBytes : (needed = @block_size) ->
+  getBytes : (needed = @blockSize) ->
     v = []
-    bsz = @block_size
+    bsz = @blockSize
 
     # special-case the common-case
     if (@_i is bsz) and (needed is bsz)
@@ -193,7 +202,7 @@ exports.Salsa20 = class Salsa20 extends Salsa20Core
   # _generateBlock generates 64 bytes from key, nonce, and counter,
   # and puts the result into this.block.
   _generateBlockBuffer : ->
-    @_buf = new Buffer @block_size
+    @_buf = new Buffer @blockSize
     v = @_generateBlock()
     for e,i in v
       @_buf.writeUInt32LE fixup_uint32(e), (i*4)
@@ -208,7 +217,7 @@ exports.Cipher = class Cipher extends StreamCipher
   constructor : ( { key, iv } ) ->
     super()
     @salsa = new Salsa20WordStream key, iv
-    @bsiw = @salsa.block_size / 4 # block size in words
+    @bsiw = @salsa.blockSize / 4 # block size in words
 
   get_pad : () -> @salsa.getWordArray()
 

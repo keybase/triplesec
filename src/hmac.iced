@@ -5,6 +5,10 @@
 
 exports.HMAC = class HMAC 
 
+  # Suggested key sizes....
+  @keySize : 512/8
+  keySize : HMAC.keySize
+
   #
   # Initializes a newly created HMAC.
   #
