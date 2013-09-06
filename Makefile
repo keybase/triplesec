@@ -41,6 +41,7 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/twofish_ecb_tbl.js \
 		test/data/salsa20_key128.js \
 		test/data/salsa20_key256.js \
+		test/data/pbkdf2.js \
 		test/browser/test.js 
 	date > $@
 
