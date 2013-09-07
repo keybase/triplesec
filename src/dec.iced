@@ -7,6 +7,7 @@ ctr           = require './ctr'
 hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
+{Salsa20}     = require './salsa20'
 {Base,V}      = require './enc'
 
 #========================================================================
@@ -42,14 +43,12 @@ class Decryptor extends Base
     received = @ct.unshift(hmac.HMAC.outputSize/4)
     throw new Error "Cipher text underrun in signature" unless received?
     computed = @sign { input : @ct, key }
-    console.log computed
-    console.log received
     throw new Error 'Signature mismatch!' unless received.equal computed
 
   #----------------------
 
-  unshift_iv  : (n, which) ->
-    throw new Error "Ciphertext underrun in #{which}" unless (iv = @ct.unshift n)?
+  unshift_iv  : (n_bytes, which) ->
+    throw new Error "Ciphertext underrun in #{which}" unless (iv = @ct.unshift(n_bytes/4))?
     iv
 
   #----------------------
@@ -61,7 +60,7 @@ class Decryptor extends Base
     @verify_sig keys.hmac
     ct2 = @run_aes     { iv : @unshift_iv(AES.ivSize),     input : @ct, key : keys.aes }
     ct1 = @run_twofish { iv : @unshift_iv(TwoFish.ivSize), input : @ct, key : keys.twofish }
-    pt  = @run_salsa20 { iv : @unshift_iv(Salsa20.ivSize), input : @ct, key : keys.salsa }
+    pt  = @run_salsa20 { iv : @unshift_iv(Salsa20.ivSize), input : @ct, key : keys.salsa20, output_iv : false}
     pt.to_buffer()
 
 #========================================================================

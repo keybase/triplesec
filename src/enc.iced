@@ -50,19 +50,16 @@ exports.Base = class Base
   #---------------
 
   sign : ({input, key}) ->
-    console.log 'sign it!'
-    console.log key
     input = (new WordArray @version.header ).concat input
-    console.log input
     out = hmac.sign { key, input }
-    console.log 'signed -> '
-    console.log out
     out
 
   #---------------
 
-  run_salsa20 : ({ input, key, iv }) ->
-    iv.clone().concat salsa20.encrypt { input, key, iv }
+  run_salsa20 : ({ input, key, iv, output_iv }) ->
+    ct = salsa20.encrypt { input, key, iv}
+    if output_iv then iv.clone().concat ct
+    else ct
 
   #---------------
 
@@ -117,7 +114,7 @@ class Encryptor extends Base
     keys = @pbkdf2()
     ivs  = @pick_random_ivs()
     pt   = WordArray.from_buffer data
-    ct1  = @run_salsa20 { input : pt,  key : keys.salsa20, iv : ivs.salsa20 }
+    ct1  = @run_salsa20 { input : pt,  key : keys.salsa20, iv : ivs.salsa20, output_iv : true }
     ct2  = @run_twofish { input : ct1, key : keys.twofish, iv : ivs.twofish }
     ct3  = @run_aes     { input : ct2, key : keys.aes,     iv : ivs.aes     }
     sig  = @sign        { input : ct3, key : keys.hmac                      }

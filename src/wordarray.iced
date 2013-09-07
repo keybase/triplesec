@@ -62,6 +62,7 @@ exports.WordArray = class WordArray
   clamp : ->
     @words[@sigBytes >>> 2] &= 0xffffffff << (32 - (@sigBytes % 4) * 8);
     @words.length = Math.ceil(@sigBytes / 4)
+    @
 
   #
   # Creates a copy of this word array.
@@ -144,7 +145,7 @@ exports.WordArray = class WordArray
     if wa.sigBytes isnt @sigBytes then ret = false
     else
       for w,i in @words
-        ret = false unless w is wa.words[i]
+        ret = false unless util.fixup_uint32(w) is util.fixup_uint32(wa.words[i])
     ret
 
   #--------------

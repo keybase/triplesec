@@ -87,7 +87,7 @@ exports.HMAC = class HMAC
 
 #=======================================================================
 
-exports.sign = ({key, input}) -> (new HMAC key).finalize(input)
+exports.sign = ({key, input}) -> (new HMAC key).finalize(input.clamp())
 
 #=======================================================================
 
