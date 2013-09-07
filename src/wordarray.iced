@@ -106,6 +106,7 @@ exports.WordArray = class WordArray
         ch = b.readUInt8 p
         last |= (ch << (24 - (p%4) * 8))
         p++
+      last = util.fixup_uint32 last
       words.push last
     new WordArray words, b.length
 
@@ -123,6 +124,7 @@ exports.WordArray = class WordArray
         ch = b.readUInt8 p
         last |= (ch << ((p%4) * 8))
         p++
+      last = util.fixup_uint32 last
       words.push last
     new WordArray words, b.length
 
@@ -158,7 +160,8 @@ exports.WordArray = class WordArray
       throw new Error "source range exceeded"
 
     for i in [0...n_words]
-      @words[dst_offset+i] ^= wa2.words[src_offset+i]
+      tmp = @words[dst_offset + i] ^ wa2.words[src_offset + i]
+      @words[dst_offset+i] = util.fixup_uint32 tmp
 
   #--------------
 
