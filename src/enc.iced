@@ -14,7 +14,7 @@ exports.V = V =
   "1" : 
     header :
       [ 0x1c94d7de, 1 ]
-    pbkdf2_iters : 1024
+    pbkdf2_iters : 2048
 
 #========================================================================
 
@@ -108,6 +108,8 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
 
+  # Initialize the keys.  You might want to save this work, since it's
+  # pretty expensive.
   init : () ->
     @keys = @pbkdf2()
     @

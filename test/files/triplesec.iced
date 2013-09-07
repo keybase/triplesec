@@ -2,6 +2,8 @@
 {Encryptor,encrypt} = require '../../lib/enc'
 {decrypt} = require '../../lib/dec'
 
+#-------------------------------------------------
+
 test_vectors = [
   { 
     key : new Buffer 'this be the password'
@@ -16,6 +18,8 @@ test_vectors = [
     salt : new Buffer [10...60]
     data : Buffer.concat ((new Buffer [0..255]) for i in [0..40])
   }]
+
+#-------------------------------------------------
 
 run_test = (T, d, i) ->
   orig = new Buffer d.data
@@ -40,10 +44,14 @@ run_test = (T, d, i) ->
   if T.is_ok()
     T.waypoint "test vector #{i}"
 
+#-------------------------------------------------
+
 exports.run_test_vectors = (T,cb) ->
   for v,i in test_vectors
     run_test T, v, i
   cb()
+
+#-------------------------------------------------
 
 exports.check_randomness = (T, cb) ->
   tv = test_vectors[0]
@@ -58,3 +66,6 @@ exports.check_randomness = (T, cb) ->
     else
       found[ct] = true
   cb()
+  
+#-------------------------------------------------
+
