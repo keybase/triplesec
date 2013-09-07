@@ -20,7 +20,10 @@ $(BUILD_STAMP): \
 	lib/twofish.js \
 	lib/ctr.js \
 	lib/salsa20.js \
-	lib/pbkdf2.js
+	lib/pbkdf2.js \
+	lib/enc.js \
+	lib/dec.js \
+	lib/rng.js
 	date > $@
 
 build: $(BUILD_STAMP)
