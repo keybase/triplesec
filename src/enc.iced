@@ -83,7 +83,7 @@ exports.Base = class Base
 #  @param {Function} rng Call it with the number of Rando bytes you need
 #
 #
-class Encryptor extends Base
+exports.Encryptor = class Encryptor extends Base
 
   #---------------
 
@@ -107,22 +107,27 @@ class Encryptor extends Base
     ivs
 
   #---------------
+
+  init : () ->
+    @keys = @pbkdf2()
+    @
  
+  #---------------
+
   # @param {Buffer} data the data to encrypt 
   # @returns {Buffer} a buffer with the encrypted data
   run : ( data ) ->
-    keys = @pbkdf2()
     ivs  = @pick_random_ivs()
     pt   = WordArray.from_buffer data
-    ct1  = @run_salsa20 { input : pt,  key : keys.salsa20, iv : ivs.salsa20, output_iv : true }
-    ct2  = @run_twofish { input : ct1, key : keys.twofish, iv : ivs.twofish }
-    ct3  = @run_aes     { input : ct2, key : keys.aes,     iv : ivs.aes     }
-    sig  = @sign        { input : ct3, key : keys.hmac                      }
+    ct1  = @run_salsa20 { input : pt,  key : @keys.salsa20, iv : ivs.salsa20, output_iv : true }
+    ct2  = @run_twofish { input : ct1, key : @keys.twofish, iv : ivs.twofish }
+    ct3  = @run_aes     { input : ct2, key : @keys.aes,     iv : ivs.aes     }
+    sig  = @sign        { input : ct3, key : @keys.hmac                      }
     (new WordArray(@version.header)).concat(sig).concat(ct3).to_buffer()
 
 #========================================================================
 
 exports.encrypt = encrypt = ({ key, salt, data, rng}) ->
-  (new Encryptor { key, salt, rng}).run(data)
+  (new Encryptor { key, salt, rng}).init().run(data)
 
 #========================================================================
