@@ -174,6 +174,12 @@ exports.WordArray = class WordArray
     else
       null
 
+  #--------------
+
+  scrub : () ->
+    for w,i in @words
+      @words[i] = 0
+
 #=======================================================================
 
 exports.X64Word = class X64Word

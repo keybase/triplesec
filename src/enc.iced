@@ -7,6 +7,7 @@ ctr           = require './ctr'
 hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
+util          = require './util'
 
 #========================================================================
 
@@ -45,6 +46,7 @@ exports.Base = class Base
       end = i + len
       keys[k] = new WordArray raw.words[i...end]
       i = end
+    @key.scrub()
     keys
 
   #---------------
@@ -72,6 +74,12 @@ exports.Base = class Base
   run_aes : ({input, key, iv}) ->
     block_cipher = new AES key
     iv.clone().concat ctr.encrypt { block_cipher, iv, input }
+
+  #---------------
+
+  scrub : () ->
+    @key.scrub()
+    k.scrub() for k in @keys
 
 #========================================================================
 
@@ -127,9 +135,33 @@ exports.Encryptor = class Encryptor extends Base
     sig  = @sign        { input : ct3, key : @keys.hmac                      }
     (new WordArray(@version.header)).concat(sig).concat(ct3).to_buffer()
 
+
 #========================================================================
 
+# 
+# encrypt data using the triple-sec 3x security engine, which is:
+#
+#      1. Encrypt PT with Salsa20
+#      2. Encrypt the result of 1 with 2Fish-256-CTR
+#      3. Encrypt the result of 2 with AES-256-CTR
+#      4. MAC with HMAC-SHA512.  
+#
+# @param {Buffer} key The secret key.  This data is scrubbed after use, so copy it
+#   if you want to keep track of it.
+# @param {Buffer} salt The salt used in key derivation; suggested: your email address
+# @param {Buffer} data The data to encrypt.  Again, this data is scrubber after
+#   use, so copy it if you need it later.
+# @param {Function} rng A function that takes as input n and output n truly
+#   random bytes.  You must give a real RNG here and not something fake.
+#   You can try require('./rng').rng for starters.
+#
+# @return {Buffer} The ciphertext.
+#
 exports.encrypt = encrypt = ({ key, salt, data, rng}) ->
-  (new Encryptor { key, salt, rng}).init().run(data)
+  enc = new Encryptor { key, salt, rng}
+  ret = enc.init().run(data)
+  util.scrub_buffer data
+  enc.scrub()
+  ret
 
 #========================================================================

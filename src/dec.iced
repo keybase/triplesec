@@ -53,20 +53,28 @@ class Decryptor extends Base
 
   #----------------------
 
+  init : () ->
+    @keys = @pbkdf2()
+    @
+
+  #----------------------
+
   run : ( data ) ->
-    keys = @pbkdf2()
     @ct = WordArray.from_buffer data
     @read_header()
-    @verify_sig keys.hmac
-    ct2 = @run_aes     { iv : @unshift_iv(AES.ivSize),     input : @ct, key : keys.aes }
-    ct1 = @run_twofish { iv : @unshift_iv(TwoFish.ivSize), input : @ct, key : keys.twofish }
-    pt  = @run_salsa20 { iv : @unshift_iv(Salsa20.ivSize), input : @ct, key : keys.salsa20, output_iv : false}
+    @verify_sig @keys.hmac
+    ct2 = @run_aes     { iv : @unshift_iv(AES.ivSize),     input : @ct, key : @keys.aes }
+    ct1 = @run_twofish { iv : @unshift_iv(TwoFish.ivSize), input : @ct, key : @keys.twofish }
+    pt  = @run_salsa20 { iv : @unshift_iv(Salsa20.ivSize), input : @ct, key : @keys.salsa20, output_iv : false}
     pt.to_buffer()
 
 #========================================================================
 
 exports.decrypt = decrypt = ( { key, salt, data } ) ->
-  (new Decryptor { key, salt}).run(data)
+  dec = (new Decryptor { key, salt})
+  pt = dec.init().run(data)
+  dec.scrub()
+  pt
 
 #========================================================================
 
