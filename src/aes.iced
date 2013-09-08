@@ -6,6 +6,7 @@
 ##
 
 {BlockCipher} = require './algbase'
+{scrub_vec} = require './util'
 
 #=======================================================================
 
@@ -147,6 +148,12 @@ exports.AES = class AES extends BlockCipher
 
     # Inv swap 2nd and 4th rows
     [ M[offset + 1], M[offset + 3] ] = [ M[offset + 3], M[offset + 1] ]
+
+  #-------------------------
+
+  scrub : () ->
+    scrub_vec @_keySchedule
+    scrub_vec @_invKeySchedule
 
   #-------------------------
   
