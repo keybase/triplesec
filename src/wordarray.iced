@@ -177,8 +177,7 @@ exports.WordArray = class WordArray
   #--------------
 
   scrub : () ->
-    for w,i in @words
-      @words[i] = 0
+    util.scrub_vec @words
 
 #=======================================================================
 

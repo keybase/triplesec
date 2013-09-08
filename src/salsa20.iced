@@ -10,6 +10,7 @@
 {Counter} = require './ctr'
 {fixup_uint32} = require './util'
 {StreamCipher} = require './algbase'
+util = require './util'
 
 #====================================================================
 
@@ -50,6 +51,13 @@ class Salsa20Core
 
   #--------------
 
+  scrub : () ->
+    @key.scrub()
+    @nonce.scrub()
+    util.scrub_vec @input
+
+  #--------------
+
   nonce_setup : () ->
     n0 = new WordArray @nonce.words[0...4]
     n1 = new WordArray @nonce.words[4...]
@@ -65,6 +73,7 @@ class Salsa20Core
     v = @_core input
     indexes = [ 0, 5, 10, 15, 6, 7, 8, 9]
     v = (fixup_uint32 v[i] for i in indexes)
+    util.scrub_vec input
     new WordArray v
 
   #--------------
@@ -219,11 +228,17 @@ exports.Cipher = class Cipher extends StreamCipher
     @salsa = new Salsa20WordStream key, iv
     @bsiw = @salsa.blockSize / 4 # block size in words
 
+  scrub : () ->
+    @salsa.scrub()
+
   get_pad : () -> @salsa.getWordArray()
 
 #====================================================================
 
 exports.encrypt = encrypt = ({key, iv, input}) ->
-  (new Cipher { key, iv }).encrypt input
+  cipher = new Cipher { key, iv }
+  ret = cipher.encrypt input
+  cipher.scrub()
+  ret
 
 #====================================================================
