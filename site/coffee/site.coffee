@@ -1,0 +1,2 @@
+$ ->
+  alert 'coffee is working'
