@@ -135,7 +135,6 @@ exports.Encryptor = class Encryptor extends Base
     sig  = @sign        { input : ct3, key : @keys.hmac                      }
     (new WordArray(@version.header)).concat(sig).concat(ct3).to_buffer()
 
-
 #========================================================================
 
 # 
@@ -151,7 +150,7 @@ exports.Encryptor = class Encryptor extends Base
 # @param {Buffer} salt The salt used in key derivation; suggested: your email address
 # @param {Buffer} data The data to encrypt.  Again, this data is scrubber after
 #   use, so copy it if you need it later.
-# @param {Function} rng A function that takes as input n and output n truly
+# @param {Function} rng A function that takes as input n and outputs n truly
 #   random bytes.  You must give a real RNG here and not something fake.
 #   You can try require('./rng').rng for starters.
 #
