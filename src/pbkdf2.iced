@@ -6,7 +6,7 @@
 
 exports.PBKDF2 = class PBKDF2
 
-  # @param {WordArray} key
+  # @param {WordArray} key Will be destroyed after it's used
   # @param {WordArray} salt
   # @param {number} c the number of iterations
   # @param {number} dkLen the needed length of output data
@@ -39,6 +39,7 @@ exports.PBKDF2 = class PBKDF2
     n = Math.ceil(len / bs)
     words = (@gen_T_i(i).words for i in [1..n])
     flat = [].concat words...
+    @key.scrub()
     new WordArray flat, len
 
 #=========================================================

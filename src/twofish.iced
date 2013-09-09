@@ -29,6 +29,7 @@
 #
 
 {BlockCipher} = require './algbase'
+{scrub_vec} = require './util'
 
 #==========================================================
 
@@ -340,6 +341,12 @@ exports.TwoFish = class TwoFish extends BlockCipher
         @gSBox[i * 2 + 1]     = @gMDS1[(G.P[G.P_11][(G.P[G.P_12][b1] & 0xff) ^ @getByte(k1, 1)] & 0xff) ^ @getByte(k0, 1)]
         @gSBox[i * 2 + 0x200] = @gMDS2[(G.P[G.P_21][(G.P[G.P_22][b2] & 0xff) ^ @getByte(k1, 2)] & 0xff) ^ @getByte(k0, 2)]
         @gSBox[i * 2 + 0x201] = @gMDS3[(G.P[G.P_31][(G.P[G.P_32][b3] & 0xff) ^ @getByte(k1, 3)] & 0xff) ^ @getByte(k0, 3)]
+
+  #----------------
+
+  scrub : () ->
+    scrub_vec @gSubKeys
+    scrub_vec @gSBox
 
   #----------------
 

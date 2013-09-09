@@ -8,6 +8,8 @@ exports.HMAC = class HMAC
   # Suggested key sizes....
   @keySize : 512/8
   keySize : HMAC.keySize
+  @outputSize : 512/8
+  outputSize : HMAC.outputSize
 
   #
   # Initializes a newly created HMAC.
@@ -85,7 +87,7 @@ exports.HMAC = class HMAC
 
 #=======================================================================
 
-exports.sign = ({key, input}) -> (new HMAC key).finalize(input)
+exports.sign = ({key, input}) -> (new HMAC key).finalize(input.clamp())
 
 #=======================================================================
 

@@ -183,6 +183,7 @@ exports.StreamCipher = class StreamCipher
     pad = @get_pad()
     n_words = Math.min(word_array.words.length - dst_offset, @bsiw)
     word_array.xor pad, { dst_offset, n_words }
+    pad.scrub()
     @bsiw
 
   encrypt : (word_array) ->

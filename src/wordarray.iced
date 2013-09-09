@@ -62,6 +62,7 @@ exports.WordArray = class WordArray
   clamp : ->
     @words[@sigBytes >>> 2] &= 0xffffffff << (32 - (@sigBytes % 4) * 8);
     @words.length = Math.ceil(@sigBytes / 4)
+    @
 
   #
   # Creates a copy of this word array.
@@ -106,6 +107,7 @@ exports.WordArray = class WordArray
         ch = b.readUInt8 p
         last |= (ch << (24 - (p%4) * 8))
         p++
+      last = util.fixup_uint32 last
       words.push last
     new WordArray words, b.length
 
@@ -123,6 +125,7 @@ exports.WordArray = class WordArray
         ch = b.readUInt8 p
         last |= (ch << ((p%4) * 8))
         p++
+      last = util.fixup_uint32 last
       words.push last
     new WordArray words, b.length
 
@@ -133,6 +136,18 @@ exports.WordArray = class WordArray
   @from_hex : (s) -> WordArray.from_buffer new Buffer(s, 'hex')
   @from_hex_le = (s) -> WordArray.from_buffer_le new Buffer(s, 'hex')
   
+  #--------------
+
+  # Important! Don't short-circuit since that enables a
+  # forging attack....
+  equal : (wa) ->
+    ret = true
+    if wa.sigBytes isnt @sigBytes then ret = false
+    else
+      for w,i in @words
+        ret = false unless util.fixup_uint32(w) is util.fixup_uint32(wa.words[i])
+    ret
+
   #--------------
 
   xor : (wa2, { dst_offset, src_offset, n_words } ) ->
@@ -146,7 +161,23 @@ exports.WordArray = class WordArray
       throw new Error "source range exceeded"
 
     for i in [0...n_words]
-      @words[dst_offset+i] ^= wa2.words[src_offset+i]
+      tmp = @words[dst_offset + i] ^ wa2.words[src_offset + i]
+      @words[dst_offset+i] = util.fixup_uint32 tmp
+
+  #--------------
+
+  unshift : (n_words) ->
+    if @words.length >= n_words
+      ret = @words.splice 0, n_words
+      @sigBytes -= n_words*4
+      new WordArray ret
+    else
+      null
+
+  #--------------
+
+  scrub : () ->
+    util.scrub_vec @words
 
 #=======================================================================
 

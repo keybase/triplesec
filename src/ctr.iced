@@ -88,6 +88,9 @@ exports.Cipher = class Cipher extends StreamCipher
       throw new Error "IV is wrong length (#{@iv.sigBytes})"
     @ctr = new Counter { value : @iv }   
 
+  scrub : () ->
+    @block_cipher.scrub()
+
   get_pad : () ->
     pad = @ctr.copy()
     @ctr.inc()
@@ -97,6 +100,9 @@ exports.Cipher = class Cipher extends StreamCipher
 #---------------
 
 exports.encrypt = encrypt = ({block_cipher, iv, input}) ->
-  (new Cipher { block_cipher, iv}).encrypt input
+  cipher = new Cipher { block_cipher, iv}
+  ret = cipher.encrypt input
+  cipher.scrub()
+  ret
 
 #=========================================

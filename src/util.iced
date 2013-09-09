@@ -8,3 +8,11 @@ exports.fixup_uint32 = (x) ->
     else x_pos
   else x
   ret
+
+exports.scrub_buffer = (b) ->
+  for i in [0...b.length]
+    b.writeUInt8 0, i
+
+exports.scrub_vec = (v) ->
+  for i in [0...v.length]
+    v[i] = 0

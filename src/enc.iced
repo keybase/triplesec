@@ -7,34 +7,23 @@ ctr           = require './ctr'
 hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
-crypto        = require 'crypto'
+util          = require './util'
 
 #========================================================================
 
-V1 = 
-  header :
-    [ 0x1c94d7de, 1 ]
-  pbkdf2_iters : 1024
+exports.V = V = 
+  "1" : 
+    header :
+      [ 0x1c94d7de, 1 ]
+    pbkdf2_iters : 2048
 
 #========================================================================
 
-#
-# Encrypt the given data with the given key
-#
-#  @param {Buffer} key  A buffer with the keystream data in it
-#  @param {Buffer} salt Salt for key derivation, should be the user's email address
-#  @param {Function} rng Call it with the number of Rando bytes you need
-#
-#
-class Encryptor 
-
-  #---------------
-
-  version : V1
+exports.Base = class Base 
 
   #---------------
   
-  constructor : ( { key, salt, @rng } ) ->
+  constructor : ( { key, salt }) ->
     @key = WordArray.from_buffer key
     @salt = WordArray.from_buffer salt
 
@@ -57,24 +46,22 @@ class Encryptor
       end = i + len
       keys[k] = new WordArray raw.words[i...end]
       i = end
+    @key.scrub()
     keys
 
   #---------------
 
-  pick_random_ivs : () ->
-    iv_lens =
-      aes : AES.ivSize
-      twofish : TwoFish.ivSize
-      salsa20 : salsa20.Salsa20.ivSize
-    ivs = {}
-    for k,v of iv_lens
-      ivs[k] = WordArray.from_buffer @rng(v)
-    ivs
+  sign : ({input, key}) ->
+    input = (new WordArray @version.header ).concat input
+    out = hmac.sign { key, input }
+    out
 
   #---------------
 
-  run_salsa20 : ({ input, key, iv }) ->
-    iv.clone().concat salsa20.encrypt { input, key, iv }
+  run_salsa20 : ({ input, key, iv, output_iv }) ->
+    ct = salsa20.encrypt { input, key, iv}
+    if output_iv then iv.clone().concat ct
+    else ct
 
   #---------------
 
@@ -90,35 +77,90 @@ class Encryptor
 
   #---------------
 
-  sign : ({input, key}) ->
-    input = (new WordArray @version.header ).concat input
-    hmac.sign { key, input }
+  scrub : () ->
+    @key.scrub()
+    k.scrub() for k in @keys
+
+#========================================================================
+
+#
+# Encrypt the given data with the given key
+#
+#  @param {Buffer} key  A buffer with the keystream data in it
+#  @param {Buffer} salt Salt for key derivation, should be the user's email address
+#  @param {Function} rng Call it with the number of Rando bytes you need
+#
+#
+exports.Encryptor = class Encryptor extends Base
 
   #---------------
+
+  version : V[1]
+
+  #---------------
+  
+  constructor : ( { key, salt, @rng } ) ->
+    super { key, salt }
+
+  #---------------
+
+  pick_random_ivs : () ->
+    iv_lens =
+      aes : AES.ivSize
+      twofish : TwoFish.ivSize
+      salsa20 : salsa20.Salsa20.ivSize
+    ivs = {}
+    for k,v of iv_lens
+      ivs[k] = WordArray.from_buffer @rng(v)
+    ivs
+
+  #---------------
+
+  # Initialize the keys.  You might want to save this work, since it's
+  # pretty expensive.
+  init : () ->
+    @keys = @pbkdf2()
+    @
  
+  #---------------
+
   # @param {Buffer} data the data to encrypt 
   # @returns {Buffer} a buffer with the encrypted data
   run : ( data ) ->
-    keys = @pbkdf2()
     ivs  = @pick_random_ivs()
     pt   = WordArray.from_buffer data
-    ct1  = @run_salsa20 { input : pt,  key : keys.salsa20, iv : ivs.salsa20 }
-    ct2  = @run_twofish { input : ct1, key : keys.twofish, iv : ivs.twofish }
-    ct3  = @run_aes     { input : ct2, key : keys.aes,     iv : ivs.aes     }
-    sig  = @sign        { input : ct3, key : keys.hmac                      }
+    ct1  = @run_salsa20 { input : pt,  key : @keys.salsa20, iv : ivs.salsa20, output_iv : true }
+    ct2  = @run_twofish { input : ct1, key : @keys.twofish, iv : ivs.twofish }
+    ct3  = @run_aes     { input : ct2, key : @keys.aes,     iv : ivs.aes     }
+    sig  = @sign        { input : ct3, key : @keys.hmac                      }
     (new WordArray(@version.header)).concat(sig).concat(ct3).to_buffer()
 
 #========================================================================
 
+# 
+# encrypt data using the triple-sec 3x security engine, which is:
+#
+#      1. Encrypt PT with Salsa20
+#      2. Encrypt the result of 1 with 2Fish-256-CTR
+#      3. Encrypt the result of 2 with AES-256-CTR
+#      4. MAC with HMAC-SHA512.  
+#
+# @param {Buffer} key The secret key.  This data is scrubbed after use, so copy it
+#   if you want to keep track of it.
+# @param {Buffer} salt The salt used in key derivation; suggested: your email address
+# @param {Buffer} data The data to encrypt.  Again, this data is scrubber after
+#   use, so copy it if you need it later.
+# @param {Function} rng A function that takes as input n and outputs n truly
+#   random bytes.  You must give a real RNG here and not something fake.
+#   You can try require('./rng').rng for starters.
+#
+# @return {Buffer} The ciphertext.
+#
 exports.encrypt = encrypt = ({ key, salt, data, rng}) ->
-  (new Encryptor { key, salt, rng}).run(data)
+  enc = new Encryptor { key, salt, rng}
+  ret = enc.init().run(data)
+  util.scrub_buffer data
+  enc.scrub()
+  ret
 
 #========================================================================
-
-arg = 
-  key : new Buffer 'this be the password'
-  salt : new Buffer 'max@okcupid.com'
-  data : new Buffer 'this be the secret message!'
-  rng : crypto.rng
-
-console.log encrypt(arg).toString 'hex'
