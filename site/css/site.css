@@ -1,5 +1,4 @@
 a {
-  color:#00f;
   text-decoration: underline;
 }
 .container {
@@ -45,5 +44,9 @@ ul {
   color:#666;
 }
 .progress-container {
-  
+
+}
+h3 {
+  margin-top:30px;
+  margin-bottom:20px;
 }
