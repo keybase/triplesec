@@ -43,10 +43,40 @@ ul {
 .demo h5 {
   color:#666;
 }
-.progress-container {
-
-}
 h3 {
   margin-top:30px;
   margin-bottom:20px;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+.subsection {
+  margin-top:80px;
+}
+
+pre, .output-code, #progress-summary {
+  font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+}
+#progress-summary {
+  font-size:0.8em;
+  margin:15px;
+  color:#333;
+}
+pre, .output-code, #progress-summary, code {
+  color: #906;
+}
+code {
+  background-color: #fce;
+}
+pre, .output-code {
+  margin:20px 0 20px 0;
+  background-color:#f5f5f5;
+  border: 1px solid #e3e3e3;
+  padding:50px;
+  white-space: pre-wrap;
+  display: block;
+  font-size: 13px;
+  line-height: 1.428571429;
+}
+.output-code {
+  border-width: 0;
+  background-color:#e8e8e8;
 }
