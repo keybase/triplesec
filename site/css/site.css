@@ -1,0 +1,52 @@
+a {
+  text-decoration: underline;
+}
+.container {
+  margin-top:100px;
+  line-height: 1.5em;
+}
+.container p {
+  margin-bottom:20px;
+}
+ul {
+  margin-bottom:30px;
+}
+.intro {
+  margin-top:30px;
+  margin-bottom:30px;
+}
+.brand {
+  font-size:2.5em;
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-weight:700;
+  color:#333;
+  letter-spacing: 0.1em;
+  border-bottom:1px solid #ddd;
+  margin-top:50px;
+  margin-bottom:20px;
+  padding-bottom:30px;
+}
+.logo-container {
+  float:left;
+  width:164px;
+  margin:-50px 20px 10px -184px;
+}
+.aes {
+  color:#0cf;
+}
+.salsa20 {
+  color:#0c0;
+}
+.twofish {
+  color:#f0f;
+}
+.demo h5 {
+  color:#666;
+}
+.progress-container {
+
+}
+h3 {
+  margin-top:30px;
+  margin-bottom:20px;
+}

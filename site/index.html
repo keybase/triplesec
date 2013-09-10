@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TripleSec - Symmetric Encryption in the browser</title>
+    <meta charset="utf-8">
+    <link  href="css/bootstrap.min.css" rel="stylesheet">
+    <link  href="css/site.css" rel="stylesheet">
+    <link  href='http://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' rel='stylesheet' type='text/css'>
+    <script type="text/javascript"   src="js/jquery.js"></script>
+    <script type="text/javascript"   src="js/bootstrap.min.js"></script>
+    <script type="text/javascript"   src="js/iced-coffee.js"></script>
+    <script type="text/coffeescript">
+
+$ ->
+
+    </script>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="row outer-grid">
+        <div class="col-xs-3 col-md-2">
+          <img src="img/logo.png" class="img-responsive">
+        </div><!-- /.outer-grid's 1st column -->
+        <div class="col-xs-9 col-md-10">
+
+          <div class="brand">
+            TripleSec
+          </div>
+
+          <div class="row">
+            
+            <div class="col-sm-8 intro">
+              <p>
+                <b>Governments have a lot of power</b>. Consider:
+              </p>
+              <ul>
+                <li>the USA may compel websites &amp; businesses to "cooperate"</li>
+                <li>the NSA may have already broken a popular cipher</li>
+              </ul>
+              <p>
+                If you're a programmer and wish to store user data that only the user can read -- to the exclusion of both you and the government -- you must 
+                encrypt it in the browser or client app with extreme presumption. With privacy in mind, 
+                <b>TripleSec</b> is a simple, open-source symmetric encryption library in JavaScript. It hides
+                data using
+                <b class="aes">AES</b>, <b class="salsa20">Salsa 20</b>, and <b class="twofish">Twofish</b>,
+                so that a failure in one will expose nothing. The 3 encryptions are combined in a
+                simple technique outlined by Bruce Schneier <a href="foo">here</a>.
+              </p>
+
+              <p>
+                In other words, <b>TripleSec</b> should work, unless <i>all 3</i> of these encryptions have fallen.
+              </p>              
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+
+          </div>
+          <!-- /.row -->
+
+
+          <div class="demo">
+
+            <h3>A Quick Demo</h3>
+
+            <div class="well">
+
+              <form class="form-horizontal" role="form">
+                <div class="form-group">
+                  <div class="col-sm-7">
+                    <textarea class="form-control" rows="10" placeholder="your secret message here"></textarea>
+                  </div>
+                  <div class="col-sm-5">
+                    <div class="row">
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="password">
+                      </div>
+                      <div class="col-sm-4">
+                        <button class="btn">Encrypt</button>
+                      </div>
+                    </div><!-- /.row -->
+                    <div class="progress-container">
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+
+          </div>
+          <!-- /.demo -->
+
+          <div class="how-to-use">
+            <h3>How to Use It</h3>          
+          </div>
+
+          <div class="questions">
+            <h3>Anticipated Questions</h3>          
+          </div>
+
+          <div class="whos-using">
+            <h3>Who's Using it?</h3>
+            <p>
+              We are (<a href="http://www.twitter.com/maxtaco">Max Krohn</a> &amp; <a href="http://www.chriscoyne.com">Chris Coyne</a>). We're developing a site
+              which involves heavy client-side encryption, and TripleSec will be used to encrypt keys.
+            </p>
+            <p>
+              If you use TripleSec, please contact us, and we'll maintain a list here. Here are some ideas:
+            </p>
+            <ul>
+              <li>password manager</li>
+              <li>Private key store</li>
+              <li>Bitcoin wallet</li>
+              <li>Diary/journal</li>
+            </ul>
+
+          </div>
+
+
+        </div><!-- /.outer-grid's 2nd column -->
+      </div><!-- /.outer-grid -->
+
+    </div><!-- /.container -->
+
+  </body>
+</html>
