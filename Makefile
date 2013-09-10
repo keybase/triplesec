@@ -31,7 +31,7 @@ $(BUILD_STAMP): \
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)
-	$(BROWSERIFY) -t icsify $< > $@
+	$(BROWSERIFY) -s triplesec $< > $@
 
 build: $(BUILD_STAMP) $(BROWSER)
 

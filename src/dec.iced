@@ -18,7 +18,7 @@ hmac          = require './hmac'
 #  @param {Buffer} key  A buffer with the keystream data in it
 #  @param {Buffer} salt Salt for key derivation, should be the user's email address
 #
-class Decryptor extends Base
+exports.Decryptor = class Decryptor extends Base
 
   #----------------------
 
