@@ -1,13 +1,25 @@
 
 hmac = require './hmac'
 sha512 = require './sha512'
+{WordArray} = require './wordarray'
 
 #====================================================================
 
+#
 # Implements an HMAC_DRBG (NIST SP 800-90A) based on HMAC_SHA512
 # Supports security strengths up to 256 bits.
 # Parameters are based on recommendations provided by Appendix D of NIST SP 800-90A.
-exports.HMAC_DRBG = class HMAC_DRBG
+# Implementation ported from: https://github.com/fpgaminer/python-hmac-drbg
+#
+exports.DRBG = class DRBG
+
+  #-----------------
+
+  constructor : (entropy, personalization_string) ->
+    # Only run at the most secure strength
+    @security_strength = 256
+    entropy = @check_entropy entropy
+    @_instantiate entropy, personalization_string
 
   #-----------------
 
@@ -20,14 +32,6 @@ exports.HMAC_DRBG = class HMAC_DRBG
       entropy.scrub()
       out
     else entropy
-
-  #-----------------
-
-  constructor : (entropy, personalization_string) ->
-    # Only run at the most secure strength
-    @security_strength = 256
-    entropy = @check_entropy entropy
-    @_instantiate entropy, personalization_string
 
   #-----------------
 
@@ -72,9 +76,9 @@ exports.HMAC_DRBG = class HMAC_DRBG
     throw new Error "Need a reseed!" if @reseed_counter >= 10000
 
     tmp = []
-    while tmp.length is 0 or (tmp.length * tmp.length[0] * 4) < num_bytes:
+    while (tmp.length is 0) or (tmp.length * tmp[0].length * 4) < num_bytes
       @V = @_hmac @K, @V
-      temp.push @V.words
+      tmp.push @V.words
     @_update()
     @reseed_counter += 1
     new WordArray([].concat tmp...)
