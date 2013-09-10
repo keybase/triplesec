@@ -43,12 +43,28 @@ exports.DRBG = class DRBG
   _update : (provided_data) ->
     V = new WordArray [0], 1
     V = V.concat provided_data if provided_data?
-    @K = @_hmac @K, @V.concat V
+    V_in = @V.clone().concat(V)
+    @K = @_hmac @K, V_in
+    V_in.scrub()
+    V.scrub()
+    console.log @K.to_hex()
+    console.log @V.to_hex()
     @V = @_hmac @K, @V
+    console.log "in update 2"
+    console.log @V.to_hex()
 
     if provided_data?
-      @K = @_hmac @K, @V.concat(new WordArray [1], 1).concat(provided_data)
+      V_in = @V.clone().concat(new WordArray [(1 << 24)], 1).concat(provided_data)
+      @K = @_hmac @K, V_in
+      console.log "intermediate K!"
+      console.log V_in.to_hex()
+      console.log @K.to_hex()
+      V_in.scrub()
       @V = @_hmac @K, @V
+      console.log "update is done!"
+      console.log provided_data.to_hex()
+      console.log @K.to_hex()
+      console.log @V.to_hex()
 
     provided_data?.scrub()
 
@@ -59,7 +75,12 @@ exports.DRBG = class DRBG
     n = 32
     @K = WordArray.from_buffer new Buffer (0 for i in [0...n])
     @V = WordArray.from_buffer new Buffer (1 for i in [0...n])
+    console.log @K.to_hex()
+    console.log @V.to_hex()
+    console.log seed_material.to_hex()
     @_update seed_material
+    console.log @K.to_hex()
+    console.log @V.to_hex()
     entropy.scrub()
     @reseed_counter = 1
   

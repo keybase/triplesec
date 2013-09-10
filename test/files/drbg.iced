@@ -14,5 +14,5 @@ test_case = (T, which, i, test) ->
   T.equal out, returned_bits, "test vector #{which}/#{i}"
 
 exports.first_case = (T,cb) ->
-  test_case T, 'no_reseed', 0, data.no_reseed[0]
+  test_case T, 'no_reseed', 0, data.no_reseed[1]
   cb()
