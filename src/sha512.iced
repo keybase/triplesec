@@ -262,3 +262,12 @@ exports.SHA512 = class SHA512 extends Hasher
     @copy_to out
     out
 
+#=======================================================================
+
+exports.transform = (x) ->
+  out = (new SHA512).finalize x
+  x.scrub()
+  out
+  
+#=======================================================================
+

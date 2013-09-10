@@ -27,7 +27,8 @@ $(BUILD_STAMP): \
 	lib/pbkdf2.js \
 	lib/enc.js \
 	lib/dec.js \
-	lib/rng.js
+	lib/rng.js \
+	lib/drbg.js
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)
@@ -53,6 +54,7 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/salsa20_key128.js \
 		test/data/salsa20_key256.js \
 		test/data/pbkdf2.js \
+		test/data/drbg_hmac_no_reseed.js \
 		test/browser/test.js 
 	date > $@
 
