@@ -5,6 +5,10 @@ BUILD_STAMP=build-stamp
 TEST_STAMP=test-stamp
 WD=`pwd`
 
+BROWSER=browser/triplesec.js
+
+default: build
+all: build
 
 lib/%.js: src/%.iced
 	$(ICED) -I none -c -o lib $<
@@ -26,7 +30,10 @@ $(BUILD_STAMP): \
 	lib/rng.js
 	date > $@
 
-build: $(BUILD_STAMP)
+$(BROWSER): lib/main.js $(BUILD_STAMP)
+	$(BROWSERIFY) -t icsify $< > $@
+
+build: $(BUILD_STAMP) $(BROWSER)
 
 test-server: $(TEST_STAMP) $(BUILD_STAMP)
 	$(ICED) test/run.iced
@@ -58,8 +65,6 @@ test: test-server test-browser-buffer test-browser
 clean:
 	rm -f lib/*.js $(BUILD_STAMP) $(TEST_STAMP)
 
-default: build
-all: build
 
 setup:
 	npm install -d
