@@ -53,6 +53,7 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/salsa20_key128.js \
 		test/data/salsa20_key256.js \
 		test/data/pbkdf2.js \
+		test/data/drbg_hmac.js \
 		test/browser/test.js 
 	date > $@
 
