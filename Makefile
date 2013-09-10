@@ -62,7 +62,7 @@ test/data/%.js: test/gen/gen_%.iced
 	@mkdir -p test/data
 	$(ICED) $< > $@
 
-test: test-server test-browser-buffer test-browser
+test: test-server test-browser
 
 clean:
 	rm -f lib/*.js $(BUILD_STAMP) $(TEST_STAMP)

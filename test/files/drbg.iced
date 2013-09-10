@@ -10,9 +10,11 @@ test_case = (T, which, i, test) ->
   personalization_string = WordArray.from_hex test.PersonalizationString
   returned_bits = test.ReturnedBits
   g = new DRBG entropy.concat(nonce), personalization_string
-  out = g.generate(returned_bits.length/2).to_hex()
+  for j in [0...2]
+    out = g.generate(returned_bits.length/2).to_hex()
   T.equal out, returned_bits, "test vector #{which}/#{i}"
 
-exports.first_case = (T,cb) ->
-  test_case T, 'no_reseed', 0, data.no_reseed[1]
+exports.no_reseed = (T,cb) ->
+  for v,i in data.no_reseed
+    test_case T, 'no_reseed', i, v
   cb()

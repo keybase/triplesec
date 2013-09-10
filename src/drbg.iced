@@ -64,8 +64,6 @@ exports.DRBG = class DRBG
     @K = WordArray.from_buffer new Buffer (0 for i in [0...n])
     @V = WordArray.from_buffer new Buffer (1 for i in [0...n])
     @_update seed_material
-    console.log @K.to_hex()
-    console.log @V.to_hex()
     entropy.scrub()
     @reseed_counter = 1
   
@@ -85,9 +83,6 @@ exports.DRBG = class DRBG
     while (tmp.length is 0) or (tmp.length * tmp[0].length * 4) < num_bytes
       @V = @_hmac @K, @V
       tmp.push @V.words
-    console.log "After generate ->"
-    console.log @V.to_hex()
-    console.log @K.to_hex()
     @_update()
     @reseed_counter += 1
     new WordArray([].concat tmp...)
