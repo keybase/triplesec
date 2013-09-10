@@ -6,13 +6,69 @@
     <link  href="css/bootstrap.min.css" rel="stylesheet">
     <link  href="css/site.css" rel="stylesheet">
     <link  href='http://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' rel='stylesheet' type='text/css'>
+    <script type="text/javascript"   src="js/triplesec.js"></script>
     <script type="text/javascript"   src="js/jquery.js"></script>
     <script type="text/javascript"   src="js/bootstrap.min.js"></script>
     <script type="text/javascript"   src="js/iced-coffee.js"></script>
+    
     <script type="text/coffeescript">
 
-$ ->
+      $ ->
+        textarea_auto = (ta) ->
+          ta.style.overflow = 'hidden'
+          ta.style.height   = 0
+          ta.style.height   = "#{25 + Math.max ta.scrollHeight, 50}px"
 
+        input_change = ->
+          textarea_auto $('#demo-input-data')[0]
+
+        reset_progress = ->
+          $("#progress-summary").html ''
+
+        add_progress = (txt) ->
+          h = $("#progress-summary").html()
+          $("#progress-summary").html h + txt
+
+        $('#demo-input-data').on 'change',  -> input_change()
+        $('#demo-input-data').on 'keydown', -> input_change()
+
+
+        $('.btn-encrypt').on 'click', ->
+          data   = new triplesec.Buffer $('#demo-input-data').val()
+          key    = new triplesec.Buffer $('#demo-input-key').val()
+          salt   = new triplesec.Buffer   'soon to be auto-generated in triplesec'
+          reset_progress()
+          add_progress 'generating key...'
+          add_progress 'doing something...'
+          out    = triplesec.encrypt {
+            data: data
+            salt: salt
+            key:  key
+            rng:  triplesec.rng
+          }
+          hex = out.toString 'hex'
+          add_progress 'done'
+          $("#demo-input-data").val hex
+          textarea_auto $("#demo-input-data")[0]
+
+        $('.btn-decrypt').on 'click', ->
+          data   = new triplesec.Buffer $('#demo-input-data').val()
+          key    = new triplesec.Buffer $('#demo-input-key').val()
+          salt   = new triplesec.Buffer   'soon to be auto-generated in triplesec'
+          reset_progress()
+          add_progress 'decrypting step 1...'
+          add_progress 'decrypting step 2...'
+          out    = triplesec.decrypt {
+            data: data
+            salt: salt
+            key:  key
+          }
+          txt = out.toString()
+          add_progress 'done'
+          $("#demo-input-data").val txt
+          textarea_auto $("#demo-input-data")[0]
+
+        textarea_auto $("#demo-input-data")[0]
     </script>
   </head>
   <body>
@@ -39,13 +95,13 @@ $ ->
                 <li>the NSA may have already broken a popular cipher</li>
               </ul>
               <p>
-                If you're a programmer and wish to store user data that only the user can read -- to the exclusion of both you and the government -- you must 
-                encrypt it in the browser or client app with extreme presumption. With privacy in mind, 
-                <b>TripleSec</b> is a simple, open-source symmetric encryption library in JavaScript. It hides
-                data using
-                <b class="aes">AES</b>, <b class="salsa20">Salsa 20</b>, and <b class="twofish">Twofish</b>,
+                If you're a programmer and wish to store user data that only the user can read -- excluding both you and the government -- you must 
+                encrypt in the browser or client app with extreme presumption. Consider 
+                <b>TripleSec</b>, a simple, open-source symmetric encryption library in JavaScript. It ensures privacy
+                 using
+                <b class="salsa20">Salsa 20</b>, <b class="aes">AES</b>, and <b class="twofish">Twofish</b>,
                 so that a failure in one will expose nothing. The 3 encryptions are combined in a
-                simple technique outlined by Bruce Schneier <a href="foo">here</a>.
+                simple technique outlined by Bruce Schneier in <i>Applied Cryptography</i>.
               </p>
 
               <p>
@@ -62,61 +118,89 @@ $ ->
 
           <div class="demo">
 
-            <h3>A Quick Demo</h3>
+            <h3>Demo</h3>
 
             <div class="well">
 
               <form class="form-horizontal" role="form">
                 <div class="form-group">
                   <div class="col-sm-7">
-                    <textarea class="form-control" rows="10" placeholder="your secret message here"></textarea>
+                    <textarea class="form-control" rows="5" placeholder="input" id='demo-input-data'></textarea>
                   </div>
                   <div class="col-sm-5">
                     <div class="row">
                       <div class="col-sm-8">
-                        <input type="text" class="form-control" placeholder="password">
+                        <input type="text" class="form-control" placeholder="key (password)" id='demo-input-key'>
+                        <div id="progress-summary">
+                        </div>
                       </div>
                       <div class="col-sm-4">
-                        <button class="btn">Encrypt</button>
+                        <div class="btn-group-vertical">
+                          <button class="btn btn-encrypt btn-default" type="button">Encrypt</button>
+                          <button class="btn btn-decrypt btn-default" type="button">Decrypt</button>
+                        </div>
                       </div>
                     </div><!-- /.row -->
-                    <div class="progress-container">
-                    </div>
                   </div>
                 </div>
               </form>
+
+              <div class="encryption-output" style="display:none;">
+                <h5>Output</h5>
+                <textarea class="output-code form-control" id="demo-output-data"></textarea>
+              </div>
+
 
             </div>
 
           </div>
           <!-- /.demo -->
 
-          <div class="how-to-use">
-            <h3>How to Use It</h3>          
+          <div class="how-to-use subsection">
+            <h3>How to Use It</h3>
+            In the browser, just include <code>triplesec.js</code> and call <code>triplesec.encrypt</code>
+
+            <pre>
+x = ->
+  document.write 'foo'</pre>
+
           </div>
 
-          <div class="questions">
-            <h3>Anticipated Questions</h3>          
+          <div class="questions subsection">
+            <h3>Anticipated Questions</h3>
+            <div class="question">
+              <h5>What random number generator does it use?</h5>
+              <h5>How are passwords salted?</h5>
+              <h5>Are slow encryptions CPU-blocking?</h5>
+              <h5>Can I encrypt files with it, in the browser?</h5>
+            </div>
           </div>
 
-          <div class="whos-using">
+          <div class="whos-using subsection">
             <h3>Who's Using it?</h3>
             <p>
-              We are (<a href="http://www.twitter.com/maxtaco">Max Krohn</a> &amp; <a href="http://www.chriscoyne.com">Chris Coyne</a>). We're developing a site
-              which involves heavy client-side encryption, and TripleSec will be used to encrypt keys.
+              We are! (<a href="http://www.twitter.com/maxtaco">Max Krohn</a> &amp; <a href="http://www.chriscoyne.com">Chris Coyne</a>). We're working on an unrelated site
+              now, and TripleSec will be used to encrypt our users' keys.
             </p>
             <p>
-              If you use TripleSec, please contact us, and we'll maintain a list here. Here are some ideas:
+              If you use TripleSec, please contact us, and we'll maintain a list here. Here are some ideas if you're feeling ambitious.
             </p>
             <ul>
+              <li>a browser extension for highlighting and encrypting/decrypting text on any page</li>
+              <li>diary/journal</li>
               <li>password manager</li>
-              <li>Private key store</li>
               <li>Bitcoin wallet</li>
-              <li>Diary/journal</li>
             </ul>
-
           </div>
 
+          <div class="whos-using subsection">
+            <h3>Can I help?</h3>
+            <p>
+              Please! We encourage <a href="foo">review of the algorithm</a>.  We'd also love to have
+              an official browser extension. In our ideal world, you could highlight some text in your browser and
+              TripleSec encrypt/decrypt it on any page just by entering a password.
+            </p>
+          </div>
 
         </div><!-- /.outer-grid's 2nd column -->
       </div><!-- /.outer-grid -->
