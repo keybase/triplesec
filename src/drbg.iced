@@ -1,76 +1,66 @@
 
-{HMAC} = require './hmac'
+hmac = require './hmac'
 
+#====================================================================
 
 # Implements an HMAC_DRBG (NIST SP 800-90A) based on HMAC_SHA512
 # Supports security strengths up to 256 bits.
 # Parameters are based on recommendations provided by Appendix D of NIST SP 800-90A.
 exports.HMAC_DRBG = class HMAC_DRBG
 
-	constructor : (entropy, personalization_string) ->
-		# Only run at the most secure strength
-		@security_strength = 256
+  check_entropy : (entropy) ->
+    if (entropy.sigBytes * 8 * 2) < (3 * @security_strength)
+      throw new Error "entropy must be at least %f bits." % (1.5 * @security_strength)
+    else if entropy.SigBytes * 8 > 1000
+      new WordArray entropy.words[0...31]
 
-		if (entropy.length * 8 * 2) < (3 * @security_strength):
-			throw new Error "entropy must be at least %f bits." % (1.5 * @security_strength)
+  constructor : (entropy, personalization_string) ->
+    # Only run at the most secure strength
+    @security_strength = 256
+    entropy = @check_entropy entropy
+    @_instantiate entropy, personalization_string
 
-		if entropy.length * 8 > 1000:
-			throw new Error "entropy cannot exceed 1000 bits"
+  # Just for convenience and succinctness
+  _hmac : (key, input) -> hmac.sign { key, input }
 
-		@_instantiate entropy, personalization_string
-	
+  _update : (provided_data) ->
+    V = new WordArray [0], 1
+    V = V.concat provided_data if provided_data?
+    @K = @_hmac @K, @V.concat V
+    @V = @_hmac @K, @V
 
-	# Just for convenience and succinctness
-	def _hmac (self, key, data):
-		return hmac.new (key, data, hashlib.sha256).digest ()
-	
+    if provided_data?
+      @K = @_hmac @K, @V.concat(new WordArray [1], 1).concat(provided_data)
+      @V = @_hmac @K, @V
 
-	def _update (self, provided_data=None):
-		self.K = self._hmac (self.K, self.V + "\x00" + ("" if provided_data is None else provided_data))
-		self.V = self._hmac (self.K, self.V)
+  _instantiate : (entropy, personalization_string) ->
+    seed_material = entropy.concat personalization_string
+    n = 32
+    @K = WordArray.from_buffer new Buffer (0 for i in [0...n])
+    @V = WordArray.from_buffer new Buffer (1 for i in [0...n])
+    @_update seed_material
+    @reseed_counter = 1
+  
+  reseed : (entropy) ->
+    entropy = @check_entropy entropy
+    @_update entropy
+    @reseed_counter = 1
+  
 
-		if provided_data is not None:
-			self.K = self._hmac (self.K, self.V + "\x01" + provided_data)
-			self.V = self._hmac (self.K, self.V)
-	
+  generate : (num_bytes) ->
+    if (num_bytes * 8) > 7500
+      throw new Error "generate cannot generate more than 7500 bits in a single call."
 
-	_instantiate : (self, entropy, personalization_string) ->
-		seed_material = entropy + personalization_string
-		n = 32
-		@K = WordArray.from_buffer new Buffer (0 for i in [0...n])
-		@V = WordArray.from_buffer new Buffer (1 for i in [0...n])
-		@_update seed_material
-		@reseed_counter = 1
-	
-	
-	def reseed (self, entropy):
-		if (len (entropy) * 8) < self.security_strength:
-			raise RuntimeError, "entropy must be at least %f bits." % (self.security_strength)
+    if @reseed_counter >= 10000
+      throw new Error "Need a reseed!"
 
-		if len (entropy) * 8 > 1000:
-			raise RuntimeError, "entropy cannot exceed 1000 bits."
+    temp = []
 
-		self._update (entropy)
-		self.reseed_counter = 1
-	
+    while temp.length*4 < num_bytes:
+      @V = @_hmac @K, @V
+      temp.push @V.words
 
-	def generate (self, num_bytes, requested_security_strength=256):
-		if (num_bytes * 8) > 7500:
-			raise RuntimeError, "generate cannot generate more than 7500 bits in a single call."
+    @_update()
+    @reseed_counter += 1
 
-		if requested_security_strength > self.security_strength:
-			raise RuntimeError, "requested_security_strength exceeds this instance's security_strength (%d)" % self.security_strength
-
-		if self.reseed_counter >= 10000:
-			return None
-
-		temp = ""
-
-		while len (temp) < num_bytes:
-			self.V = self._hmac (self.K, self.V)
-			temp += self.V
-
-		self._update (None)
-		self.reseed_counter += 1
-
-		return temp[:num_bytes]
+    return temp[:num_bytes]
