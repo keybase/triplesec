@@ -47,37 +47,22 @@ exports.DRBG = class DRBG
     @K = @_hmac @K, V_in
     V_in.scrub()
     V.scrub()
-    console.log @K.to_hex()
-    console.log @V.to_hex()
     @V = @_hmac @K, @V
-    console.log "in update 2"
-    console.log @V.to_hex()
 
     if provided_data?
       V_in = @V.clone().concat(new WordArray [(1 << 24)], 1).concat(provided_data)
       @K = @_hmac @K, V_in
-      console.log "intermediate K!"
-      console.log V_in.to_hex()
-      console.log @K.to_hex()
       V_in.scrub()
       @V = @_hmac @K, @V
-      console.log "update is done!"
-      console.log provided_data.to_hex()
-      console.log @K.to_hex()
-      console.log @V.to_hex()
-
     provided_data?.scrub()
 
   #-----------------
 
   _instantiate : (entropy, personalization_string) ->
     seed_material = entropy.concat personalization_string
-    n = 32
+    n = 64
     @K = WordArray.from_buffer new Buffer (0 for i in [0...n])
     @V = WordArray.from_buffer new Buffer (1 for i in [0...n])
-    console.log @K.to_hex()
-    console.log @V.to_hex()
-    console.log seed_material.to_hex()
     @_update seed_material
     console.log @K.to_hex()
     console.log @V.to_hex()
@@ -100,6 +85,9 @@ exports.DRBG = class DRBG
     while (tmp.length is 0) or (tmp.length * tmp[0].length * 4) < num_bytes
       @V = @_hmac @K, @V
       tmp.push @V.words
+    console.log "After generate ->"
+    console.log @V.to_hex()
+    console.log @K.to_hex()
     @_update()
     @reseed_counter += 1
     new WordArray([].concat tmp...)
