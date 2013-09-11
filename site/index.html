@@ -36,13 +36,11 @@
         $('.btn-encrypt').on 'click', ->
           data   = new triplesec.Buffer $('#demo-input-data').val()
           key    = new triplesec.Buffer $('#demo-input-key').val()
-          salt   = new triplesec.Buffer   'soon to be auto-generated in triplesec'
           reset_progress()
           add_progress 'generating key...'
           add_progress 'doing something...'
           out    = triplesec.encrypt {
             data: data
-            salt: salt
             key:  key
             rng:  triplesec.rng
           }
@@ -52,15 +50,13 @@
           textarea_auto $("#demo-input-data")[0]
 
         $('.btn-decrypt').on 'click', ->
-          data   = new triplesec.Buffer $('#demo-input-data').val()
+          data   = new triplesec.Buffer $('#demo-input-data').val(), 'hex'
           key    = new triplesec.Buffer $('#demo-input-key').val()
-          salt   = new triplesec.Buffer   'soon to be auto-generated in triplesec'
           reset_progress()
           add_progress 'decrypting step 1...'
           add_progress 'decrypting step 2...'
           out    = triplesec.decrypt {
             data: data
-            salt: salt
             key:  key
           }
           txt = out.toString()
@@ -103,7 +99,6 @@
                 so that a failure in one will expose nothing. The 3 encryptions are combined in a
                 simple technique outlined by Bruce Schneier in <i>Applied Cryptography</i>.
               </p>
-
               <p>
                 In other words, <b>TripleSec</b> should work, unless <i>all 3</i> of these encryptions have fallen.
               </p>              
@@ -156,21 +151,52 @@
           </div>
           <!-- /.demo -->
 
+          <div class="installation subsection">
+            <h3>Installation</h3>
+            <p>
+              In the browser, just <code>&lt;script src="triplesec.js"&gt;&lt;/script&gt;</code>.
+            </p>
+            <p>
+              In node, <code>npm install triplesec</code>.
+            </p>
+          </div>
+
           <div class="how-to-use subsection">
             <h3>How to Use It</h3>
-            In the browser, just include <code>triplesec.js</code> and call <code>triplesec.encrypt</code>
+            <p>
+            Encryption is done by the <code>encrypt</code> function; data and key inputs
+            should be of type <code>triplesec.Buffer</code>. A salt is generated automatically for you and is embedded in the ciphertext.
+            </p>
+            <pre>var b = triplesec.encrypt ({
 
-            <pre>
-x = ->
-  document.write 'foo'</pre>
+  data: new triplesec.Buffer('Here is my secret message'),
+  key:  new triplesec.Buffer('my-super-secret-password'),
+  rng:  triplesec.rng
+
+});
+
+// convert the output buffer to hex
+var hex = b.toString('hex');</pre>
+          <p>
+            And <code>decrypt</code> is easier than an CIA honeypot:
+          </p><pre>var b = triplesec.decrypt ({
+
+  data: new triplesec.Buffer(ciphertext, "hex"),
+  key:  new triplesec.Buffer('my-super-secret-password')
+
+});
+
+var plaintext = b.toString();
+</pre>
 
           </div>
 
           <div class="questions subsection">
             <h3>Anticipated Questions</h3>
             <div class="question">
-              <h5>What random number generator does it use?</h5>
-              <h5>How are passwords salted?</h5>
+              <h5>What's triplesec.Buffer?</h5>
+              <h5>What's triplesec.rng?</h5>
+              <h5>How are passphrases salted?</h5>
               <h5>Are slow encryptions CPU-blocking?</h5>
               <h5>Can I encrypt files with it, in the browser?</h5>
             </div>
@@ -183,11 +209,15 @@ x = ->
               now, and TripleSec will be used to encrypt our users' keys.
             </p>
             <p>
-              If you use TripleSec, please contact us, and we'll maintain a list here. Here are some ideas if you're feeling ambitious.
+              If you use TripleSec, please contact us, and we'll mention you here. 
+            </p>
+            <p>
+              Here are some ideas, in case you're feeling ambitious:
             </p>
             <ul>
-              <li>a browser extension for highlighting and encrypting/decrypting text on any page</li>
+              <li>a triplesec browser extension for highlighting and encrypting/decrypting text on any page</li>
               <li>diary/journal</li>
+              <li>key storage</li>
               <li>password manager</li>
               <li>Bitcoin wallet</li>
             </ul>
