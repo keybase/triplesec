@@ -43,7 +43,8 @@ exports.default_delay = default_delay = (i, n, cb) ->
 # @param {number} n The number of words per batch
 # @param {Function} delay The function to call in each delay slot
 # @param {Callback} cb The callback to call upon completion, with
-#    and (err, res) result
+#    a result (and no error, since no errors can be generated in a correct
+#    implementation).
 exports.bulk = (n_input_bytes, {update, finalize, default_n}, {delay, n, cb}) ->
   i = 0
   left = 0
@@ -56,7 +57,7 @@ exports.bulk = (n_input_bytes, {update, finalize, default_n}, {delay, n, cb}) ->
     await delay i, total_words, defer()
     i += n_words
   ret = finalize()
-  cb null, ret
+  cb ret
 
 
 

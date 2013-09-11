@@ -28,10 +28,8 @@ exports.sp_nist_800_38a__f_5_5 = (T, cb) ->
     input : input
   }, cb
   pt = WordArray.from_hex tv.pt
-  await E pt, defer err, out
-  T.assert not err?
+  await E pt, defer out
   T.equal out.to_hex(), tv.ct, "Cipher text match"
-  await E out, defer err, out
-  T.assert not err?
+  await E out, defer out
   T.equal out.to_hex(), tv.pt, "Plaintext decryption match"
   cb()
