@@ -23,29 +23,34 @@ exports.PBKDF2 = class PBKDF2
 
   #-----------
   
-  gen_T_i : (i) ->
+  gen_T_i : (i, cb) ->
     seed = @salt.clone().concat new WordArray [i]
     U = @PRF seed
     ret = U.clone()
     for i in [1...@c]
       U = @PRF U
       ret.xor U, {}
-    ret
+    cb ret
 
   #-----------
   
-  gen : (len) ->
+  gen : (len, cb) ->
     bs = @prf.get_output_size()
     n = Math.ceil(len / bs)
-    words = (@gen_T_i(i).words for i in [1..n])
+    words = []
+    for i in [1..n]
+      await @gen_T_i i, defer tmp
+      words.push tmp.words
     flat = [].concat words...
     @key.scrub()
-    new WordArray flat, len
+    cb new WordArray flat, len
 
 #=========================================================
 
-exports.pbkdf2 = pkbdf2 = ({key, salt, c, dkLen}) ->
-  (new PBKDF2 { key, salt, c}).gen dkLen
+exports.pbkdf2 = pkbdf2 = ({key, salt, c, dkLen}, cb) ->
+  eng = new PBKDF2 { key, salt, c}
+  await eng.gen dkLen, defer out
+  cb out
 
 #=========================================================
 

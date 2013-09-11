@@ -99,10 +99,10 @@ exports.Cipher = class Cipher extends StreamCipher
 
 #---------------
 
-exports.encrypt = encrypt = ({block_cipher, iv, input}) ->
+exports.encrypt = encrypt = ({block_cipher, iv, input}, cb) ->
   cipher = new Cipher { block_cipher, iv}
-  ret = cipher.encrypt input
+  await cipher.encrypt input, defer ret
   cipher.scrub()
-  ret
+  cb ret
 
 #=========================================

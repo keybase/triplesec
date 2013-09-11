@@ -32,57 +32,61 @@ exports.Base = class Base
 
   #---------------
 
-  pbkdf2 : (salt) ->
+  pbkdf2 : (salt, cb) ->
     # Check the cache first
     salt_hex = salt.to_hex()
-    return k if (k = @derived_keys[salt_hex])?
 
-    lens = 
-      hmac    : hmac.HMAC.keySize
-      aes     : AES.keySize
-      twofish : TwoFish.keySize
-      salsa20 : salsa20.Salsa20.keySize
-    tot = 0
-    (tot += v for k,v of lens)
+    unless (keys = @derived_keys[salt_hex])?
 
-    # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
-    key = @key.clone()
-    raw = pbkdf2 { key, salt, c : @version.pbkdf2_iters, dkLen : tot }
-    keys = {}
-    i = 0
-    for k,v of lens
-      len = v/4
-      end = i + len
-      keys[k] = new WordArray raw.words[i...end]
-      i = end
-    @derived_keys[salt_hex] = keys
-    keys
+      lens = 
+        hmac    : hmac.HMAC.keySize
+        aes     : AES.keySize
+        twofish : TwoFish.keySize
+        salsa20 : salsa20.Salsa20.keySize
+      tot = 0
+      (tot += v for k,v of lens)
+
+      # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
+      key = @key.clone()
+      await pbkdf2 { key, salt, c : @version.pbkdf2_iters, dkLen : tot }, defer raw
+      keys = {}
+      i = 0
+      for k,v of lens
+        len = v/4
+        end = i + len
+        keys[k] = new WordArray raw.words[i...end]
+        i = end
+      @derived_keys[salt_hex] = keys
+
+    cb keys
 
   #---------------
 
-  sign : ({input, key, salt}) ->
+  sign : ({input, key, salt}, cb) ->
     input = (new WordArray @version.header ).concat(salt).concat(input)
-    out = hmac.sign { key, input }
-    out
+    await hmac.sign { key, input }, defer out
+    cb out
 
   #---------------
 
-  run_salsa20 : ({ input, key, iv, output_iv }) ->
-    ct = salsa20.encrypt { input, key, iv}
-    if output_iv then iv.clone().concat ct
-    else ct
+  run_salsa20 : ({ input, key, iv, output_iv }, cb) ->
+    await salsa20.encrypt { input, key, iv}, defer ct
+    ct = iv.clone().concat(ct) if output_iv
+    cb ct
 
   #---------------
 
-  run_twofish : ({input, key, iv}) ->
+  run_twofish : ({input, key, iv}, cb) ->
     block_cipher = new TwoFish key
-    iv.clone().concat ctr.encrypt { block_cipher, iv, input }
+    await ctr.encrypt { block_cipher, iv, input }, defer ct
+    cb iv.clone().concat(ct)
 
   #---------------
 
-  run_aes : ({input, key, iv}) ->
+  run_aes : ({input, key, iv}, cb) ->
     block_cipher = new AES key
-    iv.clone().concat ctr.encrypt { block_cipher, iv, input }
+    await ctr.encrypt { block_cipher, iv, input }, defer ct
+    cb iv.clone().concat(ct)
 
   #---------------
 
@@ -116,7 +120,7 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
 
-  pick_random_ivs : () ->
+  pick_random_ivs : (cb) ->
     iv_lens =
       aes : AES.ivSize
       twofish : TwoFish.ivSize
@@ -124,7 +128,7 @@ exports.Encryptor = class Encryptor extends Base
     ivs = {}
     for k,v of iv_lens
       ivs[k] = WordArray.from_buffer @rng(v)
-    ivs
+    cb ivs
 
   #---------------
 
@@ -133,22 +137,22 @@ exports.Encryptor = class Encryptor extends Base
   # same salt.
   resalt : () ->
     @salt = WordArray.from_buffer @rng @version.salt_size
-    @keys = @pbkdf2 @salt
-    @ 
+    await @pbkdf2 @salt, defer @keys
  
   #---------------
 
   # @param {Buffer} data the data to encrypt 
-  # @returns {Buffer} a buffer with the encrypted data
-  run : ( data ) ->
-    @resalt() unless @salt?
-    ivs  = @pick_random_ivs()
+  # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
+  run : ( data, cb ) ->
+    await @resalt defer() unless @salt?
+    await @pick_random_ivs defer ivs
     pt   = WordArray.from_buffer data
-    ct1  = @run_salsa20 { input : pt,  key : @keys.salsa20, iv : ivs.salsa20, output_iv : true }
-    ct2  = @run_twofish { input : ct1, key : @keys.twofish, iv : ivs.twofish }
-    ct3  = @run_aes     { input : ct2, key : @keys.aes,     iv : ivs.aes     }
-    sig  = @sign        { input : ct3, key : @keys.hmac,    @salt }
-    (new WordArray(@version.header)).concat(@salt).concat(sig).concat(ct3).to_buffer()
+    await @run_salsa20 { input : pt,  key : @keys.salsa20, iv : ivs.salsa20, output_iv : true }, defer ct1
+    await @run_twofish { input : ct1, key : @keys.twofish, iv : ivs.twofish }, defer ct2
+    await @run_aes     { input : ct2, key : @keys.aes,     iv : ivs.aes     }, defer ct3
+    await @sign        { input : ct3, key : @keys.hmac,    @salt            }, defer sig
+    ret = (new WordArray(@version.header)).concat(@salt).concat(sig).concat(ct3).to_buffer()
+    cb null, ret
 
 #========================================================================
 
@@ -167,14 +171,13 @@ exports.Encryptor = class Encryptor extends Base
 # @param {Function} rng A function that takes as input n and outputs n truly
 #   random bytes.  You must give a real RNG here and not something fake.
 #   You can try require('./rng').rng for starters.
+# @param {callback} cb Callback with an (err,res) pair.
 #
-# @return {Buffer} The ciphertext.
-#
-exports.encrypt = encrypt = ({ key, data, rng}) ->
+exports.encrypt = encrypt = ({ key, data, rng}, cb) ->
   enc = new Encryptor { key, rng}
-  ret = enc.run(data)
+  await enc.run data, defer err, ret
   util.scrub_buffer data
   enc.scrub()
-  ret
+  cb err, ret
 
 #========================================================================

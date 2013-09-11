@@ -22,13 +22,14 @@ exports.sp_nist_800_38a__f_5_5 = (T, cb) ->
             "2b0930daa23de94ce87017ba2d84988d"
             "dfc9c58db67aada613c2dd08457941a6" ].join("") 
 
-  E = (input) -> ctr.encrypt {
+  E = (input, cb) -> ctr.encrypt {
     block_cipher : new AES(WordArray.from_hex tv.key)
     iv : WordArray.from_hex tv.iv
     input : input
-  }
-  out = E WordArray.from_hex tv.pt
+  }, cb
+  pt = WordArray.from_hex tv.pt
+  await E pt, defer out
   T.equal out.to_hex(), tv.ct, "Cipher text match"
-  out = E out
+  await E out, defer out
   T.equal out.to_hex(), tv.pt, "Plaintext decryption match"
   cb()

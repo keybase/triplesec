@@ -12,7 +12,7 @@ default: build
 all: build
 
 lib/%.js: src/%.iced
-	$(ICED) -I none -c -o lib $<
+	$(ICED) -I browserify -c -o lib $<
 
 $(BUILD_STAMP): \
 	lib/main.js \

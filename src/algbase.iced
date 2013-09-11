@@ -186,10 +186,11 @@ exports.StreamCipher = class StreamCipher
     pad.scrub()
     @bsiw
 
-  encrypt : (word_array) ->
+  # Todo -- insert delay slots!
+  encrypt : (word_array, cb) ->
     for i in [0...word_array.words.length] by @bsiw
       @encryptBlock word_array, i
-    word_array
+    cb word_array
 
 #=======================================================================
 
