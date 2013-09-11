@@ -231,7 +231,11 @@ exports.Cipher = class Cipher extends StreamCipher
   scrub : () ->
     @salsa.scrub()
 
-  get_pad : () -> @salsa.getWordArray()
+  get_pad : () -> 
+    console.log "getting pad..."
+    pad = @salsa.getWordArray()
+    console.log "got pad!"
+    pad
 
 #====================================================================
 
@@ -240,5 +244,14 @@ exports.encrypt = encrypt = ({key, iv, input}) ->
   ret = cipher.encrypt input
   cipher.scrub()
   ret
+
+#====================================================================
+
+exports.bulk_encrypt = bulk_encrypt = ({key, iv, input}, cb) ->
+  console.log "in salsa20 BE"
+  cipher = new Cipher { key, iv }
+  await cipher.bulk_encrypt input, defer ret
+  cipher.scrub()
+  cb ret
 
 #====================================================================

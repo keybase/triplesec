@@ -48,7 +48,7 @@ exports.default_delay = default_delay = (i, n, cb) ->
 exports.bulk = (n_input_bytes, {update, finalize, default_n}, {delay, n, cb}) ->
   i = 0
   left = 0
-  total_words = n_input_bytes / 4
+  total_words = Math.ceil n_input_bytes / 4
   delay or= default_delay
   n or= default_n
   while (left = (total_words - i)) > 0

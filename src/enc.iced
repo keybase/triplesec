@@ -70,7 +70,7 @@ exports.Base = class Base
   #---------------
 
   run_salsa20 : ({ input, key, iv, output_iv }, cb) ->
-    await salsa20.encrypt { input, key, iv}, defer ct
+    await salsa20.bulk_encrypt { input, key, iv}, defer ct
     ct = iv.clone().concat(ct) if output_iv
     cb ct
 
@@ -78,14 +78,14 @@ exports.Base = class Base
 
   run_twofish : ({input, key, iv}, cb) ->
     block_cipher = new TwoFish key
-    await ctr.encrypt { block_cipher, iv, input }, defer ct
+    await ctr.bulk_encrypt { block_cipher, iv, input }, defer ct
     cb iv.clone().concat(ct)
 
   #---------------
 
   run_aes : ({input, key, iv}, cb) ->
     block_cipher = new AES key
-    await ctr.encrypt { block_cipher, iv, input }, defer ct
+    await ctr.bulk_encrypt { block_cipher, iv, input }, defer ct
     cb iv.clone().concat(ct)
 
   #---------------
@@ -135,9 +135,10 @@ exports.Encryptor = class Encryptor extends Base
   # Regenerate the salt. Reinitialize the keys. You have to do this
   # once, but if you don't do it again, you'll just wind up using the
   # same salt.
-  resalt : () ->
+  resalt : (cb) ->
     @salt = WordArray.from_buffer @rng @version.salt_size
     await @pbkdf2 @salt, defer @keys
+    cb()
  
   #---------------
 
@@ -171,13 +172,15 @@ exports.Encryptor = class Encryptor extends Base
 # @param {Function} rng A function that takes as input n and outputs n truly
 #   random bytes.  You must give a real RNG here and not something fake.
 #   You can try require('./rng').rng for starters.
-# @param {callback} cb Callback with an (err,res) pair.
+# @param {callback} cb Callback with an (err,res) pair. The err is an Error object
+#   (if encountered), and res is a Buffer object (on success).
 #
 exports.encrypt = encrypt = ({ key, data, rng}, cb) ->
   enc = new Encryptor { key, rng}
   await enc.run data, defer err, ret
   util.scrub_buffer data
   enc.scrub()
+  console.log "encrypted! #{ret.toString('hex')}"
   cb err, ret
 
 #========================================================================

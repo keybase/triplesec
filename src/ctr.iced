@@ -109,8 +109,8 @@ exports.encrypt = encrypt = ({block_cipher, iv, input}) ->
 
 exports.bulk_encrypt = bulk_encrypt = ({block_cipher, iv, input}, cb) ->
   cipher = new Cipher { block_cipher, iv }
-  await cipher.bulk_encrypt input, { cb : defer(err, ret) }
+  await cipher.bulk_encrypt input, defer ret
   cipher.scrub()
-  cb err, ret
+  cb ret
 
 #=========================================

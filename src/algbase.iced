@@ -196,15 +196,20 @@ exports.StreamCipher = class StreamCipher
 
   #---------------------
 
-  bulk_encrypt : (word_array, async_args) ->
+  bulk_encrypt : (word_array, cb) ->
     slice_args = 
       update : (lo,hi) =>
+        console.log "In in #{lo}...#{hi}"
         for i in [lo...hi] by @bsiw
+          console.log "doing it #{i}"
           @encryptBlock word_array, i
-      finalize : () -> word_array
+          console.log "did it"
+      finalize : () -> 
+        console.log "now it's final..."
+        word_array
       default_n : @bsiw * 1024
 
-    util.bulk word_array.sigBytes, slice_args, async_args
+    util.bulk word_array.sigBytes, slice_args, { cb }
 
 #=======================================================================
 
