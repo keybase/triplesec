@@ -1,5 +1,6 @@
 
 ICED=node_modules/.bin/iced
+RSP2JSON=node_modules/.bin/rsp2json
 BROWSERIFY=node_modules/.bin/browserify
 BUILD_STAMP=build-stamp
 TEST_STAMP=test-stamp
@@ -48,6 +49,9 @@ test/browser/test.js: test/browser/main.iced $(BUILD_STAMP)
 test-browser: $(TEST_STAMP) $(BUILD_STAMP)
 	@echo "Please visit in your favorite browser --> file://$(WD)/test/browser/index.html"
 
+test/json/HMAC_DRBG_reseed.json: test/rsp/HMAC_DRBG_reseed.rsp
+	$(RSP2JSON) $< > $@
+
 $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha512_long.js \
 		test/data/twofish_ecb_tbl.js \
@@ -55,6 +59,8 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/salsa20_key256.js \
 		test/data/pbkdf2.js \
 		test/data/drbg_hmac_no_reseed.js \
+		test/json/HMAC_DRBG_reseed.json \
+		test/data/drbg_hmac_reseed.js \
 		test/browser/test.js 
 	date > $@
 

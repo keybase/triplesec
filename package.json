@@ -16,7 +16,8 @@
     "colors" : "*",
     "deep-equal" : "*",
     "cryptojs-2fish" : "*",
-    "optimist" : "*"
+    "optimist" : "*",
+    "rsp2json" : "*"
   },
   "dependencies" : {
     "purepack" : "*"

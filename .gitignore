@@ -18,3 +18,4 @@ build-stamp
 test-stamp
 test/browser/test.js
 test/data
+test/json
