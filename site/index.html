@@ -21,6 +21,13 @@
 
         input_change = ->
           textarea_auto $('#demo-input-data')[0]
+          v = $('#demo-input-data').val()
+          k = $('#demo-input-key').val()
+          $('.btn-encrypt, .btn-decrypt').prop('disabled', true)
+          if v and v.length and k and k.length
+            $('.btn-encrypt').prop('disabled', false)
+            if v.match /// ^ [a-f0-9]+ $///
+              $('.btn-decrypt').prop('disabled', false)
 
         reset_progress = ->
           $("#progress-summary").html ''
@@ -30,10 +37,12 @@
           $("#progress-summary").html h + txt
 
         $('#demo-input-data').on 'change',  -> input_change()
-        $('#demo-input-data').on 'keydown', -> input_change()
+        $('#demo-input-data').on 'keyup', -> input_change()
+        $('#demo-input-key').on 'change',  ->  input_change()
+        $('#demo-input-key').on 'keyup', ->  input_change()
 
 
-        $('.btn-encrypt').on 'click', ->
+        $('.btn-encrypt').on 'click', =>
           data   = new triplesec.Buffer $('#demo-input-data').val()
           key    = new triplesec.Buffer $('#demo-input-key').val()
           reset_progress()
@@ -48,8 +57,9 @@
           add_progress 'done'
           $("#demo-input-data").val hex
           textarea_auto $("#demo-input-data")[0]
+          input_change()
 
-        $('.btn-decrypt').on 'click', ->
+        $('.btn-decrypt').on 'click', =>
           data   = new triplesec.Buffer $('#demo-input-data').val(), 'hex'
           key    = new triplesec.Buffer $('#demo-input-key').val()
           reset_progress()
@@ -63,6 +73,7 @@
           add_progress 'done'
           $("#demo-input-data").val txt
           textarea_auto $("#demo-input-data")[0]
+          input_change()
 
         textarea_auto $("#demo-input-data")[0]
     </script>
@@ -131,8 +142,8 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="btn-group-vertical">
-                          <button class="btn btn-encrypt btn-default" type="button">Encrypt</button>
-                          <button class="btn btn-decrypt btn-default" type="button">Decrypt</button>
+                          <button class="btn btn-encrypt btn-default" type="button" disabled="true">Encrypt</button>
+                          <button class="btn btn-decrypt btn-default" type="button" disabled="true">Decrypt</button>
                         </div>
                       </div>
                     </div><!-- /.row -->
@@ -154,7 +165,7 @@
           <div class="installation subsection">
             <h3>Installation</h3>
             <p>
-              In the browser, just <code>&lt;script src="triplesec.js"&gt;&lt;/script&gt;</code>.
+              For the browser, <a href="js/triplesec.js">download it here</a>, then <code>&lt;script src="triplesec.js"&gt;&lt;/script&gt;</code>. 
             </p>
             <p>
               In node, <code>npm install triplesec</code>.
@@ -164,25 +175,26 @@
           <div class="how-to-use subsection">
             <h3>How to Use It</h3>
             <p>
-            Encryption is done by the <code>encrypt</code> function; data and key inputs
+            Encryption is performed by the <code>encrypt</code> function; data and key inputs
             should be of type <code>triplesec.Buffer</code>. A salt is generated automatically for you and is embedded in the ciphertext.
             </p>
             <pre>var b = triplesec.encrypt ({
 
-  data: new triplesec.Buffer('Here is my secret message'),
-  key:  new triplesec.Buffer('my-super-secret-password'),
+  data: new triplesec.Buffer('Pssst. I believe I love you.'),
+  key:  new triplesec.Buffer('top-secret-pw'),
   rng:  triplesec.rng
 
 });
 
-// convert the output buffer to hex
-var hex = b.toString('hex');</pre>
+// convert the output buffer to hex, base64, whatever
+
+var ciphertext = b.toString('hex');</pre>
           <p>
-            And <code>decrypt</code> is easier than an CIA honeypot:
+            And <code>decrypt</code> is smoother than a CIA honeypot.
           </p><pre>var b = triplesec.decrypt ({
 
   data: new triplesec.Buffer(ciphertext, "hex"),
-  key:  new triplesec.Buffer('my-super-secret-password')
+  key:  new triplesec.Buffer('top-secret-pw')
 
 });
 
@@ -215,7 +227,7 @@ var plaintext = b.toString();
               Here are some ideas, in case you're feeling ambitious:
             </p>
             <ul>
-              <li>a triplesec browser extension for highlighting and encrypting/decrypting text on any page</li>
+              <li>a TripleSec browser extension for highlighting and encrypting/decrypting text on any page</li>
               <li>diary/journal</li>
               <li>key storage</li>
               <li>password manager</li>
@@ -226,7 +238,7 @@ var plaintext = b.toString();
           <div class="whos-using subsection">
             <h3>Can I help?</h3>
             <p>
-              Please! We encourage <a href="foo">review of the algorithm</a>.  We'd also love to have
+              Please! We encourage <a href="foo">review of the source code</a>.  We'd also love to have
               an official browser extension. In our ideal world, you could highlight some text in your browser and
               TripleSec encrypt/decrypt it on any page just by entering a password.
             </p>
