@@ -64,7 +64,7 @@ exports.Base = class Base
 
   sign : ({input, key, salt}, cb) ->
     input = (new WordArray @version.header ).concat(salt).concat(input)
-    await hmac.sign { key, input }, defer out
+    await hmac.bulk_sign { key, input }, { cb : defer(out) }
     cb out
 
   #---------------

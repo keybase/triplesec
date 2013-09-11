@@ -1,5 +1,6 @@
 
 {SHA512} = require './sha512'
+util = require './util'
 
 #=======================================================================
 
@@ -87,7 +88,19 @@ exports.HMAC = class HMAC
 
 #=======================================================================
 
-exports.sign = ({key, input}) -> (new HMAC key).finalize(input.clamp())
+exports.sign = ({key, input}) -> 
+  (new HMAC key).finalize(input.clamp())
+
+#=======================================================================
+
+exports.bulk_sign = ({key, input}, async_args) ->
+  eng = new HMAC key
+  input.clamp()
+  slice_args = 
+    update    : (lo,hi) -> eng.update input[lo...hi]
+    finalize  : ()      -> eng.finalize()
+    default_n : eng.hasherBlockSize * 1000
+  util.bulk input, slice_args, async_args
 
 #=======================================================================
 
