@@ -6,6 +6,7 @@
 ##
 
 {WordArray} = require './wordarray'
+util = require './util'
 
 #=======================================================================
 
@@ -186,10 +187,24 @@ exports.StreamCipher = class StreamCipher
     pad.scrub()
     @bsiw
 
-  # Todo -- insert delay slots!
+  #---------------------
+
   encrypt : (word_array) ->
     for i in [0...word_array.words.length] by @bsiw
       @encryptBlock word_array, i
+    word_array
+
+  #---------------------
+
+  bulk_encrypt : (word_array, async_args) ->
+    slice_args = 
+      update : (lo,hi) =>
+        for i in [lo...hi] by @bsiw
+          @encryptBlock word_array, i
+      finalize : () -> word_array
+      default_n : @bsiw * 1024
+
+    util.bulk word_array.sigBytes, slice_args, async_args
 
 #=======================================================================
 

@@ -100,7 +100,7 @@ exports.bulk_sign = ({key, input}, async_args) ->
     update    : (lo,hi) -> eng.update input[lo...hi]
     finalize  : ()      -> eng.finalize()
     default_n : eng.hasherBlockSize * 1000
-  util.bulk input, slice_args, async_args
+  util.bulk input.sigBytes, slice_args, async_args
 
 #=======================================================================
 

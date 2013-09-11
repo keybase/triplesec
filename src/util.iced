@@ -33,6 +33,7 @@ exports.default_delay = default_delay = (i, n, cb) ->
 # Perform a bulk crypto operation, inserting delay slots as
 # needs be.
 #
+# @param {number} n_input_bytes The number of bytes in the input
 # @param {Function} update Function to call to update internal state. Call with a lo
 #    and high position **in words**, for which window of the input to operate on.
 # @param {Function} finalize Function to call to finalize computation 
@@ -43,10 +44,10 @@ exports.default_delay = default_delay = (i, n, cb) ->
 # @param {Function} delay The function to call in each delay slot
 # @param {Callback} cb The callback to call upon completion, with
 #    and (err, res) result
-exports.bulk = ({update, finalize, default_n}, {delay, n, cb}) ->
+exports.bulk = (n_input_bytes, {update, finalize, default_n}, {delay, n, cb}) ->
   i = 0
   left = 0
-  total_words = Math.ceil(input.sigBytes/4)
+  total_words = n_input_bytes / 4
   delay or= default_delay
   n or= default_n
   while (left = (total_words - i)) > 0
