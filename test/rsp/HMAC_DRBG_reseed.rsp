@@ -1,7 +1,13 @@
 # CAVS 14.3
 # DRBG800-90A information for "drbg_pr"
+# 
 # Generated on Tue Apr 02 15:32:12 2013
 # 01d07d7a6b06314a6cb25c1230a8b28c10a17763fa0bb6674f1a0a126d4a267f5b34877ec693b66a03b46b505ed6de19c6180d0ade97a6a7832b5f3bc5169466
+# 
+# From this download:
+#  http://csrc.nist.gov/groups/STM/cavp/documents/drbg/drbgtestvectors.zip
+#  From the inner Zip file: drbgvectors_pr_false.zip
+#  From the file: HMAC_DRBG.rsp
 
 # HMAC_DRBG options: SHA-1 :: SHA-224 :: SHA-256 :: SHA-384 :: SHA-512 :: SHA-512/224 :: SHA-512/256
 

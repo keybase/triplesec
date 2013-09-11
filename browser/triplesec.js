@@ -529,11 +529,10 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
     Decryptor.prototype.version = V[1];
 
     function Decryptor(_arg) {
-      var key, salt;
-      key = _arg.key, salt = _arg.salt;
+      var key;
+      key = _arg.key;
       Decryptor.__super__.constructor.call(this, {
-        key: key,
-        salt: salt
+        key: key
       });
       this._i = 0;
     }
@@ -542,7 +541,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
       var wa;
       wa = this.ct.unshift(2);
       if (wa == null) {
-        throw new Error("Cipher text underrun in header");
+        throw new Error("Ciphertext underrun in header");
       }
       if (!wa.equal(new WordArray(this.version.header))) {
         throw new Error("Bad header");
@@ -553,11 +552,12 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
       var computed, received;
       received = this.ct.unshift(hmac.HMAC.outputSize / 4);
       if (received == null) {
-        throw new Error("Cipher text underrun in signature");
+        throw new Error("Ciphertext underrun in signature");
       }
       computed = this.sign({
         input: this.ct,
-        key: key
+        key: key,
+        salt: this.salt
       });
       if (!received.equal(computed)) {
         throw new Error('Signature mismatch!');
@@ -572,8 +572,16 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
       return iv;
     };
 
-    Decryptor.prototype.init = function() {
-      this.keys = this.pbkdf2();
+    Decryptor.prototype.read_salt = function() {
+      this.salt = this.ct.unshift(2);
+      if (!this.salt) {
+        throw new Error("Ciphertext underrrun in read_salt");
+      }
+      return this;
+    };
+
+    Decryptor.prototype.generate_keys = function() {
+      this.keys = this.pbkdf2(this.salt);
       return this;
     };
 
@@ -581,6 +589,8 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
       var ct1, ct2, pt;
       this.ct = WordArray.from_buffer(data);
       this.read_header();
+      this.read_salt();
+      this.generate_keys();
       this.verify_sig(this.keys.hmac);
       ct2 = this.run_aes({
         iv: this.unshift_iv(AES.ivSize),
@@ -606,13 +616,12 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
   })(Base);
 
   exports.decrypt = decrypt = function(_arg) {
-    var data, dec, key, pt, salt;
-    key = _arg.key, salt = _arg.salt, data = _arg.data;
+    var data, dec, key, pt;
+    key = _arg.key, data = _arg.data;
     dec = new Decryptor({
-      key: key,
-      salt: salt
+      key: key
     });
-    pt = dec.init().run(data);
+    pt = dec.run(data);
     dec.scrub();
     return pt;
   };
@@ -649,20 +658,25 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
   exports.V = V = {
     "1": {
       header: [0x1c94d7de, 1],
-      pbkdf2_iters: 2048
+      pbkdf2_iters: 2048,
+      salt_size: 8
     }
   };
 
   exports.Base = Base = (function() {
     function Base(_arg) {
-      var key, salt;
-      key = _arg.key, salt = _arg.salt;
+      var key;
+      key = _arg.key;
       this.key = WordArray.from_buffer(key);
-      this.salt = WordArray.from_buffer(salt);
+      this.derived_keys = {};
     }
 
-    Base.prototype.pbkdf2 = function() {
-      var end, i, k, keys, len, lens, raw, tot, v;
+    Base.prototype.pbkdf2 = function(salt) {
+      var end, i, k, key, keys, len, lens, raw, salt_hex, tot, v;
+      salt_hex = salt.to_hex();
+      if ((k = this.derived_keys[salt_hex]) != null) {
+        return k;
+      }
       lens = {
         hmac: hmac.HMAC.keySize,
         aes: AES.keySize,
@@ -674,9 +688,10 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
         v = lens[k];
         tot += v;
       }
+      key = this.key.clone();
       raw = pbkdf2({
-        key: this.key,
-        salt: this.salt,
+        key: key,
+        salt: salt,
         c: this.version.pbkdf2_iters,
         dkLen: tot
       });
@@ -689,14 +704,14 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
         keys[k] = new WordArray(raw.words.slice(i, end));
         i = end;
       }
-      this.key.scrub();
+      this.derived_keys[salt_hex] = keys;
       return keys;
     };
 
     Base.prototype.sign = function(_arg) {
-      var input, key, out;
-      input = _arg.input, key = _arg.key;
-      input = (new WordArray(this.version.header)).concat(input);
+      var input, key, out, salt;
+      input = _arg.input, key = _arg.key, salt = _arg.salt;
+      input = (new WordArray(this.version.header)).concat(salt).concat(input);
       out = hmac.sign({
         key: key,
         input: input
@@ -742,13 +757,21 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
     };
 
     Base.prototype.scrub = function() {
-      var k, _i, _len, _ref, _results;
+      var key, key_ring, salt, _ref, _results;
       this.key.scrub();
-      _ref = this.keys;
+      _ref = this.derived_keys;
       _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        k = _ref[_i];
-        _results.push(k.scrub());
+      for (salt in _ref) {
+        key_ring = _ref[salt];
+        _results.push((function() {
+          var _i, _len, _results1;
+          _results1 = [];
+          for (_i = 0, _len = key_ring.length; _i < _len; _i++) {
+            key = key_ring[_i];
+            _results1.push(key.scrub());
+          }
+          return _results1;
+        })());
       }
       return _results;
     };
@@ -763,12 +786,12 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
     Encryptor.prototype.version = V[1];
 
     function Encryptor(_arg) {
-      var key, salt;
-      key = _arg.key, salt = _arg.salt, this.rng = _arg.rng;
+      var key;
+      key = _arg.key, this.rng = _arg.rng;
       Encryptor.__super__.constructor.call(this, {
-        key: key,
-        salt: salt
+        key: key
       });
+      this.last_salt = null;
     }
 
     Encryptor.prototype.pick_random_ivs = function() {
@@ -786,13 +809,17 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
       return ivs;
     };
 
-    Encryptor.prototype.init = function() {
-      this.keys = this.pbkdf2();
+    Encryptor.prototype.resalt = function() {
+      this.salt = WordArray.from_buffer(this.rng(this.version.salt_size));
+      this.keys = this.pbkdf2(this.salt);
       return this;
     };
 
     Encryptor.prototype.run = function(data) {
       var ct1, ct2, ct3, ivs, pt, sig;
+      if (this.salt == null) {
+        this.resalt();
+      }
       ivs = this.pick_random_ivs();
       pt = WordArray.from_buffer(data);
       ct1 = this.run_salsa20({
@@ -813,9 +840,10 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
       });
       sig = this.sign({
         input: ct3,
-        key: this.keys.hmac
+        key: this.keys.hmac,
+        salt: this.salt
       });
-      return (new WordArray(this.version.header)).concat(sig).concat(ct3).to_buffer();
+      return (new WordArray(this.version.header)).concat(this.salt).concat(sig).concat(ct3).to_buffer();
     };
 
     return Encryptor;
@@ -823,14 +851,13 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
   })(Base);
 
   exports.encrypt = encrypt = function(_arg) {
-    var data, enc, key, ret, rng, salt;
-    key = _arg.key, salt = _arg.salt, data = _arg.data, rng = _arg.rng;
+    var data, enc, key, ret, rng;
+    key = _arg.key, data = _arg.data, rng = _arg.rng;
     enc = new Encryptor({
       key: key,
-      salt: salt,
       rng: rng
     });
-    ret = enc.init().run(data);
+    ret = enc.run(data);
     util.scrub_buffer(data);
     enc.scrub();
     return ret;
@@ -1957,7 +1984,6 @@ var Buffer=require("__browserify_Buffer").Buffer;// Generated by IcedCoffeeScrip
       if (this.sigBytes % 4) {
         for (i = _i = 0; 0 <= thatSigBytes ? _i < thatSigBytes : _i > thatSigBytes; i = 0 <= thatSigBytes ? ++_i : --_i) {
           thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
-          console.log("That byte " + i + " -> " + thatByte);
           this.words[(this.sigBytes + i) >>> 2] |= thatByte << (24 - ((this.sigBytes + i) % 4) * 8);
         }
       } else {

@@ -23,9 +23,9 @@ exports.DRBG = class DRBG
 
   #-----------------
 
-  check_entropy : (entropy) ->
-    if (entropy.sigBytes * 8 * 2) < (3 * @security_strength)
-      throw new Error "entropy must be at least %f bits." % (1.5 * @security_strength)
+  check_entropy : (entropy, reseed = false) ->
+    if (entropy.sigBytes * 8 * 2) < ((if reseed then 2 else 3) * @security_strength)
+      throw new Error "entropy must be at least #{1.5 * @security_strength} bits."
     else if entropy.SigBytes * 8 > 1000 
       # if too many bits, then just hash them down to size
       out = sha512.transform entropy
@@ -70,7 +70,7 @@ exports.DRBG = class DRBG
   #-----------------
 
   reseed : (entropy) ->
-    @_update @check_entropy entropy
+    @_update @check_entropy(entropy,true)
     @reseed_counter = 1
 
   #-----------------

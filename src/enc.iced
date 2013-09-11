@@ -16,6 +16,7 @@ exports.V = V =
     header :
       [ 0x1c94d7de, 1 ]
     pbkdf2_iters : 2048
+    salt_size : 8 # 8 bytes of salt is good enough!
 
 #========================================================================
 
@@ -23,22 +24,30 @@ exports.Base = class Base
 
   #---------------
   
-  constructor : ( { key, salt }) ->
+  constructor : ( { key } ) ->
     @key = WordArray.from_buffer key
-    @salt = WordArray.from_buffer salt
+
+    # A map from Salt -> KeySets
+    @derived_keys = {}
 
   #---------------
 
-  pbkdf2 : () ->
+  pbkdf2 : (salt) ->
+    # Check the cache first
+    salt_hex = salt.to_hex()
+    return k if (k = @derived_keys[salt_hex])?
+
     lens = 
       hmac    : hmac.HMAC.keySize
       aes     : AES.keySize
       twofish : TwoFish.keySize
       salsa20 : salsa20.Salsa20.keySize
     tot = 0
-    for k,v of lens
-      tot += v
-    raw = pbkdf2 { @key, @salt, c : @version.pbkdf2_iters, dkLen : tot }
+    (tot += v for k,v of lens)
+
+    # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
+    key = @key.clone()
+    raw = pbkdf2 { key, salt, c : @version.pbkdf2_iters, dkLen : tot }
     keys = {}
     i = 0
     for k,v of lens
@@ -46,13 +55,13 @@ exports.Base = class Base
       end = i + len
       keys[k] = new WordArray raw.words[i...end]
       i = end
-    @key.scrub()
+    @derived_keys[salt_hex] = keys
     keys
 
   #---------------
 
-  sign : ({input, key}) ->
-    input = (new WordArray @version.header ).concat input
+  sign : ({input, key, salt}) ->
+    input = (new WordArray @version.header ).concat(salt).concat(input)
     out = hmac.sign { key, input }
     out
 
@@ -79,7 +88,9 @@ exports.Base = class Base
 
   scrub : () ->
     @key.scrub()
-    k.scrub() for k in @keys
+    for salt,key_ring of @derived_keys
+      for key in key_ring
+        key.scrub()
 
 #========================================================================
 
@@ -99,8 +110,9 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
   
-  constructor : ( { key, salt, @rng } ) ->
-    super { key, salt }
+  constructor : ( { key, @rng } ) ->
+    super { key }
+    @last_salt = null
 
   #---------------
 
@@ -116,24 +128,27 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
 
-  # Initialize the keys.  You might want to save this work, since it's
-  # pretty expensive.
-  init : () ->
-    @keys = @pbkdf2()
-    @
+  # Regenerate the salt. Reinitialize the keys. You have to do this
+  # once, but if you don't do it again, you'll just wind up using the
+  # same salt.
+  resalt : () ->
+    @salt = WordArray.from_buffer @rng @version.salt_size
+    @keys = @pbkdf2 @salt
+    @ 
  
   #---------------
 
   # @param {Buffer} data the data to encrypt 
   # @returns {Buffer} a buffer with the encrypted data
   run : ( data ) ->
+    @resalt() unless @salt?
     ivs  = @pick_random_ivs()
     pt   = WordArray.from_buffer data
     ct1  = @run_salsa20 { input : pt,  key : @keys.salsa20, iv : ivs.salsa20, output_iv : true }
     ct2  = @run_twofish { input : ct1, key : @keys.twofish, iv : ivs.twofish }
     ct3  = @run_aes     { input : ct2, key : @keys.aes,     iv : ivs.aes     }
-    sig  = @sign        { input : ct3, key : @keys.hmac                      }
-    (new WordArray(@version.header)).concat(sig).concat(ct3).to_buffer()
+    sig  = @sign        { input : ct3, key : @keys.hmac,    @salt }
+    (new WordArray(@version.header)).concat(@salt).concat(sig).concat(ct3).to_buffer()
 
 #========================================================================
 
@@ -147,7 +162,6 @@ exports.Encryptor = class Encryptor extends Base
 #
 # @param {Buffer} key The secret key.  This data is scrubbed after use, so copy it
 #   if you want to keep track of it.
-# @param {Buffer} salt The salt used in key derivation; suggested: your email address
 # @param {Buffer} data The data to encrypt.  Again, this data is scrubber after
 #   use, so copy it if you need it later.
 # @param {Function} rng A function that takes as input n and outputs n truly
@@ -156,9 +170,9 @@ exports.Encryptor = class Encryptor extends Base
 #
 # @return {Buffer} The ciphertext.
 #
-exports.encrypt = encrypt = ({ key, salt, data, rng}) ->
-  enc = new Encryptor { key, salt, rng}
-  ret = enc.init().run(data)
+exports.encrypt = encrypt = ({ key, data, rng}) ->
+  enc = new Encryptor { key, rng}
+  ret = enc.run(data)
   util.scrub_buffer data
   enc.scrub()
   ret

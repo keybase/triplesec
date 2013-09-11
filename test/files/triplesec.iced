@@ -7,15 +7,12 @@
 test_vectors = [
   { 
     key : new Buffer 'this be the password'
-    salt : new Buffer 'you@example.com'
     data : new Buffer 'this be the secret message'
   },{
     key : new Buffer [0...127]
-    salt : new Buffer [10...60]
     data : Buffer.concat ((new Buffer [0..255]) for i in [0..4])
   },{
     key : new Buffer [0...127]
-    salt : new Buffer [10...60]
     data : Buffer.concat ((new Buffer [0..255]) for i in [0..40])
   }]
 
@@ -57,7 +54,6 @@ exports.check_randomness = (T, cb) ->
   tv = test_vectors[0]
   tv.rng = rng
   enc = new Encryptor tv
-  enc.init()
   found = {}
   for i in [0...1000]
     ct = enc.run(tv.data).toString 'hex'

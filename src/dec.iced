@@ -26,23 +26,23 @@ exports.Decryptor = class Decryptor extends Base
 
   #----------------------
 
-  constructor : ( { key, salt } ) ->
-    super { key, salt }
+  constructor : ( { key } ) ->
+    super { key }
     @_i = 0
 
   #----------------------
 
   read_header : () ->
     wa = @ct.unshift 2
-    throw new Error "Cipher text underrun in header" unless wa?
+    throw new Error "Ciphertext underrun in header" unless wa?
     throw new Error "Bad header" unless wa.equal new WordArray @version.header
 
   #----------------------
 
   verify_sig : (key) ->
     received = @ct.unshift(hmac.HMAC.outputSize/4)
-    throw new Error "Cipher text underrun in signature" unless received?
-    computed = @sign { input : @ct, key }
+    throw new Error "Ciphertext underrun in signature" unless received?
+    computed = @sign { input : @ct, key, @salt }
     throw new Error 'Signature mismatch!' unless received.equal computed
 
   #----------------------
@@ -53,8 +53,15 @@ exports.Decryptor = class Decryptor extends Base
 
   #----------------------
 
-  init : () ->
-    @keys = @pbkdf2()
+  read_salt : () ->
+    @salt = @ct.unshift 2
+    throw new Error "Ciphertext underrrun in read_salt" unless @salt
+    @
+
+  #----------------------
+
+  generate_keys : () ->
+    @keys = @pbkdf2 @salt
     @
 
   #----------------------
@@ -62,6 +69,8 @@ exports.Decryptor = class Decryptor extends Base
   run : ( data ) ->
     @ct = WordArray.from_buffer data
     @read_header()
+    @read_salt()
+    @generate_keys()
     @verify_sig @keys.hmac
     ct2 = @run_aes     { iv : @unshift_iv(AES.ivSize),     input : @ct, key : @keys.aes }
     ct1 = @run_twofish { iv : @unshift_iv(TwoFish.ivSize), input : @ct, key : @keys.twofish }
@@ -70,9 +79,9 @@ exports.Decryptor = class Decryptor extends Base
 
 #========================================================================
 
-exports.decrypt = decrypt = ( { key, salt, data } ) ->
-  dec = (new Decryptor { key, salt})
-  pt = dec.init().run(data)
+exports.decrypt = decrypt = ( { key, data } ) ->
+  dec = (new Decryptor { key })
+  pt = dec.run(data)
   dec.scrub()
   pt
 
