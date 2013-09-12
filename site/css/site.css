@@ -6,8 +6,11 @@ a {
   color:#0cf;
 }
 a:hover {
-  color:#0ad;
+  /*color:#0ad;*/
+  text-decoration:none;
+  color:#0cf;
 }
+
 .nav li a, .nav li a:hover {
   text-decoration: none;
   color: #0cf;
@@ -54,15 +57,10 @@ ul {
   width:163px;
   margin:-50px 20px 10px -184px;
 }
-.aes {
-  color:#0cf;
-}
-.salsa20 {
-  color:#0c0;
-}
-.twofish {
-  color:#f0f;
-}
+.aes,     a.aes:hover     { color:#0cf; }
+.salsa20, a.salsa20:hover { color:#0c0; }
+.twofish, a.twofish:hover { color:#f0f; }
+
 .demo h5 {
   color:#666;
 }
