@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>TripleSec - Symmetric Encryption in the browser</title>
+    <title>TripleSec - Symmetric Encryption in the Browser combining AES, Salsa20, and Twofish</title>
     <meta charset="utf-8">
     <link  href="css/bootstrap.min.css" rel="stylesheet">
     <link  href="css/site.css" rel="stylesheet">
@@ -117,11 +117,10 @@
               </ul>
               <p>
                 If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
-                encrypt in the browser or client app with care.
+                encrypt in the browser or client app with care, and to avoid "provided" technologies such as a single encryption algorithm (possibly broken) or
+                entropy provider (possibly intentionally weak).
               </p>
-              <p>Has a government already compromised a popular encryption algorithm?
-                Will academia?
-                 With a yes in mind,
+              <p>
                 <b>TripleSec</b> is a simple, open-source symmetric encryption library for the browser and Node.js. It aims for unbreakable encryption
                  using
                 <a href="http://en.wikipedia.org/wiki/Salsa20" class="salsa20">Salsa 20</a>, 
@@ -306,7 +305,7 @@ var plaintext = buff.toString();</pre>
             <div class="question">
               <h5>Wait, so how are the 3 ciphers combined?</h5>
               <p class="answer">
-                Like magic.
+                Max to write this.
               </p>
               <h5>What's triplesec.Buffer?</h5>
               <p class="answer">
@@ -316,12 +315,21 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>How does TripleSec generate randomness/entropy? And can I change it?</h5>
               <p class="answer">
-                In the browser it uses <code>window.crypto.getRandomValues</code> and in Node it uses <code>crypto.rng</code>.
-                For fear one of these has been compromised, TripleSec augments
-                with <a href="https://github.com/keybase/more-entropy">more-entropy</a>. 
+                In the browser, TripleSec uses <code>window.crypto.getRandomValues</code> and in Node it uses <code>crypto.rng</code>.
+                For fear of a compromise -- let's say your browser author has inserted a weak version of one of these in exchange
+                for some honeypot sex -- 
+                TripleSec seeds further
+                with <a href="https://github.com/keybase/more-entropy">more-entropy (explained here in more detail)</a>, which does its own timing of a great
+                number of math operations.
               </p>
               <h5>How are passphrases salted?</h5>
+              <p class="answer">
+                Max to write this.
+              </p>
               <h5>Can I encrypt files with it, in the browser?</h5>
+              <p class="answer">
+                Yes, using HTML5 features you can access file data without uploading it to a server. Note that TripleSec is not super fast.
+              </p>
             </div>
           </div>
 
