@@ -2,6 +2,7 @@
 hmac = require './hmac'
 sha512 = require './sha512'
 {WordArray} = require './wordarray'
+{Lock} = require './lock'
 
 #====================================================================
 
@@ -19,6 +20,7 @@ exports.DRBG = class DRBG
     # Only run at the most secure strength
     @security_strength = 256
     entropy = @check_entropy entropy
+    personalization_string or= new WordArray []
     @_instantiate entropy, personalization_string
 
   #-----------------
@@ -80,11 +82,32 @@ exports.DRBG = class DRBG
     throw new Error "Need a reseed!" if @reseed_counter >= 10000
 
     tmp = []
+    i = 0
     while (tmp.length is 0) or (tmp.length * tmp[0].length * 4) < num_bytes
       @V = @_hmac @K, @V
       tmp.push @V.words
     @_update()
     @reseed_counter += 1
-    new WordArray([].concat tmp...)
+    (new WordArray([].concat tmp...)).truncate num_bytes
+
+#====================================================================
+
+exports.ADRBG = class ADRBG
+
+  constructor : (@gen_seed) ->
+    @drbg = null
+    @lock = new Lock()
+
+  generate : (n, cb) ->
+    await @lock.acquire defer()
+    if not @drbg?
+      await @gen_seed 256, defer seed
+      @drbg = new DRBG seed
+    if @drbg.reseed_counter > 100
+      await @gen_seed 256, defer seed
+      @drbg.reseed seed
+    ret = @drbg.generate n
+    @lock.release()
+    cb ret
 
 #====================================================================

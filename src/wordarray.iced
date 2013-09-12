@@ -166,6 +166,13 @@ exports.WordArray = class WordArray
 
   #--------------
 
+  truncate : (n_bytes) ->
+    throw new Error "Cannot truncate: #{n_bytes} > #{@sigBytes}" unless n_bytes <= @sigBytes
+    n_words = Math.ceil(n_bytes/4)
+    new WordArray @words[0...n_words], n_bytes
+
+  #--------------
+
   unshift : (n_words) ->
     if @words.length >= n_words
       ret = @words.splice 0, n_words

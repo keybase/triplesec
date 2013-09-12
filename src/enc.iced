@@ -8,6 +8,7 @@ hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
 util          = require './util'
+prng          = require './prng'
 
 #========================================================================
 
@@ -103,8 +104,8 @@ exports.Base = class Base
 #
 #  @param {Buffer} key  A buffer with the keystream data in it
 #  @param {Buffer} salt Salt for key derivation, should be the user's email address
-#  @param {Function} rng Call it with the number of Rando bytes you need
-#
+#  @param {Function} rng Call it with the number of Rando bytes you need. It should
+#    callback with a WordArray of random bytes
 #
 exports.Encryptor = class Encryptor extends Base
 
@@ -114,8 +115,9 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
   
-  constructor : ( { key, @rng } ) ->
+  constructor : ( { key, rng } ) ->
     super { key }
+    @rng = rng or prng.generate
     @last_salt = null
 
   #---------------
@@ -127,7 +129,7 @@ exports.Encryptor = class Encryptor extends Base
       salsa20 : salsa20.Salsa20.ivSize
     ivs = {}
     for k,v of iv_lens
-      ivs[k] = WordArray.from_buffer @rng(v)
+      await @rng v, defer ivs[k]
     cb ivs
 
   #---------------
@@ -136,7 +138,7 @@ exports.Encryptor = class Encryptor extends Base
   # once, but if you don't do it again, you'll just wind up using the
   # same salt.
   resalt : ({progress_hook}, cb) ->
-    @salt = WordArray.from_buffer @rng @version.salt_size
+    await @rng @version.salt_size, defer @salt
     await @pbkdf2 {progress_hook, @salt}, defer @keys
     cb()
  
@@ -172,12 +174,12 @@ exports.Encryptor = class Encryptor extends Base
 #   use, so copy it if you need it later.
 # @param {Function} rng A function that takes as input n and outputs n truly
 #   random bytes.  You must give a real RNG here and not something fake.
-#   You can try require('./rng').rng for starters.
+#   You can try require('./prng').generate_words for starters.
 # @param {callback} cb Callback with an (err,res) pair. The err is an Error object
 #   (if encountered), and res is a Buffer object (on success).
 #
 exports.encrypt = encrypt = ({ key, data, rng, progress_hook}, cb) ->
-  enc = new Encryptor { key, rng}
+  enc = new Encryptor { key, rng }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()
   cb err, ret

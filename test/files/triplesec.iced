@@ -1,4 +1,3 @@
-{rng}     = require '../../lib/rng'
 {Encryptor,encrypt} = require '../../lib/enc'
 {decrypt} = require '../../lib/dec'
 
@@ -20,7 +19,6 @@ test_vectors = [
 
 run_test = (T, d, i, cb) ->
   orig = new Buffer d.data
-  d.rng = rng
   await encrypt d, defer err, ct
   T.assert not err?
   d.data = ct
@@ -52,7 +50,6 @@ exports.run_test_vectors = (T,cb) ->
 
 exports.check_randomness = (T, cb) ->
   tv = test_vectors[0]
-  tv.rng = rng
   enc = new Encryptor tv
   found = {}
   for i in [0...100]

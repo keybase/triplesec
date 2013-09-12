@@ -17,6 +17,7 @@
     "colors" : "*",
     "deep-equal" : "*",
     "cryptojs-2fish" : "*",
+    "more-entropy" : "*",
     "optimist" : "*",
     "rsp2json" : "*"
   },
