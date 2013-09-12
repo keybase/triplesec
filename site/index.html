@@ -300,6 +300,84 @@ var plaintext = buff.toString();</pre>
 
           </div><!-- /.how-to-use -->
 
+          <div class="design subsection">
+            <h3>Algorithm Design</h3>
+
+            <p>The Triplesec library encrypts data in four high-level steps:
+              <ol>
+
+                <li>
+                  <b>Key derivation.</b> Given a user-provided password, and a
+                  random salt value, generate four separate secret keys, one
+                  for each cipher (see Step 3), and a final key for
+                  signing the ciphertext (see Step 4).  This "key stretching" is done via
+                  <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a> 
+                  using the <a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> 
+                  hash primitive.  The output of this step is four seperate keys, 
+                  used below.
+                </li>
+
+                <li>
+                  <b>Initial value (IV) generation.</b> A random number generator is queried 
+                  to produce an initial for each of the three ciphers: a 192-bit
+                  IV for <a href="http://cr.yp.to/papers.html#xsalsa">XSalsa20</a> 
+                  (a slightly modified version of Salsa20 that takes a 192-bit nonce
+                  rather than the standard 64-bit nonce); a 128-bit IV for Twofish; and a 128-bit
+                  IV for AES.
+                </li>
+
+                <li>
+                  <b>Cascading encryption.</b> Each of the ciphers runs with the keys generated
+                  in Step 1, and the IVs generated in Step 2. The innermost cipher
+                  is XSalsa20, which is a stream cipher so doesn't need a block mode of
+                  operation.  Given a key, and an IV, Salsa20 generates a random pad,
+                  which is then XOR'ed with the input message.  This step of the algorithm
+                  then outputs the concatenation of the IV and the result of the XOR operation.
+                  This output is then the input for the next cipher, which is Twofish
+                  running in <a href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">CTR</a> mode.  That is, given the Twofish key generated in Step 1
+                  and the Twofish IV generated in Step 2 (call it R), an encrypted pad is output
+                  that is the size of the ciphertext output from the Salsa step.
+                  This pad will be of the concatenation of Twofish outputs when run on inputs R, 
+                  R+1, R+2, etc, until enough pad is accumulated.  Then, this pad is XOR'ed with the output
+                  from the Salsa20 step.  The output of the Twofish step is the concatenation of the IV and
+                  the XOR result. The same process is repeated one last time,
+                  with AES also running in CTR mode.
+                </li>
+
+                <li>
+                  <b>HMAC (or "sign") the ciphertext.</b> Finally, Triplesec "signs" the ciphertext
+                  to ensure that it's not tampered by an adversary.  The data to be signed
+                  is everything generated to date: a small header that encapsulates the version
+                  of the algorithm (now at <tt>1</tt>); the salt used in key derivation; and
+                  the output of the AES stage of the chained encryption above.  Triplesec uses
+                  <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a> with SHA-512 to prepare a mac.  The final output is a concatenation of:
+                  the header; the salt; the signature; and the outermost ciphertext.
+                </li>
+
+              </ol>
+            </p>
+
+            <p>
+              Though this is not the exact algorithm suggested by Schneier in
+              <i>Applied Cryptography</i> (Section 15.8 in the Second Edition), it is
+              close.  Triplesec never uses the output of one block cipher as input into the next,
+              which theoretically might allow a crack of one cipher to used to crack
+              another. Rather, by merit of CTR mode, the three ciphers run on statistcally 
+              independent IVs, so a crack of one will not help the crack of the others.
+              The Triplesec techniques takes one futher step not suggested by Schneier,
+              which is the protect the inner IVs with the outer encryption algorithms, and only
+              exposing the outermost IV in the clear. Though we can't prove this make 
+              the scheme more secure, it seems like a reasonable idea: why reveal cipher
+              inputs if we don't have to. Finally, this algorithm has the added advantage
+              in that the output ciphertext only increases by a constant additive amount (i.e.,
+              the lengths of the header, the salt, the HMAC and the three IVs).  Schneier's
+              technique inflates ciphertexts by a factor N, where N is the number of 
+              independent ciphers used.
+            </p>
+
+          </div><!-- /.design -->
+
+
           <div class="questions subsection">
             <h3>Anticipated Questions</h3>
             <div class="question">
