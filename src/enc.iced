@@ -47,12 +47,8 @@ exports.Base = class Base
       (tot += v for k,v of lens)
 
       # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
-      arg = 
-        key : @key.clone()
-        c : @version.pbkdf2_iters
-        dkLen : tot
-        progress_hook : progress_hook
-      await pbkdf2 arg, defer raw
+      await pbkdf2 { key : @key.clone(), c : @version.pbkdf2_iters, dkLen : tot, 
+                     progress_hook, salt }, defer raw
       keys = {}
       i = 0
       for k,v of lens

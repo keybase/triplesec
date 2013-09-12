@@ -38,7 +38,7 @@ exports.PBKDF2 = class PBKDF2
         ret.xor U, {}
         i++
       progress_hook? { what , total : @c, i}
-      await util.default_delay defer()
+      await util.default_delay 0, 0, defer()
     progress_hook? { what , total : @c, i }
     cb ret
 
@@ -46,7 +46,7 @@ exports.PBKDF2 = class PBKDF2
   
   gen : ({dkLen, progress_hook}, cb) ->
     bs = @prf.get_output_size()
-    n = Math.ceil(len / bs)
+    n = Math.ceil(dkLen / bs)
     words = []
     tph = null
     for i in [1..n]
@@ -57,7 +57,7 @@ exports.PBKDF2 = class PBKDF2
       words.push tmp.words
     flat = [].concat words...
     @key.scrub()
-    cb new WordArray flat, len
+    cb new WordArray flat, dkLen
 
 #=========================================================
 
