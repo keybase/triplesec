@@ -245,9 +245,9 @@ exports.encrypt = encrypt = ({key, iv, input}) ->
 
 #====================================================================
 
-exports.bulk_encrypt = bulk_encrypt = ({key, iv, input}, cb) ->
+exports.bulk_encrypt = bulk_encrypt = ({key, iv, input, progress_hook }, cb) ->
   cipher = new Cipher { key, iv }
-  await cipher.bulk_encrypt input, defer ret
+  await cipher.bulk_encrypt { input, progress_hook, what : "salsa20" }, defer ret
   cipher.scrub()
   cb ret
 

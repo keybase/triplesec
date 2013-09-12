@@ -93,13 +93,18 @@ exports.sign = ({key, input}) ->
 
 #=======================================================================
 
-exports.bulk_sign = ({key, input}, async_args) ->
+exports.bulk_sign = ({key, input, progress_hook}, cb) ->
   eng = new HMAC key
   input.clamp()
   slice_args = 
     update    : (lo,hi) -> eng.update input[lo...hi]
     finalize  : ()      -> eng.finalize()
     default_n : eng.hasherBlockSize * 1000
+  async_args = {
+    what : "hmac_sha512"
+    progress_hook
+    cb
+  }
   util.bulk input.sigBytes, slice_args, async_args
 
 #=======================================================================

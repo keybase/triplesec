@@ -70,35 +70,37 @@ exports.Decryptor = class Decryptor extends Base
 
   #----------------------
 
-  generate_keys : (cb) ->
-    await @pbkdf2 @salt, defer keys
+  generate_keys : ({progress_hook}, cb) ->
+    await @pbkdf2 { @salt, progress_hook }, defer keys
     cb keys
 
   #----------------------
 
-  run : (data, cb) ->
+  run : ({data, progress_hook}, cb) ->
+    
     # esc = "Error Short-Circuiter".  In the case of an error,
     # we'll forget about the rest of the function and just call back
-    # with the error.  If no error, the proceed as normal
+    # the outer-level cb with the error.  If no error, then proceed as normal.
     esc = make_esc cb, "Decryptor::run"
+
     @ct = WordArray.from_buffer data
     await @read_header esc defer()
     await @read_salt esc defer()
-    await @generate_keys defer @keys
+    await @generate_keys { progress_hook }, defer @keys
     await @verify_sig @keys.hmac, esc defer()
     await @unshift_iv AES.ivSize, "AES", esc defer iv
-    await @run_aes { iv, input : @ct, key : @keys.aes }, defer ct2
+    await @run_aes { iv, input : @ct, key : @keys.aes, progress_hook }, defer ct2
     await @unshift_iv TwoFish.ivSize, "2fish", esc defer iv
-    await @run_twofish { iv, input : @ct, key : @keys.twofish }, defer ct1
+    await @run_twofish { iv, input : @ct, key : @keys.twofish, progress_hook }, defer ct1
     await @unshift_iv Salsa20.ivSize, "Salsa", esc defer iv
-    await @run_salsa20 { iv, input : @ct, key : @keys.salsa20, output_iv : false }, defer pt
+    await @run_salsa20 { iv, input : @ct, key : @keys.salsa20, output_iv : false, progress_hook }, defer pt
     cb null, pt.to_buffer()
 
 #========================================================================
 
-exports.decrypt = decrypt = ( { key, data } , cb) ->
+exports.decrypt = decrypt = ( { key, data, progress_hook } , cb) ->
   dec = (new Decryptor { key })
-  await dec.run data, defer err, pt
+  await dec.run { data, progress_hook }, defer err, pt
   dec.scrub()
   cb err, pt
 

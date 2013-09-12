@@ -164,7 +164,7 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
 
 #=======================================================================
 
-exports.BlockCipher = class BlockCipher
+exports.BlockCipher = class BlockCipheGr
   constructor : (key) ->
   encryptBlock : (M, offset) ->
     
@@ -198,16 +198,15 @@ exports.StreamCipher = class StreamCipher
 
   #---------------------
 
-  bulk_encrypt : (word_array, cb) ->
+  bulk_encrypt : ({input, progress_hook, what}, cb) ->
     slice_args = 
       update : (lo,hi) =>
         for i in [lo...hi] by @bsiw
-          @encryptBlock word_array, i
-      finalize : () -> 
-        word_array
+          @encryptBlock input, i
+      finalize : () -> input
       default_n : @bsiw * 1024
-
-    util.bulk word_array.sigBytes, slice_args, { cb }
+    async_args = {progress_hook, cb, what }
+    util.bulk input.sigBytes, slice_args, async_args
 
 #=======================================================================
 

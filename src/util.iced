@@ -46,20 +46,26 @@ exports.default_delay = default_delay = (i, n, cb) ->
 #    on if none is given explicitly as n
 # @param {number} n The number of words per batch
 # @param {Function} delay The function to call in each delay slot
+# @param {String} what The "what" parameter to pass to progress_hook
+# @param {Function} progress_hook The hook to call periodically with progress updates
 # @param {Callback} cb The callback to call upon completion, with
 #    a result (and no error, since no errors can be generated in a correct
 #    implementation).
-exports.bulk = (n_input_bytes, {update, finalize, default_n}, {delay, n, cb}) ->
+exports.bulk = (n_input_bytes, {update, finalize, default_n}, {delay, n, cb, what, progress_hook}) ->
   i = 0
   left = 0
   total_words = Math.ceil n_input_bytes / 4
   delay or= default_delay
   n or= default_n
+  call_ph = (i) -> progress_hook? { what, i, total : total_words }
+  call_ph 0
   while (left = (total_words - i)) > 0
     n_words = Math.min n, left
     update i, i + n_words
+    call_ph i
     await delay i, total_words, defer()
     i += n_words
+  call_ph total_words
   ret = finalize()
   cb ret
 

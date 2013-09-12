@@ -56,7 +56,7 @@ exports.check_randomness = (T, cb) ->
   enc = new Encryptor tv
   found = {}
   for i in [0...100]
-    await enc.run tv.data, defer err, ct
+    await enc.run {data : tv.data}, defer err, ct
     T.assert not err?
     ct = ct.toString 'hex'
     if found[ct]

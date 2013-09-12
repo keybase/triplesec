@@ -32,11 +32,11 @@ exports.Base = class Base
 
   #---------------
 
-  pbkdf2 : (salt, cb) ->
+  pbkdf2 : ({salt, progress_hook}, cb) ->
     # Check the cache first
     salt_hex = salt.to_hex()
 
-    unless (keys = @derived_keys[salt_hex])?
+    if not (keys = @derived_keys[salt_hex])?
 
       lens = 
         hmac    : hmac.HMAC.keySize
@@ -47,8 +47,12 @@ exports.Base = class Base
       (tot += v for k,v of lens)
 
       # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
-      key = @key.clone()
-      await pbkdf2 { key, salt, c : @version.pbkdf2_iters, dkLen : tot }, defer raw
+      arg = 
+        key : @key.clone()
+        c : @version.pbkdf2_iters
+        dkLen : tot
+        progress_hook : progress_hook
+      await pbkdf2 arg, defer raw
       keys = {}
       i = 0
       for k,v of lens
@@ -62,30 +66,30 @@ exports.Base = class Base
  
   #---------------
 
-  sign : ({input, key, salt}, cb) ->
+  sign : ({input, key, salt, progress_hook}, cb) ->
     input = (new WordArray @version.header ).concat(salt).concat(input)
-    await hmac.bulk_sign { key, input }, { cb : defer(out) }
+    await hmac.bulk_sign { key, input, progress_hook}, defer(out)
     cb out
 
   #---------------
 
-  run_salsa20 : ({ input, key, iv, output_iv }, cb) ->
-    await salsa20.bulk_encrypt { input, key, iv}, defer ct
+  run_salsa20 : ({ input, key, iv, output_iv, progress_hook }, cb) ->
+    await salsa20.bulk_encrypt { input, key, iv, progress_hook}, defer ct
     ct = iv.clone().concat(ct) if output_iv
     cb ct
 
   #---------------
 
-  run_twofish : ({input, key, iv}, cb) ->
+  run_twofish : ({input, key, iv, progress_hook}, cb) ->
     block_cipher = new TwoFish key
-    await ctr.bulk_encrypt { block_cipher, iv, input }, defer ct
+    await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "twofish" }, defer ct
     cb iv.clone().concat(ct)
 
   #---------------
 
-  run_aes : ({input, key, iv}, cb) ->
+  run_aes : ({input, key, iv, progress_hook}, cb) ->
     block_cipher = new AES key
-    await ctr.bulk_encrypt { block_cipher, iv, input }, defer ct
+    await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "aes" }, defer ct
     cb iv.clone().concat(ct)
 
   #---------------
@@ -120,7 +124,7 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
 
-  pick_random_ivs : (cb) ->
+  pick_random_ivs : ({progress_hook}, cb) ->
     iv_lens =
       aes : AES.ivSize
       twofish : TwoFish.ivSize
@@ -135,23 +139,23 @@ exports.Encryptor = class Encryptor extends Base
   # Regenerate the salt. Reinitialize the keys. You have to do this
   # once, but if you don't do it again, you'll just wind up using the
   # same salt.
-  resalt : (cb) ->
+  resalt : ({progress_hook}, cb) ->
     @salt = WordArray.from_buffer @rng @version.salt_size
-    await @pbkdf2 @salt, defer @keys
+    await @pbkdf2 {progress_hook, @salt}, defer @keys
     cb()
  
   #---------------
 
   # @param {Buffer} data the data to encrypt 
   # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
-  run : ( data, cb ) ->
-    await @resalt defer() unless @salt?
-    await @pick_random_ivs defer ivs
+  run : ( { data, progress_hook }, cb ) ->
+    await @resalt { progress_hook }, defer() unless @salt?
+    await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
-    await @run_salsa20 { input : pt,  key : @keys.salsa20, iv : ivs.salsa20, output_iv : true }, defer ct1
-    await @run_twofish { input : ct1, key : @keys.twofish, iv : ivs.twofish }, defer ct2
-    await @run_aes     { input : ct2, key : @keys.aes,     iv : ivs.aes     }, defer ct3
-    await @sign        { input : ct3, key : @keys.hmac,    @salt            }, defer sig
+    await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, defer ct1
+    await @run_twofish { input : ct1, key : @keys.twofish, progress_hook, iv : ivs.twofish }, defer ct2
+    await @run_aes     { input : ct2, key : @keys.aes,     progress_hook, iv : ivs.aes     }, defer ct3
+    await @sign        { input : ct3, key : @keys.hmac,    progress_hook, @salt            }, defer sig
     ret = (new WordArray(@version.header)).concat(@salt).concat(sig).concat(ct3).to_buffer()
     util.scrub_buffer data
     cb null, ret
@@ -176,9 +180,9 @@ exports.Encryptor = class Encryptor extends Base
 # @param {callback} cb Callback with an (err,res) pair. The err is an Error object
 #   (if encountered), and res is a Buffer object (on success).
 #
-exports.encrypt = encrypt = ({ key, data, rng}, cb) ->
+exports.encrypt = encrypt = ({ key, data, rng, progress_hook}, cb) ->
   enc = new Encryptor { key, rng}
-  await enc.run data, defer err, ret
+  await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()
   cb err, ret
 
