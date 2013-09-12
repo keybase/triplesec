@@ -27,6 +27,10 @@ a:hover {
 .container p {
   margin-bottom:20px;
 }
+.container p.answer {
+  margin:30px;
+  max-width:400px;
+}
 ul {
   margin-bottom:30px;
 }
