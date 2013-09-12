@@ -326,28 +326,42 @@ var plaintext = buff.toString();</pre>
                 <li>
                   <b>Initial value (IV) generation.</b> A random number generator is queried 
                   to produce an initial for each of the three ciphers: a 192-bit
-                  IV for <a href="http://cr.yp.to/papers.html#xsalsa">XSalsa20</a> 
-                  (a slightly modified version of Salsa20 that takes a 192-bit nonce
-                  rather than the standard 64-bit nonce); a 128-bit IV for Twofish; and a 128-bit
+                  IV for Salsa20; a 128-bit IV for Twofish; and a 128-bit
                   IV for AES.
                 </li>
 
                 <li>
                   <b>Cascading encryption.</b> Each of the ciphers runs with the keys generated
-                  in Step 1, and the IVs generated in Step 2. The innermost cipher
-                  is XSalsa20, which is a stream cipher so doesn't need a block mode of
-                  operation.  Given a key, and an IV, Salsa20 generates a random pad,
-                  which is then XOR'ed with the input message.  This step of the algorithm
-                  then outputs the concatenation of the IV and the result of the XOR operation.
-                  This output is then the input for the next cipher, which is Twofish
-                  running in <a href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">CTR</a> mode.  That is, given the Twofish key generated in Step 1
-                  and the Twofish IV generated in Step 2 (call it R), an encrypted pad is output
-                  that is the size of the ciphertext output from the Salsa step.
-                  This pad will be of the concatenation of Twofish outputs when run on inputs R, 
-                  R+1, R+2, etc, until enough pad is accumulated.  Then, this pad is XOR'ed with the output
+                  in Step 1, and the IVs generated in Step 2.
+
+                  <ol>
+                    <li>
+                      <p><b>Salsa20.</b> The innermost cipher is a Salsa20 variant called <a href="http://cr.yp.to/papers.html#xsalsa">XSalsa20</a>. Like Salsa20, XSalsa20 is a stream
+                      cipher, meaning it can encrypt input texts of arbitrary length without a 
+                      a block cipher mode of operation.  XSalsa20 takes a 192-bit nonce
+                      rather than Salsa20's 64-bit nonce, but is provably as secure.  We chose
+                      XSalsa20 over Salsa20 for the sake of excess paranoia.
+                      Given a key, and an IV, XSalsa20 generates a random pad,
+                      which is then XOR'ed with the input message.  This step of the algorithm
+                      outputs the concatenation of the IV and the result of the XOR operation.
+                    </li>
+
+                    <li><b>Twofish-CTR.</b> The output of the previous step 
+                      (call it <i>C<sub>1</sub></i>) is the input
+                      of this step, which uses Twofish running in <a href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">CTR</a> mode.
+                      Call the IV generated for Twofish in Step <i>R</i>.
+                      Twofish-CTR works by encrypting <i>R</i>, <i>R+1</i>, <i>R+2</i>,...
+                      with Twofish, and concatenates the result to yield a pad the size
+                      of <i>C<sub>1</sub></i>.  This step outputs <i>R</i> concatenated
+                      with the result of the XOR operation above.
+                    </li>
+
+                    <li>
                   from the Salsa20 step.  The output of the Twofish step is the concatenation of the IV and
                   the XOR result. The same process is repeated one last time,
                   with AES also running in CTR mode.
+                    </li>
+                  </ol>
                 </li>
 
                 <li>
@@ -370,11 +384,11 @@ var plaintext = buff.toString();</pre>
               which theoretically might allow a crack of one cipher to used to crack
               another. Rather, by merit of CTR mode, the three ciphers run on statistcally 
               independent IVs, so a crack of one will not help the crack of the others.
-              The TripleSec techniques takes one futher step not suggested by Schneier,
-              which is the protect the inner IVs with the outer encryption algorithms, and only
-              exposing the outermost IV in the clear. Though we can't prove this make 
+              The TripleSec technique takes one futher step not suggested by Schneier,
+              which is to protect the inner IVs with the outer encryption algorithms, and only
+              exposing the outermost IV in the clear. Though we can't prove this makes 
               the scheme more secure, it seems like a reasonable idea: why reveal cipher
-              inputs if we don't have to. Finally, this algorithm has the added advantage
+              inputs if we don't have to? Finally, this algorithm has the added advantage
               in that the output ciphertext only increases by a constant additive amount (i.e.,
               the lengths of the header, the salt, the HMAC and the three IVs).  Schneier's
               technique inflates ciphertexts by a factor N, where N is the number of 
