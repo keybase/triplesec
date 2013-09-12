@@ -3,7 +3,23 @@ body {
 }
 a {
   text-decoration: underline;
+  color:#0cf;
 }
+a:hover {
+  color:#0ad;
+}
+.nav li a, .nav li a:hover {
+  text-decoration: none;
+  color: #0cf;
+}
+.nav li.active a,.nav li.active a:hover  {
+  color:#fff;
+  background-color:#0cf;
+}
+.nav li {
+  margin:10px;
+}
+
 .container {
   margin-top:100px;
   line-height: 1.5em;
@@ -67,7 +83,7 @@ pre, .output-code, #progress-summary, code {
   color: #906;
 }
 code {
-  background-color: #fce;
+  background-color: #ffeef8;
 }
 pre, .output-code {
   margin:20px 0 20px 0;

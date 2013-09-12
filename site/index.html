@@ -37,9 +37,9 @@
           $("#progress-summary").html h + txt
 
         $('#demo-input-data').on 'change',  -> input_change()
-        $('#demo-input-data').on 'keyup', -> input_change()
-        $('#demo-input-key').on 'change',  ->  input_change()
-        $('#demo-input-key').on 'keyup', ->  input_change()
+        $('#demo-input-data').on 'keyup',   -> input_change()
+        $('#demo-input-key').on  'change',  -> input_change()
+        $('#demo-input-key').on  'keyup',   -> input_change()
 
 
         $('.btn-encrypt').on 'click', =>
@@ -48,11 +48,11 @@
           reset_progress()
           add_progress 'generating key...'
           add_progress 'doing something...'
-          out    = triplesec.encrypt {
+          await triplesec.encrypt {
             data: data
             key:  key
             rng:  triplesec.rng
-          }
+          }, defer err, out
           hex = out.toString 'hex'
           add_progress 'done'
           $("#demo-input-data").val hex
@@ -65,10 +65,10 @@
           reset_progress()
           add_progress 'decrypting step 1...'
           add_progress 'decrypting step 2...'
-          out    = triplesec.decrypt {
+          await triplesec.decrypt {
             data: data
             key:  key
-          }
+          }, defer err, out
           txt = out.toString()
           add_progress 'done'
           $("#demo-input-data").val txt
@@ -103,10 +103,12 @@
               </ul>
               <p>
                 If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
-                encrypt in the browser or client app with extreme presumption. Has a government already compromised a popular cipher?
+                encrypt in the browser or client app with extreme presumption.
+              </p>
+              <p>Has a government already compromised a popular cipher?
                 Will academics eventually break one?
                  With a yes in mind,
-                <b>TripleSec</b> is a simple, open-source symmetric encryption library in JavaScript. It aims for reliable privacy
+                <b>TripleSec</b> is a simple, open-source symmetric encryption library for the browser and Node.js. It aims for unbreakable encryption
                  using
                 <b class="salsa20">Salsa 20</b>, <b class="aes">AES</b>, and <b class="twofish">Twofish</b>,
                 so that a compromise of 1 (or even 2) of the ciphers will expose nothing. The 3 are combined in a
@@ -167,7 +169,7 @@
           <div class="installation subsection">
             <h3>Installation</h3>
             <p>
-              For the browser, <a href="js/triplesec.js">download it here</a>, then <code>&lt;script src="triplesec.js"&gt;&lt;/script&gt;</code>. 
+              For the browser, <a href="js/triplesec.js">download triplesec.js</a>, then <code>&lt;script src="triplesec.js"&gt;&lt;/script&gt;</code>. 
             </p>
             <p>
               In node, <code>npm install triplesec</code>.
@@ -180,37 +182,116 @@
             Encryption is performed by the <code>encrypt</code> function; data and key inputs
             should be of type <code>triplesec.Buffer</code>. A salt is generated automatically for you and is embedded in the ciphertext.
             </p>
-            <pre>var b = triplesec.encrypt ({
 
-  data: new triplesec.Buffer('Pssst. I believe I love you.'),
-  key:  new triplesec.Buffer('top-secret-pw'),
-  rng:  triplesec.rng
+            <!--
 
-});
+                SAMPLE CODE PANED SECTION
 
-// convert the output buffer to hex, base64, whatever
+            -->
 
-var ciphertext = b.toString('hex');</pre>
+
+            <ul class="nav nav-pills pull-right">
+              <li class="pull-right active"><a href="#encrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
+              <li class="pull-right"><a href="#encrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="encrypt-javascript">
+
+                <pre>triplesec.encrypt ({
+
+    data:          new triplesec.Buffer('Pssst. I believe I love you.'),
+    key:           new triplesec.Buffer('top-secret-pw'),
+    progress_hook: function (step, iterations, i) { /* ... */ }
+
+}, function(err, buff) {
+  
+    if (! err) { 
+        var ciphertext = buff.toString('hex');
+    }
+
+});</pre>
+              </div><!-- /.tab-pane -->
+              <div class="tab-pane active" id="encrypt-coffeescript">
+
+                <pre>triplesec.encrypt
+
+    data:          new triplesec.Buffer 'Pssst. I believe I love you.'
+    key:           new triplesec.Buffer 'top-secret-pw'
+    progress_hook: (step, iterations, i) -> # ...
+
+, (err, buff) ->
+
+    console.log buff.toString 'hex' unless err</pre>
+              </div><!-- /.tab-pane -->
+            </div><!-- /.tab-content -->
+
+          <!--
+
+              END PANED SECTION
+
+          -->
+
           <p>
             And <code>decrypt</code> is smoother than a CIA honeypot.
-          </p><pre>var b = triplesec.decrypt ({
+          </p>
 
-  data: new triplesec.Buffer(ciphertext, "hex"),
-  key:  new triplesec.Buffer('top-secret-pw')
+            <!--
+
+                SAMPLE CODE PANED SECTION
+
+            -->
+
+            <ul class="nav nav-pills pull-right">
+              <li class="pull-right active"><a href="#decrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
+              <li class="pull-right"><a href="#decrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="decrypt-javascript">
+
+
+          <pre>triplesec.decrypt ({
+
+    data:          new triplesec.Buffer(ciphertext, "hex"),
+    key:           new triplesec.Buffer('top-secret-pw'),    
+    progress_hook: function (step, iterations, i) { /* ... */ }
+
+}, function (err, buff) {
+
+    if (! err) { 
+        console.log(buff.toString());
+    }  
 
 });
 
-var plaintext = b.toString();
-</pre>
+var plaintext = b.toString();</pre>
+              </div><!-- /.tab-pane -->
+              <div class="tab-pane active" id="decrypt-coffeescript">
 
-          </div>
+
+          <pre>triplesec.decrypt
+
+    data:          new triplesec.Buffer ciphertext, 'hex'
+    key:           new triplesec.Buffer 'top-secret-pw'
+    progress_hook: (step, iterations, i) -> # ...
+
+, (err, buff) ->
+
+    console.log b.toString() unless err</pre>
+              </div><!-- /.tab-pane -->              
+            </div><!-- /.tab-content -->
+
+            
+
+          </div><!-- /.how-to-use -->
 
           <div class="questions subsection">
             <h3>Anticipated Questions</h3>
             <div class="question">
               <h5>Wait, so how are the 3 ciphers combined?</h5>
               <h5>What's triplesec.Buffer?</h5>
-              <h5>What's triplesec.rng?</h5>
+              <h5>How does triplec generate randomness? And can I change it?</h5>
               <h5>How are passphrases salted?</h5>
               <h5>Are slow encryptions CPU-blocking?</h5>
               <h5>Can I encrypt files with it, in the browser?</h5>
