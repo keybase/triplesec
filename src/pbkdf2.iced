@@ -48,7 +48,7 @@ exports.PBKDF2 = class PBKDF2
     n = Math.ceil(dkLen / bs)
     words = []
     tph = null
-    ph = (block) => (iter) => progress_hook? { what : "pbkdf2", total : n * bs, i : block*bs + iter }
+    ph = (block) => (iter) => progress_hook? { what : "pbkdf2", total : n * @c, i : block*@c + iter }
     ph(0)(0)
     for i in [1..n]
       await @gen_T_i {i, progress_hook : ph(i-1) }, defer tmp
