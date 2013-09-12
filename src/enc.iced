@@ -8,7 +8,7 @@ hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
 util          = require './util'
-rng           = require './rng'
+prng          = require './prng'
 
 #========================================================================
 
@@ -173,12 +173,12 @@ exports.Encryptor = class Encryptor extends Base
 #   use, so copy it if you need it later.
 # @param {Function} rng A function that takes as input n and outputs n truly
 #   random bytes.  You must give a real RNG here and not something fake.
-#   You can try require('./rng').rng for starters.
+#   You can try require('./prng').generate_words for starters.
 # @param {callback} cb Callback with an (err,res) pair. The err is an Error object
 #   (if encountered), and res is a Buffer object (on success).
 #
 exports.encrypt = encrypt = ({ key, data, rng, progress_hook}, cb) ->
-  rng or= rng.generate_words
+  rng or= prng.generate_words
   enc = new Encryptor { key, rng }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()

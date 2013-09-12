@@ -28,7 +28,7 @@ $(BUILD_STAMP): \
 	lib/pbkdf2.js \
 	lib/enc.js \
 	lib/dec.js \
-	lib/rng.js \
+	lib/prng.js \
 	lib/drbg.js \
 	lib/lock.js
 	date > $@
