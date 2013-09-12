@@ -26,11 +26,13 @@ exports.scrub_vec = (v) ->
 #----------------------------------------------
 
 exports.default_delay = default_delay = (i, n, cb) ->
-  await setTimeout defer(), 2
-  if setImmediate?
+  if setImmediate? and false
     await setImmediate defer()
   else
+    d = Date.now()
+    console.log "Call set timeout"
     await setTimeout defer(), 1
+    console.log "Set timeout took #{Date.now() - d}"
   cb()
 
 #----------------------------------------------
