@@ -8,6 +8,7 @@ hmac          = require './hmac'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
 util          = require './util'
+rng           = require './rng'
 
 #========================================================================
 
@@ -103,8 +104,8 @@ exports.Base = class Base
 #
 #  @param {Buffer} key  A buffer with the keystream data in it
 #  @param {Buffer} salt Salt for key derivation, should be the user's email address
-#  @param {Function} rng Call it with the number of Rando bytes you need
-#
+#  @param {Function} rng Call it with the number of Rando bytes you need. It should
+#    callback with a WordArray of random bytes
 #
 exports.Encryptor = class Encryptor extends Base
 
@@ -127,7 +128,7 @@ exports.Encryptor = class Encryptor extends Base
       salsa20 : salsa20.Salsa20.ivSize
     ivs = {}
     for k,v of iv_lens
-      ivs[k] = WordArray.from_buffer @rng(v)
+      await @rng v, defer ivs[k]
     cb ivs
 
   #---------------
@@ -177,7 +178,8 @@ exports.Encryptor = class Encryptor extends Base
 #   (if encountered), and res is a Buffer object (on success).
 #
 exports.encrypt = encrypt = ({ key, data, rng, progress_hook}, cb) ->
-  enc = new Encryptor { key, rng}
+  rng or= rng.generate_words
+  enc = new Encryptor { key, rng }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()
   cb err, ret

@@ -29,7 +29,8 @@ $(BUILD_STAMP): \
 	lib/enc.js \
 	lib/dec.js \
 	lib/rng.js \
-	lib/drbg.js
+	lib/drbg.js \
+	lib/lock.js
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)
