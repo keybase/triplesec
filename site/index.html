@@ -309,7 +309,7 @@ var plaintext = buff.toString();</pre>
           <div class="design subsection">
             <h3>Algorithm Design</h3>
 
-            <p>The Triplesec library encrypts data in four high-level steps:
+            <p>The TripleSec library encrypts data in four high-level steps:
               <ol>
 
                 <li>
@@ -351,11 +351,11 @@ var plaintext = buff.toString();</pre>
                 </li>
 
                 <li>
-                  <b>HMAC (or "sign") the ciphertext.</b> Finally, Triplesec "signs" the ciphertext
+                  <b>HMAC (or "sign") the ciphertext.</b> Finally, TripleSec "signs" the ciphertext
                   to ensure that it's not tampered by an adversary.  The data to be signed
                   is everything generated to date: a small header that encapsulates the version
                   of the algorithm (now at <tt>1</tt>); the salt used in key derivation; and
-                  the output of the AES stage of the chained encryption above.  Triplesec uses
+                  the output of the AES stage of the chained encryption above.  TripleSec uses
                   <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a> with SHA-512 to prepare a mac.  The final output is a concatenation of:
                   the header; the salt; the signature; and the outermost ciphertext.
                 </li>
@@ -366,11 +366,11 @@ var plaintext = buff.toString();</pre>
             <p>
               Though this is not the exact algorithm suggested by Schneier in
               <i>Applied Cryptography</i> (Section 15.8 in the Second Edition), it is
-              close.  Triplesec never uses the output of one block cipher as input into the next,
+              close.  TripleSec never uses the output of one block cipher as input into the next,
               which theoretically might allow a crack of one cipher to used to crack
               another. Rather, by merit of CTR mode, the three ciphers run on statistcally 
               independent IVs, so a crack of one will not help the crack of the others.
-              The Triplesec techniques takes one futher step not suggested by Schneier,
+              The TripleSec techniques takes one futher step not suggested by Schneier,
               which is the protect the inner IVs with the outer encryption algorithms, and only
               exposing the outermost IV in the clear. Though we can't prove this make 
               the scheme more secure, it seems like a reasonable idea: why reveal cipher
