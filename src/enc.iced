@@ -115,8 +115,9 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
   
-  constructor : ( { key, @rng } ) ->
+  constructor : ( { key, rng } ) ->
     super { key }
+    @rng = rng or prng.generate
     @last_salt = null
 
   #---------------
@@ -137,7 +138,7 @@ exports.Encryptor = class Encryptor extends Base
   # once, but if you don't do it again, you'll just wind up using the
   # same salt.
   resalt : ({progress_hook}, cb) ->
-    @salt = WordArray.from_buffer @rng @version.salt_size
+    await @rng @version.salt_size, defer @salt
     await @pbkdf2 {progress_hook, @salt}, defer @keys
     cb()
  
@@ -178,7 +179,6 @@ exports.Encryptor = class Encryptor extends Base
 #   (if encountered), and res is a Buffer object (on success).
 #
 exports.encrypt = encrypt = ({ key, data, rng, progress_hook}, cb) ->
-  rng or= prng.generate_words
   enc = new Encryptor { key, rng }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()

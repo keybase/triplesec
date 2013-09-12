@@ -33,24 +33,24 @@ exports.PRNG = class PRNG
     @adrbg = new ADRBG (n,cb) => @gen_seed n, cb
 
   now_to_buffer : () ->
-    d = date.now()
+    d = Date.now()
     ms = d % 1000
-    s = d / 1000
-    buf = new buffer 8
-    buf.writeuint32be s, 0
-    buf.writeuint32be ms, 4
+    s = Math.floor d / 1000
+    buf = new Buffer 8
+    buf.writeUInt32BE s, 0
+    buf.writeUInt32BE ms, 4
     buf
 
   gen_seed : (nbits, cb) ->
-    n_bytes = n_bits / 8
+    nbytes = nbits / 8
     bufs = []
     bufs.push @now_to_buffer()
-    await @meg.generate_bits n_bits, defer words
+    await @meg.generate nbits, defer words
     bufs.push @now_to_buffer()
-    bufs.push new buffer words
-    bufs.push native_rng n_bytes
+    bufs.push new Buffer words
+    bufs.push native_rng nbytes
     bufs.push @now_to_buffer()
-    wa = wordarray.from_buffer [].concat bufs...
+    wa = WordArray.from_buffer Buffer.concat bufs
     cb wa
 
   generate : (n, cb) -> @adrbg.generate n, cb
@@ -58,7 +58,7 @@ exports.PRNG = class PRNG
 #===============================================
 
 _prng = null
-exports.generate_words = (n, cb) ->
+exports.generate = (n, cb) ->
   _prng = new PRNG() if not _prng?
   _prng.generate n, cb
 

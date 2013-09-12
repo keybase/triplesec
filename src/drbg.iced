@@ -82,12 +82,13 @@ exports.DRBG = class DRBG
     throw new Error "Need a reseed!" if @reseed_counter >= 10000
 
     tmp = []
+    i = 0
     while (tmp.length is 0) or (tmp.length * tmp[0].length * 4) < num_bytes
       @V = @_hmac @K, @V
       tmp.push @V.words
     @_update()
     @reseed_counter += 1
-    new WordArray([].concat tmp...)
+    (new WordArray([].concat tmp...)).truncate num_bytes
 
 #====================================================================
 
@@ -105,8 +106,8 @@ exports.ADRBG = class ADRBG
     if @drbg.reseed_counter > 100
       await @gen_seed 256, defer seed
       @drbg.reseed seed
-    ret = @drbg.generate num_bytes
+    ret = @drbg.generate n
     @lock.release()
     cb ret
-    
+
 #====================================================================
