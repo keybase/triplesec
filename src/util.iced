@@ -26,11 +26,7 @@ exports.scrub_vec = (v) ->
 #----------------------------------------------
 
 exports.default_delay = default_delay = (i, n, cb) ->
-  console.log "start delaying..."
-  f = () ->
-    console.log "done delaying..."
-    cb()
-  setTimeout f, 1000
+  setTimeout cb, 2
 
 #----------------------------------------------
 

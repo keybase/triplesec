@@ -199,13 +199,9 @@ exports.StreamCipher = class StreamCipher
   bulk_encrypt : (word_array, cb) ->
     slice_args = 
       update : (lo,hi) =>
-        console.log "In in #{lo}...#{hi}"
         for i in [lo...hi] by @bsiw
-          console.log "doing it #{i}"
           @encryptBlock word_array, i
-          console.log "did it"
       finalize : () -> 
-        console.log "now it's final..."
         word_array
       default_n : @bsiw * 1024
 

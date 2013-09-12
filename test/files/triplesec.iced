@@ -55,8 +55,10 @@ exports.check_randomness = (T, cb) ->
   tv.rng = rng
   enc = new Encryptor tv
   found = {}
-  for i in [0...1000]
-    ct = enc.run(tv.data).toString 'hex'
+  for i in [0...100]
+    await enc.run tv.data, defer err, ct
+    T.assert not err?
+    ct = ct.toString 'hex'
     if found[ct]
       T.error "found a repeated cipher text -> #{ct}"
     else

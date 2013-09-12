@@ -50,6 +50,7 @@ test-browser: $(TEST_STAMP) $(BUILD_STAMP)
 	@echo "Please visit in your favorite browser --> file://$(WD)/test/browser/index.html"
 
 test/json/HMAC_DRBG_reseed.json: test/rsp/HMAC_DRBG_reseed.rsp
+	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 
 $(TEST_STAMP): test/data/sha512_short.js \

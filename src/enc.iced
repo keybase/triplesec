@@ -59,7 +59,7 @@ exports.Base = class Base
       @derived_keys[salt_hex] = keys
 
     cb keys
-
+ 
   #---------------
 
   sign : ({input, key, salt}, cb) ->
@@ -180,7 +180,6 @@ exports.encrypt = encrypt = ({ key, data, rng}, cb) ->
   await enc.run data, defer err, ret
   util.scrub_buffer data
   enc.scrub()
-  console.log "encrypted! #{ret.toString('hex')}"
   cb err, ret
 
 #========================================================================
