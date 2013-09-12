@@ -26,7 +26,12 @@ exports.scrub_vec = (v) ->
 #----------------------------------------------
 
 exports.default_delay = default_delay = (i, n, cb) ->
-  setTimeout cb, 2
+  await setTimeout defer(), 2
+  if setImmediate?
+    await setImmediate defer()
+  else
+    await setTimeout defer(), 1
+  cb()
 
 #----------------------------------------------
 
