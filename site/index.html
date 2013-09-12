@@ -122,7 +122,7 @@
               </ul>
               <p>
                 If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
-                encrypt in the browser or client app with care, and avoid single encryption algorithms (possibly broken) or
+                encrypt in the browser or client app with care, and avoid single encryption algorithms (possibly broken) and
                 provided sources of entropy (possibly intentionally weak).
               </p>
               <p>
@@ -132,7 +132,7 @@
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>,
                 so that a compromise of 1 or 2 of the ciphers will expose nothing. The 3 are combined in a
-                technique (explained below) described by Bruce Schneier in <i>Applied Cryptography</i>. And TripleSec
+                technique described by Bruce Schneier in <i>Applied Cryptography</i> and explained below. And TripleSec
                 collects extra entropy from your computer, beyond the "provided" <code>window.crypto</code> and <code>crypto.rng</code>.
               </p>
               <p>
