@@ -402,6 +402,10 @@ var plaintext = buff.toString();</pre>
                 with <a href="https://github.com/keybase/more-entropy">more-entropy (explained here in more detail)</a>, which does its own timing of a great
                 number of math operations.
               </p>
+              <p class="answer">
+                You may alternatively provide your own random number generator for encryption. Pass an <code>rng</code> function
+                along with your other data. This function should behave just like [...].
+              </p>
               <h5>How are passphrases salted?</h5>
               <p class="answer">
                 Max to write this.
