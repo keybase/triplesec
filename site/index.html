@@ -132,7 +132,7 @@
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>,
                 so that a compromise of 1 or 2 of the ciphers will expose nothing. The 3 are combined in a
-                technique described by Bruce Schneier in <i>Applied Cryptography</i> and explained below. And TripleSec
+                technique described by Bruce Schneier in <i>Applied Cryptography</i> and expanded on below. And our implementation of TripleSec
                 collects extra entropy from your computer, beyond the "provided" <code>window.crypto</code> and <code>crypto.rng</code>.
               </p>
               <p>
@@ -396,7 +396,7 @@ var plaintext = buff.toString();</pre>
               <h5>How does TripleSec generate randomness/entropy? Can I provide my own?</h5>
               <p class="answer">
                 In the browser, TripleSec uses <code>window.crypto.getRandomValues</code> and in Node it uses <code>crypto.rng</code>.
-                For fear of a compromise -- let's say your browser author has inserted a weak version of one of these in exchange
+                For fear of a compromise -- let's say your browser's author has inserted a weak version of one of these in exchange
                 for some honeypot sex -- 
                 TripleSec seeds further
                 with <a href="https://github.com/keybase/more-entropy">more-entropy (explained here in more detail)</a>, which does its own timing of a great
