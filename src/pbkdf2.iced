@@ -25,8 +25,7 @@ exports.PBKDF2 = class PBKDF2
   #-----------
   
   gen_T_i : ({i, progress_hook}, cb) ->
-    what = "pkbdf2_gen_T_#{i}"
-    progress_hook? { what, total : @c, i : 0}
+    progress_hook 0
     seed = @salt.clone().concat new WordArray [i]
     U = @PRF seed
     ret = U.clone()
@@ -37,9 +36,9 @@ exports.PBKDF2 = class PBKDF2
         U = @PRF U
         ret.xor U, {}
         i++
-      progress_hook? { what , total : @c, i}
+      progress_hook i
       await util.default_delay 0, 0, defer()
-    progress_hook? { what , total : @c, i }
+    progress_hook i
     cb ret
 
   #-----------
@@ -49,12 +48,12 @@ exports.PBKDF2 = class PBKDF2
     n = Math.ceil(dkLen / bs)
     words = []
     tph = null
+    ph = (block) => (iter) => progress_hook? { what : "pbkdf2", total : n * @c, i : block*@c + iter }
+    ph(0)(0)
     for i in [1..n]
-      if progress_hook?
-        tph = (arg) ->
-          progress_hook { what : "pbkdf2", total : n*@c, i : i*@c + arg.i }
-      await @gen_T_i {i, progress_hook : tph }, defer tmp
+      await @gen_T_i {i, progress_hook : ph(i) }, defer tmp
       words.push tmp.words
+    ph(n)(0)
     flat = [].concat words...
     @key.scrub()
     cb new WordArray flat, dkLen
