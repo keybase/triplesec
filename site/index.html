@@ -29,8 +29,20 @@
             if (v.match /// ^ [a-f0-9]+ $///i ) and not (v.length % 2)
               $('.btn-decrypt').prop('disabled', false)
 
+        progress = []
+
+        reset_progress = (msg) ->
+          progress = []
+          $("#progress-summary").html (msg or '')
+
         progress_hook = (p) ->
-          $("#progress-summary").html "#{p.what} #{p.i}/#{p.total}"
+          if (progress.length) and (progress[progress.length-1].what is p.what)
+            progress[progress.length-1] = p
+          else
+            progress.push p
+          h = ""
+          h += "<li>#{pr.what} #{pr.i}/#{pr.total}</li>" for pr in progress
+          $("#progress-summary").html h
 
         $('#demo-input-data').on 'change',  -> input_change()
         $('#demo-input-data').on 'keyup',   -> input_change()
@@ -39,6 +51,7 @@
 
 
         $('.btn-encrypt').on 'click', =>
+          reset_progress()
           $('.btn-encrypt, .btn-decrypt').prop('disabled', true)
           data   = new triplesec.Buffer $('#demo-input-data').val()
           key    = new triplesec.Buffer $('#demo-input-key').val()
@@ -50,7 +63,7 @@
           }, defer err, out
           await setTimeout defer(), 5
           if err
-            $("#progress-summary").html err
+            reset_progress "<li>#{err}</li>"
           else
             hex = out.toString 'hex'          
             $("#demo-input-data").val hex
@@ -58,6 +71,7 @@
           input_change()
 
         $('.btn-decrypt').on 'click', =>
+          reset_progress()
           $('.btn-encrypt, .btn-decrypt').prop('disabled', true)
           data   = new triplesec.Buffer $('#demo-input-data').val(), 'hex'
           key    = new triplesec.Buffer $('#demo-input-key').val()
@@ -68,7 +82,7 @@
           }, defer err, out
           await setTimeout defer(), 5
           if err
-            $("#progress-summary").html err
+            reset_progress "<li>#{err}</li>"
           else
             txt = out.toString()
             $("#demo-input-data").val txt
@@ -103,7 +117,7 @@
               </ul>
               <p>
                 If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
-                encrypt in the browser or client app with extreme presumption.
+                encrypt in the browser or client app with care.
               </p>
               <p>Has a government already compromised a popular encryption algorithm?
                 Will academia?
@@ -114,7 +128,7 @@
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>,
                 so that a compromise of 1 (or even 2) of the ciphers will expose nothing. The 3 are combined in a
-                simple technique outlined by Bruce Schneier in <i>Applied Cryptography</i>.
+                technique (explained below) outlined by Bruce Schneier in <i>Applied Cryptography</i>.
               </p>
               <p>
                 In other words, <b>TripleSec</b> should work unless <i>all 3</i> of have fallen. A dark, dark day that would be.
@@ -296,12 +310,16 @@ var plaintext = b.toString();</pre>
               </p>
               <h5>What's triplesec.Buffer?</h5>
               <p class="answer">
-                It is
-                just a convenience wrapper around either Node.js's Buffer or a browser equivalent. When you generate
-                encrypted data, you can leave it as a buffer,
-                if that's useful. Or you can convert to 'base64' and other formats, too. This page demos hex conversion.
+                It is a wrapper around either Node.js's Buffer or a browser equivalent. When you generate
+                encrypted data, you can use the output buffer however you like. In our above examples, we converted
+                to and from hex strings.
               </p>
-              <h5>How does triplec generate randomness? And can I change it?</h5>
+              <h5>How does TripleSec generate randomness/entropy? And can I change it?</h5>
+              <p class="answer">
+                In the browser it uses <code>window.crypto.getRandomValues</code> and in Node it uses <code>crypto.rng</code>.
+                For fear one of these has been compromised, TripleSec augments
+                with <a href="https://github.com/keybase/more-entropy">more-entropy</a>. 
+              </p>
               <h5>How are passphrases salted?</h5>
               <h5>Can I encrypt files with it, in the browser?</h5>
             </div>
