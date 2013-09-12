@@ -117,8 +117,8 @@
               </ul>
               <p>
                 If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
-                encrypt in the browser or client app with care, and to avoid "provided" technologies such as a single encryption algorithm (possibly broken) or
-                entropy provider (possibly intentionally weak).
+                encrypt in the browser or client app with care, and avoid single encryption algorithms (possibly broken) or
+                provided sources of entropy (possibly intentionally weak).
               </p>
               <p>
                 <b>TripleSec</b> is a simple, open-source symmetric encryption library for the browser and Node.js. It aims for unbreakable encryption
@@ -127,10 +127,11 @@
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>,
                 so that a compromise of 1 (or even 2) of the ciphers will expose nothing. The 3 are combined in a
-                technique (explained below) outlined by Bruce Schneier in <i>Applied Cryptography</i>.
+                technique (explained below) outlined by Bruce Schneier in <i>Applied Cryptography</i>. And TripleSec
+                collects extra entropy from your computer, beyond the "provided" <code>window.crypto</code> and <code>crypto.rng</code>.
               </p>
               <p>
-                In other words, <b>TripleSec</b> should work unless <i>all 3</i> of have fallen. A dark, dark day that would be.
+                In other words, <b>TripleSec</b> should work unless <i>all 3</i> of the algorithms have fallen. A dark, dark day that would be.
               </p>
             </div>
             <div class="col-sm-4">
