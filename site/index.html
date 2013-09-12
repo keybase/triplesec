@@ -387,17 +387,13 @@ var plaintext = buff.toString();</pre>
           <div class="questions subsection">
             <h3>Anticipated Questions</h3>
             <div class="question">
-              <h5>Wait, so how are the 3 ciphers combined?</h5>
-              <p class="answer">
-                Max to write this.
-              </p>
               <h5>What's triplesec.Buffer?</h5>
               <p class="answer">
                 It is a wrapper around either Node.js's Buffer or a browser equivalent. When you generate
                 encrypted data, you can use the output buffer however you like. In our above examples, we converted
                 to and from hex strings.
               </p>
-              <h5>How does TripleSec generate randomness/entropy? And can I change it?</h5>
+              <h5>How does TripleSec generate randomness/entropy? Can I provide my own?</h5>
               <p class="answer">
                 In the browser, TripleSec uses <code>window.crypto.getRandomValues</code> and in Node it uses <code>crypto.rng</code>.
                 For fear of a compromise -- let's say your browser author has inserted a weak version of one of these in exchange
