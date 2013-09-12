@@ -102,17 +102,19 @@
                 <li>the NSA may have already broken a popular cipher</li>
               </ul>
               <p>
-                If you're a programmer and wish to store user data that only the user can read -- excluding both you and the government -- you must 
-                encrypt in the browser or client app with extreme presumption. Consider 
-                <b>TripleSec</b>, a simple, open-source symmetric encryption library in JavaScript. It ensures privacy
+                If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and the government -- you must 
+                encrypt in the browser or client app with extreme presumption. Has a government already compromised a popular cipher?
+                Will academics eventually break one?
+                 With these questions in mind,
+                <b>TripleSec</b> is a simple, open-source symmetric encryption library in JavaScript. It aims for reliable privacy
                  using
                 <b class="salsa20">Salsa 20</b>, <b class="aes">AES</b>, and <b class="twofish">Twofish</b>,
-                so that a failure in one will expose nothing. The 3 encryptions are combined in a
+                so that a government compromise of 1 (or even 2) of the ciphers will expose nothing. The 3 are combined in a
                 simple technique outlined by Bruce Schneier in <i>Applied Cryptography</i>.
               </p>
               <p>
-                In other words, <b>TripleSec</b> should work, unless <i>all 3</i> of these encryptions have fallen.
-              </p>              
+                In other words, <b>TripleSec</b> should work unless <i>all 3</i> of these popular and publicly scrutinized encryptions have fallen.
+              </p>
             </div>
             <div class="col-sm-4">
 
@@ -206,10 +208,10 @@ var plaintext = b.toString();
           <div class="questions subsection">
             <h3>Anticipated Questions</h3>
             <div class="question">
+              <h5>Wait, so how are the 3 ciphers combined?</h5>
               <h5>What's triplesec.Buffer?</h5>
               <h5>What's triplesec.rng?</h5>
               <h5>How are passphrases salted?</h5>
-              <h5>How are the 3 ciphers combined?</h5>
               <h5>Are slow encryptions CPU-blocking?</h5>
               <h5>Can I encrypt files with it, in the browser?</h5>
             </div>
@@ -239,9 +241,7 @@ var plaintext = b.toString();
           <div class="whos-using subsection">
             <h3>Can I help?</h3>
             <p>
-              Please! We encourage <a href="foo">review of the source code</a>.  We'd also love to have
-              an official browser extension. In our ideal world, you could highlight some text in your browser and
-              TripleSec encrypt/decrypt it on any page just by entering a password.
+              Please! Above all else, we encourage <a href="http://github.com/keybase/triplesec">review of the source code</a>.
             </p>
           </div>
 
