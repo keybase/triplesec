@@ -45,7 +45,7 @@ exports.PRNG = class PRNG
     n_bytes = n_bits / 8
     bufs = []
     bufs.push @now_to_buffer()
-    await @meg.generate_bits n_bits, words
+    await @meg.generate_bits n_bits, defer words
     bufs.push @now_to_buffer()
     bufs.push new buffer words
     bufs.push native_rng n_bytes
@@ -53,7 +53,7 @@ exports.PRNG = class PRNG
     wa = wordarray.from_buffer [].concat bufs...
     cb wa
 
-  generate : (n, cb) -> @adrbg n, cb
+  generate : (n, cb) -> @adrbg.generate n, cb
 
 #===============================================
 
