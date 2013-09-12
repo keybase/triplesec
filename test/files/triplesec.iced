@@ -18,12 +18,14 @@ test_vectors = [
 
 #-------------------------------------------------
 
-run_test = (T, d, i) ->
+run_test = (T, d, i, cb) ->
   orig = new Buffer d.data
   d.rng = rng
-  ct = encrypt d
+  await encrypt d, defer err, ct
+  T.assert not err?
   d.data = ct
-  pt = decrypt d
+  await decrypt d, defer err, pt
+  T.assert not err?
   T.equal (pt.toString 'hex'), (orig.toString 'hex'), "test vector #{i}"
 
   ct_orig_hex = ct.toString 'hex'
@@ -32,20 +34,18 @@ run_test = (T, d, i) ->
   ct_corrupt_hex = ct.toString 'hex'
 
   T.assert (ct_orig_hex isnt ct_corrupt_hex), "failed to corrupt vector #{i}"
-  try
-    decrypt(d)
-    T.error "Signature didn't fail in test vector #{i}"
-  catch e
-    #
+  await decrypt d, defer err, res
+  T.assert err?
 
   if T.is_ok()
     T.waypoint "test vector #{i}"
+  cb()
 
 #-------------------------------------------------
 
 exports.run_test_vectors = (T,cb) ->
   for v,i in test_vectors
-    run_test T, v, i
+    await run_test T, v, i, defer()
   cb()
 
 #-------------------------------------------------
@@ -55,8 +55,10 @@ exports.check_randomness = (T, cb) ->
   tv.rng = rng
   enc = new Encryptor tv
   found = {}
-  for i in [0...1000]
-    ct = enc.run(tv.data).toString 'hex'
+  for i in [0...100]
+    await enc.run tv.data, defer err, ct
+    T.assert not err?
+    ct = ct.toString 'hex'
     if found[ct]
       T.error "found a repeated cipher text -> #{ct}"
     else

@@ -5,13 +5,14 @@
 
 exports.cryptojs_reference = (T,cb) ->
   for test,i in data
-    run_test T, test, i
+    await run_test T, test, i, defer()
   cb()
 
-run_test = (T, test, i) ->
+run_test = (T, test, i, cb) ->
   key = WordArray.from_hex test.password
   salt = WordArray.from_hex test.salt
-  output_wa = pbkdf2 { key, salt, c : opts.c, dkLen : opts.dkLen }
+  await pbkdf2 { key, salt, c : opts.c, dkLen : opts.dkLen }, defer output_wa
   output = output_wa.to_hex()
   T.equal output, test.output, "Test #{i}"
+  cb()
 

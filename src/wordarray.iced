@@ -179,6 +179,18 @@ exports.WordArray = class WordArray
   scrub : () ->
     util.scrub_vec @words
 
+  #--------------
+
+  # @param{number} low The low word to include in the output slice
+  # @param{number} hi The hi word to include in the output slice (exclusive)
+  slice : (low, hi) ->
+    n = @words.length
+    unless (low < hi) and (hi <= n)
+      throw new Error "Bad WordArray slice [#{low},#{hi})] when only #{n} avail"
+    sb = (hi - low)*4
+    if hi is n then sb -= (n*4 - @sigBytes)
+    new WordArray @words[low...hi], sb
+
 #=======================================================================
 
 exports.X64Word = class X64Word

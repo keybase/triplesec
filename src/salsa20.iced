@@ -231,7 +231,9 @@ exports.Cipher = class Cipher extends StreamCipher
   scrub : () ->
     @salsa.scrub()
 
-  get_pad : () -> @salsa.getWordArray()
+  get_pad : () -> 
+    pad = @salsa.getWordArray()
+    pad
 
 #====================================================================
 
@@ -240,5 +242,13 @@ exports.encrypt = encrypt = ({key, iv, input}) ->
   ret = cipher.encrypt input
   cipher.scrub()
   ret
+
+#====================================================================
+
+exports.bulk_encrypt = bulk_encrypt = ({key, iv, input}, cb) ->
+  cipher = new Cipher { key, iv }
+  await cipher.bulk_encrypt input, defer ret
+  cipher.scrub()
+  cb ret
 
 #====================================================================

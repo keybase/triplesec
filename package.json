@@ -12,6 +12,7 @@
     "icsify" : "*",
     "iced-utils" : "*",
     "iced-test" : "*",
+    "iced-error" : "*",
     "iced-coffee-script" : "*",
     "colors" : "*",
     "deep-equal" : "*",
