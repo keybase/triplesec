@@ -153,6 +153,7 @@ exports.Encryptor = class Encryptor extends Base
     await @run_aes     { input : ct2, key : @keys.aes,     iv : ivs.aes     }, defer ct3
     await @sign        { input : ct3, key : @keys.hmac,    @salt            }, defer sig
     ret = (new WordArray(@version.header)).concat(@salt).concat(sig).concat(ct3).to_buffer()
+    util.scrub_buffer data
     cb null, ret
 
 #========================================================================
@@ -178,7 +179,6 @@ exports.Encryptor = class Encryptor extends Base
 exports.encrypt = encrypt = ({ key, data, rng}, cb) ->
   enc = new Encryptor { key, rng}
   await enc.run data, defer err, ret
-  util.scrub_buffer data
   enc.scrub()
   cb err, ret
 

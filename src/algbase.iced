@@ -175,10 +175,12 @@ exports.StreamCipher = class StreamCipher
   constructor : () ->
 
   # Encrypt one block's worth of data. Use the next block
-  # in the keystream (order matters here!)
+  # in the keystream (order matters here!). Call into the 
+  # virtual @get_pad() function to get the pad from the underlying
+  # block cipher for this block.
   #
   #   @param {WordArray} word_array The WordArray to operator on
-  #   @param {number} dst_offset The offset to operate on, in words
+  #   @param {number} dst_offset The offset to operate on, in wordGs
   #   @returns {number} the number of blocks encrypted
   encryptBlock : (word_array, dst_offset = 0) ->
     pad = @get_pad()
