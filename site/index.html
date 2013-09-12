@@ -108,6 +108,11 @@
           <div class="row">
             
             <div class="col-sm-8 intro">
+              <blockquote>
+                &ldquo;the NSA works with security product vendors to ensure that commercial encryption products are broken in secret ways that only it knows about.&rdquo;
+                - Bruce Schneier, 9/13
+              </blockquote>
+
               <p>
                 <b>Governments wield great power</b>. Consider:
               </p>
@@ -117,8 +122,8 @@
               </ul>
               <p>
                 If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
-                encrypt in the browser or client app with care, and to avoid "provided" technologies such as a single encryption algorithm (possibly broken) or
-                entropy provider (possibly intentionally weak).
+                encrypt in the browser or client app with care, and avoid single encryption algorithms (possibly broken) and
+                provided sources of entropy (possibly intentionally weak).
               </p>
               <p>
                 <b>TripleSec</b> is a simple, open-source symmetric encryption library for the browser and Node.js. It aims for unbreakable encryption
@@ -126,11 +131,12 @@
                 <a href="http://en.wikipedia.org/wiki/Salsa20" class="salsa20">Salsa 20</a>, 
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>,
-                so that a compromise of 1 (or even 2) of the ciphers will expose nothing. The 3 are combined in a
-                technique (explained below) outlined by Bruce Schneier in <i>Applied Cryptography</i>.
+                so that a compromise of 1 or 2 of the ciphers will expose nothing. The 3 are combined in a
+                technique described by Bruce Schneier in <i>Applied Cryptography</i> and explained below. And TripleSec
+                collects extra entropy from your computer, beyond the "provided" <code>window.crypto</code> and <code>crypto.rng</code>.
               </p>
               <p>
-                In other words, <b>TripleSec</b> should work unless <i>all 3</i> of have fallen. A dark, dark day that would be.
+                In other words, <b>TripleSec</b> should work unless <i>all 3</i> of the algorithms have fallen. A dark, dark day that would be.
               </p>
             </div>
             <div class="col-sm-4">
@@ -411,10 +417,17 @@ var plaintext = buff.toString();</pre>
             </div>
           </div>
 
+          <div class="outside-javascript subsection">
+            <h3>Implementations Outside JavaScript</h3>
+            <p>
+              We welcome ports! We will list them here.
+            </p>
+          </div>
+
           <div class="whos-using subsection">
             <h3>Who's Using it?</h3>
             <p>
-              We are! (<a href="http://www.twitter.com/maxtaco">Max Krohn</a> &amp; <a href="http://www.twitter.com/malgorithms">Chris Coyne</a>). We're working on an unrelated site
+              For starters, we are (<a href="http://www.twitter.com/maxtaco">Max Krohn</a> &amp; <a href="http://www.twitter.com/malgorithms">Chris Coyne</a>). We're working on an unrelated site
               now, and TripleSec will be used to encrypt our users' keys.
             </p>
             <p>
@@ -435,7 +448,7 @@ var plaintext = buff.toString();</pre>
           <div class="whos-using subsection">
             <h3>Can I help?</h3>
             <p>
-              Please! Above all else, we encourage <a href="http://github.com/keybase/triplesec">review of the source code</a>.
+              Please! Above all else, we encourage review of both our algorithm and <a href="http://github.com/keybase/triplesec">the source code</a>.
             </p>
           </div>
 
