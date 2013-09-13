@@ -411,11 +411,10 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>How does TripleSec generate randomness/entropy? Can I provide my own?</h5>
               <p class="answer">
-                In the browser, TripleSec uses <code>window.crypto.getRandomValues</code> and in Node it uses <code>crypto.rng</code>.
-                For fear of a compromise -- let's say your browser's author has inserted a weak version of one of these in exchange
-                for some honeypot sex -- 
+                In the browser, TripleSec starts with <code>window.crypto.getRandomValues</code> and in Node it starts with <code>crypto.rng</code>.
+                Then, for extra entropy -- let's say one of these is intentionally weak -- 
                 TripleSec seeds further
-                with <a href="https://github.com/keybase/more-entropy">more-entropy (explained here in more detail)</a>, which does its own timing of a great
+                with <a href="https://github.com/keybase/more-entropy">more-entropy</a>, which does its own timing of a great
                 number of math operations.
               </p>
               <p class="answer">
@@ -443,7 +442,7 @@ var plaintext = buff.toString();</pre>
                 We don't know. We think that TripleSec can only be broken if all three algorithms are broken, but 
                 we don't have a proof. We furthmore think that TripleSec is non-malleable (and hence IND-CCA2 secure)
                 due to the HMAC step. Current events and insider leaks are changing all cryptographic assumptions.
-                A few months ago, TripleSec's cryptographic redudancy would be seen as a kinky fettish.
+                A few months ago, TripleSec's cryptographic redudancy would be seen as a kinky fetish.
                 But going forward, double- or triple-protection seems like a good
                 idea, and we expect that proofs and/or proven constructions for cascading encryption will 
                 be available shortly. 
