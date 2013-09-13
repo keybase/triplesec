@@ -215,7 +215,6 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
 
     BufferedBlockAlgorithm.prototype._process = function(doFlush) {
       var blockSizeBytes, data, dataSigBytes, dataWords, nBlocksReady, nBytesReady, nWordsReady, offset, processedWords, _i, _ref;
-      console.log("processing!");
       data = this._data;
       dataWords = data.words;
       dataSigBytes = data.sigBytes;

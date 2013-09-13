@@ -31,7 +31,8 @@ $(BUILD_STAMP): \
 	lib/prng.js \
 	lib/drbg.js \
 	lib/lock.js \
-	lib/sha3.js
+	lib/sha3.js \
+	lib/hmax.js
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)

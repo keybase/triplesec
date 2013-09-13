@@ -163,6 +163,7 @@ exports.WordArray = class WordArray
     for i in [0...n_words]
       tmp = @words[dst_offset + i] ^ wa2.words[src_offset + i]
       @words[dst_offset+i] = util.fixup_uint32 tmp
+    @
 
   #--------------
 
