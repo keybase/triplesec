@@ -87,9 +87,9 @@ glbl = new Global()
 #  
 exports.SHA3 = class SHA3 extends Hasher
 
-  @utputLength : 512 # in bits!
+  @outputLength : 512 # in bits!
   outputLength : SHA3.outputLength
-  @blockSize : (1600 - 2 * SHA3.outputLenth)/32
+  @blockSize : (1600 - 2 * SHA3.outputLength)/32
   blockSize : SHA3.blockSize
   @output_size : SHA3.outputLength / 8
   output_size : SHA3.output_size
@@ -100,11 +100,13 @@ exports.SHA3 = class SHA3 extends Hasher
   _doProcessBlock : (M, offset) ->
     G = glbl
     # Shortcuts
-    state = @_state;
+    state = @_state
     nBlockSizeLanes = @blockSize / 2
+    console.log "_--. #{nBlockSizeLanes}"
 
     # Absorb
     for i in [0...nBlockSizeLanes]
+      console.log "A #{i}"
       # Shortcuts
       M2i  = M[offset + 2 * i]
       M2i1 = M[offset + 2 * i + 1]
@@ -200,7 +202,7 @@ exports.SHA3 = class SHA3 extends Hasher
       lane = state[0]
       roundConstant = G.ROUND_CONSTANTS[round]
       lane.high ^= roundConstant.high
-      lane.low  ^= roundConstant.low;
+      lane.low  ^= roundConstant.low
 
   #----------------
 
@@ -248,7 +250,7 @@ exports.SHA3 = class SHA3 extends Hasher
       hashWords.push(laneMsw);
 
     # Return final computed hash
-    return new WordArray hashWords, outputLengthBytes
+    new WordArray hashWords, outputLengthBytes
 
   #----------------
 

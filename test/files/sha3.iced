@@ -17,5 +17,5 @@ exports.short = (T,cb) ->
   cb()
 
 test_cases = (T, which) ->
-  for v,i in data[which]
+  for v,i in data[which] when i < 5
     test_case T, which, i, v
