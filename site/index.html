@@ -131,9 +131,11 @@
                 <a href="http://en.wikipedia.org/wiki/Salsa20" class="salsa20">Salsa 20</a>, 
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>,
-                so that a compromise of 1 or 2 of the ciphers will expose nothing. The 3 are combined in a
-                technique described by Bruce Schneier in <i>Applied Cryptography</i> and expanded on below. And our implementation of TripleSec
-                collects extra entropy from your computer, beyond the "provided" <code>window.crypto</code> and <code>crypto.rng</code>.
+                so that a compromise of 1 or 2 of the ciphers will expose nothing. A good source of
+                cryptographically-strong pseudorandomness is crucial our construction's security, so
+                TripleSec's implementation
+                collects extra entropy from your computer, beyond the "provided" <code>window.crypto.getRandomValues</code>
+                in browsers and <code>crypto.rng</code> in Node.js.
               </p>
               <p>
                 In other words, <b>TripleSec</b> should work unless <i>all 3</i> of the algorithms have fallen. A dark, dark day that would be.
@@ -309,7 +311,7 @@ var plaintext = buff.toString();</pre>
           <div class="design subsection">
             <h3>Algorithm Design</h3>
 
-            <p>The TripleSec library encrypts data in four high-level steps:
+            <p>The TripleSec library encrypts data in four steps:
               <ol>
 
                 <li>
@@ -349,27 +351,28 @@ var plaintext = buff.toString();</pre>
                     <li><b>Twofish-CTR.</b> The output of the previous step 
                       (call it <i>C<sub>1</sub></i>) is the input
                       of this step, which uses Twofish running in <a href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">CTR</a> mode.
-                      Call the IV generated for Twofish in Step <i>R</i>.
-                      Twofish-CTR works by encrypting <i>R</i>, <i>R+1</i>, <i>R+2</i>,...
-                      with Twofish, and concatenates the result to yield a pad the size
-                      of <i>C<sub>1</sub></i>.  This step outputs <i>R</i> concatenated
-                      with the result of the XOR operation above.
+                      Let <i>R<sub>2</sub></i> be the the IV generated for Twofish in Step 2.
+                      Twofish-CTR works by encrypting <i>R<sub>2</sub></i>, <i>R<sub>2</sub>+1</i>, <i>R<sub>2</sub>+2</i>,...
+                      with Twofish, and concatenating the result to yield a pad the size
+                      of <i>C<sub>1</sub></i>. Call this pad <i>P<sub>2</sub></i> .
+                      Output (<i>R<sub>2</sub></i> || (<i>P<sub>2</sub></i> ⊕ <i>C<sub>1</sub></i>)),
+                      where "||" denotes concatenation, and "⊕" denotes XOR.
                     </li>
 
-                    <li>
-                  from the Salsa20 step.  The output of the Twofish step is the concatenation of the IV and
-                  the XOR result. The same process is repeated one last time,
-                  with AES also running in CTR mode.
+                    <li><b>AES-256-CTR.</b> In the final encryption step, apply AES-256 running
+                      in CTR mode to the output of the Twofish-CTR step.  As above,
+                      first XOR the output of the previous step with the pad output
+                      by AES-256-CTR.  Then prepend the IV used.
                     </li>
                   </ol>
                 </li>
 
                 <li>
                   <b>HMAC (or "sign") the ciphertext.</b> Finally, TripleSec "signs" the ciphertext
-                  to ensure that it's not tampered by an adversary.  The data to be signed
+                  to ensure that no adversary tampers with it. The data to be signed
                   is everything generated to date: a small header that encapsulates the version
                   of the algorithm (now at <tt>1</tt>); the salt used in key derivation; and
-                  the output of the AES stage of the chained encryption above.  TripleSec uses
+                  the output of the AES stage of the cascading encryption above.  TripleSec uses
                   <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a> with SHA-512 to prepare a mac.  The final output is a concatenation of:
                   the header; the salt; the signature; and the outermost ciphertext.
                 </li>
@@ -378,25 +381,24 @@ var plaintext = buff.toString();</pre>
             </p>
 
             <p>
-              Though this is not the exact algorithm suggested by Schneier in
+              Though this is not the exact composition suggested by Schneier in
               <i>Applied Cryptography</i> (Section 15.8 in the Second Edition), it is
               close.  TripleSec never uses the output of one block cipher as input into the next,
-              which theoretically might allow a crack of one cipher to used to crack
+              which theoretically might allow a crack of one cipher to be used to crack
               another. Rather, by merit of CTR mode, the three ciphers run on statistcally 
-              independent IVs, so a crack of one will not help the crack of the others.
+              independent IVs, so a crack of one will not spread up or down the chain.
               The TripleSec technique takes one futher step not suggested by Schneier,
               which is to protect the inner IVs with the outer encryption algorithms, and only
               exposing the outermost IV in the clear. Though we can't prove this makes 
               the scheme more secure, it seems like a reasonable idea: why reveal cipher
               inputs if we don't have to? Finally, this algorithm has the added advantage
-              in that the output ciphertext only increases by a constant additive amount (i.e.,
+              that the output ciphertext only increases by a constant additive term (i.e.,
               the lengths of the header, the salt, the HMAC and the three IVs).  Schneier's
               technique inflates ciphertexts by a factor N, where N is the number of 
               independent ciphers used.
             </p>
 
           </div><!-- /.design -->
-
 
           <div class="questions subsection">
             <h3>Anticipated Questions</h3>
@@ -427,6 +429,24 @@ var plaintext = buff.toString();</pre>
               <h5>Can I encrypt files with it, in the browser?</h5>
               <p class="answer">
                 Yes, using HTML5 features you can access file data without uploading it to a server. Note that TripleSec is not super fast.
+              </p>
+              <h5>Why isn't library X good enough (for X in Clipperz, Forge, SJCL, CryptoJS, etc.)?</h5>
+              <p class="answer">
+                 There are lots of great JS Crypto libraries out there, and we've borrowed from some to build TripleSec.
+                 But combining cryptographic primitives to achieve 
+                 <a href="http://en.wikipedia.org/wiki/Ciphertext_indistinguishability">IND-CCA2</a> security involves many fussy
+                 decisions and much avoidance of implementation pitfalls.  We want all to have access to higher-level primitives that can
+                 be applied with little thought.  Hence TripleSec!  
+              </p>
+              <h5>Is this provably secure?</h5>
+              <p class="answer">
+                We don't know. We think that TripleSec can only be broken if all three algorithms are broken, but 
+                we don't have a proof. We furthmore think that TripleSec is non-malleable (and hence IND-CCA2 secure)
+                due to the HMAC step. Current events and insider leaks are changing all cryptographic assumptions.
+                A few months ago, TripleSec's cryptographic redudancy would be seen as a kinky fettish.
+                But going forward, double- or triple-protection seems like a good
+                idea, and we expect that proofs and/or proven constructions for cascading encryption will 
+                be available shortly. 
               </p>
             </div>
           </div>
@@ -462,7 +482,7 @@ var plaintext = buff.toString();</pre>
           <div class="whos-using subsection">
             <h3>Can I help?</h3>
             <p>
-              Please! Above all else, we encourage review of both our algorithm and <a href="http://github.com/keybase/triplesec">the source code</a>.
+              Please! Above all else, we encourage review of both our algorithm and <a href="http://github.com/keybase/triplesec">the source code</a>. If anyone has a spare proof of IND-CCA2 security sitting around the house, we'd love to it!
             </p>
           </div>
 

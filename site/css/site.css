@@ -34,6 +34,9 @@ a:hover {
   margin:30px;
   max-width:500px;
 }
+.container div.design {
+  max-width:500px;
+}
 ul {
   margin-bottom:30px;
 }
