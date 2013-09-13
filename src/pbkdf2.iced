@@ -13,8 +13,9 @@ exports.PBKDF2 = class PBKDF2
   # @param {number} dkLen the needed length of output data
   #
   
-  constructor : ({@key, @salt, @c}) ->
-    @prf = new HMAC @key
+  constructor : ({@key, @salt, @c, klass}) ->
+    klass or= HMAC
+    @prf = new klass @key
 
   #-----------
 
@@ -56,6 +57,7 @@ exports.PBKDF2 = class PBKDF2
     ph(n)(0)
     flat = [].concat words...
     @key.scrub()
+    @prf.scrub()
     cb new WordArray flat, dkLen
 
 #=========================================================

@@ -4,7 +4,7 @@ salsa20       = require './salsa20'
 {AES}         = require './aes'
 {TwoFish}     = require './twofish'
 ctr           = require './ctr'
-hmac          = require './hmac'
+hmax          = require './hmax'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
 util          = require './util'
@@ -16,7 +16,7 @@ exports.V = V =
   "1" : 
     header :
       [ 0x1c94d7de, 1 ]
-    pbkdf2_iters : 2048
+    pbkdf2_iters : 1024
     salt_size : 8 # 8 bytes of salt is good enough!
 
 #========================================================================
@@ -40,7 +40,7 @@ exports.Base = class Base
     if not (keys = @derived_keys[salt_hex])?
 
       lens = 
-        hmac    : hmac.HMAC.keySize
+        hmac    : hmax.HMAX.keySize
         aes     : AES.keySize
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
@@ -48,8 +48,15 @@ exports.Base = class Base
       (tot += v for k,v of lens)
 
       # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
-      await pbkdf2 { key : @key.clone(), c : @version.pbkdf2_iters, dkLen : tot, 
-                     progress_hook, salt }, defer raw
+      args = {
+        key : @key.clone()
+        c : @version.pbkdf2_iters
+        klass : hmax.HMAX
+        dkLen : tot
+        progress_hook
+        salt 
+      }
+      await pbkdf2 args, defer raw
       keys = {}
       i = 0
       for k,v of lens
@@ -65,7 +72,7 @@ exports.Base = class Base
 
   sign : ({input, key, salt, progress_hook}, cb) ->
     input = (new WordArray @version.header ).concat(salt).concat(input)
-    await hmac.bulk_sign { key, input, progress_hook}, defer(out)
+    await hmax.bulk_sign { key, input, progress_hook}, defer(out)
     cb out
 
   #---------------
@@ -166,7 +173,7 @@ exports.Encryptor = class Encryptor extends Base
 #      1. Encrypt PT with Salsa20
 #      2. Encrypt the result of 1 with 2Fish-256-CTR
 #      3. Encrypt the result of 2 with AES-256-CTR
-#      4. MAC with HMAC-SHA512.  
+#      4. MAC with HMAX-SHA512-SHA3
 #
 # @param {Buffer} key The secret key.  This data is scrubbed after use, so copy it
 #   if you want to keep track of it.

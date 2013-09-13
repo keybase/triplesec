@@ -17,18 +17,27 @@ exports.HMAX = class HMAX
     @hashers[0].finalize(x).xor @hashers[1].finalize(x), {}
 
   #
-  # Initializes a newly created HMAC.
+  # Initializes a newly created HMAX.
   #
   # @param {WordArray} key The secret key.
   # @param {Classes} klasses The hash algorithm classes to user
   #
+  # HMAX is our own invention, and it works as follows:
+  #
+  # HMAX(key,m) ->
+  #   1. Derive ikey and okey from key as in HMAC
+  #   2. Compute inner = (okey || H1(ikey || m) || H2(ikey || m))
+  #   3. Output H1(inner) XOR H2(inner)
+  #
+  # Properties:
+  #   1. If (H2 = (x) -> null), then HMAX = HMAC.
+  #
   # @example
   #
-  #     hmacHasher = new HMAC(key, SHA512)
+  #     hmacHasher = new HMAX(key)
   #
   constructor : (@key, klasses = [SHA512, SHA3]) ->
     @hashers = (new klass() for klass in klasses)
-    console.log @hashers
     unless @hashers[0].output_size is @hashers[1].output_size
       throw new Error "hashers need the same blocksize"
     @hasher_output_size_bytes = @hashers[0].output_size # in bytes
@@ -42,18 +51,12 @@ exports.HMAX = class HMAX
     @_oKey = @key.clone()
     @_iKey = @key.clone()
 
-    console.log "hos -> #{@hasher_output_size}"
     # XOR keys with pad constants
     for i in [0...@hasher_output_size]
       @_oKey.words[i] ^= 0x5c5c5c5c
       @_iKey.words[i] ^= 0x36363636
 
     @_oKey.sigBytes = @_iKey.sigBytes = @hasher_output_size_bytes
-
-    console.log "ikey -> "
-    console.log @_iKey
-    console.log "okey -> "
-    console.log @_oKey
 
     # Set initial values
     @reset()
@@ -79,7 +82,7 @@ exports.HMAX = class HMAX
   #     hmacHasher.update(wordArray);
   #
   update : (wa) ->
-    (h.update(w) for h in @hashers)
+    (h.update(wa) for h in @hashers)
     @
 
   #
@@ -97,27 +100,25 @@ exports.HMAX = class HMAX
   #
   finalize : (wa) ->
     innerHashes = (h.finalize wa for h in @hashers)
-    console.log "inner hashes ->"
-    console.log innerHashes
     innerPayload = @_oKey.clone()
     for h in innerHashes
       innerPayload.concat h
-    console.log "inner payload ->"
-    console.log innerPayload
+      h.scrub()
     terms = for h in @hashers
       h.reset()
       h.finalize innerPayload
-    console.log "terms -> "
-    console.log terms
     out = terms[0]
     for t in terms[1...]
       out.xor t, {}
       t.scrub()
-    console.log "out ->" 
-    console.log out
     innerPayload.scrub()
     out
 
+  scrub : ->
+    @key.scrub()
+    @_iKey.scrub()
+    @_oKey.scrub()
+    
 #=======================================================================
 
 exports.sign = ({key, input}) -> 

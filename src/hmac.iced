@@ -86,6 +86,11 @@ exports.HMAC = class HMAC
     @hasher.reset()
     @hasher.finalize @_oKey.clone().concat innerHash
 
+  scrub : ->
+    @key.scrub()
+    @_iKey.scrub()
+    @_oKey.scrub()
+
 #=======================================================================
 
 exports.sign = ({key, input}) -> 

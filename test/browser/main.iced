@@ -10,6 +10,7 @@ mods =
   pbkdf2 : require '../files/pbkdf2.iced'
   triplesec : require '../files/triplesec.iced'
   drbg : require '../files/drbg.iced'
+  sha3 : require '../files/sha3.iced'
 
 {BrowserRunner} = require('iced-test')
 
