@@ -156,7 +156,7 @@ exports.WordArray = class WordArray
     n_words = wa2.words.length - src_offset unless n_words?
 
     if @words.length < dst_offset + n_words
-      throw new Error "dest range exceeded (#{@words.length} > #{dst_offset + n_words})"
+      throw new Error "dest range exceeded (#{@words.length} < #{dst_offset + n_words})"
     if wa2.words.length <  src_offset + n_words
       throw new Error "source range exceeded"
 

@@ -74,7 +74,8 @@ glbl = new Global()
 exports.SHA512 = class SHA512 extends Hasher
 
   blockSize : 1024/32
-  output_size : 512/8
+  @output_size : 512/8
+  output_size : SHA512.output_size
 
   _doReset : () ->
     @_hash = glbl.I.clone()
