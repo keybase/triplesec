@@ -7,7 +7,7 @@ data =
 test_case = (T, which, i, test) ->
   s = new SHA3()
   input = WordArray.from_hex test.Msg
-  expected = test.MD
+  expected = test.MD.toLowerCase()
   s.update input
   output = s.finalize().to_hex()
   T.equal output, expected, "test vector #{which}/#{i}"

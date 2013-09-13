@@ -56,7 +56,6 @@ exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm
   #   processedData = bufferedBlockAlgorithm._process(!!'flush');
   #
   _process : (doFlush) ->
-    console.log "processing!"
     data = @_data
     dataWords = data.words
     dataSigBytes = data.sigBytes

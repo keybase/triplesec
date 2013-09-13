@@ -102,11 +102,9 @@ exports.SHA3 = class SHA3 extends Hasher
     # Shortcuts
     state = @_state
     nBlockSizeLanes = @blockSize / 2
-    console.log "_--. #{nBlockSizeLanes}"
 
     # Absorb
     for i in [0...nBlockSizeLanes]
-      console.log "A #{i}"
       # Shortcuts
       M2i  = M[offset + 2 * i]
       M2i1 = M[offset + 2 * i + 1]
