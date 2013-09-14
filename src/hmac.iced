@@ -102,8 +102,9 @@ exports.sign = ({key, input}) ->
 
 #=======================================================================
 
-exports.bulk_sign = ({key, input, progress_hook}, cb) ->
-  eng = new HMAC key
+exports.bulk_sign = ({key, input, progress_hook, klass}, cb) ->
+  klass or= HMAC
+  eng = new klass key
   input.clamp()
   slice_args = 
     update    : (lo,hi) -> eng.update input[lo...hi]
