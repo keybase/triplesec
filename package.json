@@ -19,7 +19,9 @@
     "cryptojs-2fish" : "*",
     "more-entropy" : "*",
     "optimist" : "*",
-    "rsp2json" : "*"
+    "rsp2json" : "*",
+    "codo" : "*"
+
   },
   "dependencies" : {
     "purepack" : "*"

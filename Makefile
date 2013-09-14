@@ -90,8 +90,10 @@ test: test-server test-browser
 clean:
 	rm -f lib/*.js $(BUILD_STAMP) $(TEST_STAMP)
 
+doc:
+	node_modules/.bin/codo
 
 setup:
 	npm install -d
 
-.PHONY: clean setup test test-browser-buffer
+.PHONY: clean setup test test-browser-buffer doc

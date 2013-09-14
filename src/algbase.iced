@@ -15,7 +15,7 @@ util = require './util'
 #
 # The property blockSize must be implemented in a concrete subtype.
 #
-# @property {number} _minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0
+# @property {Number} _minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0
 #
 exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm 
 
@@ -109,7 +109,7 @@ exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm
 #
 # Abstract hasher template.
 #
-# @property {number} blockSize The number of 32-bit words this hasher 
+# @property {Number} blockSize The number of 32-bit words this hasher 
 #   operates on. Default: 16 (512 bits)
 #
 exports.Hasher = class Hasher extends BufferedBlockAlgorithm
@@ -180,8 +180,8 @@ exports.StreamCipher = class StreamCipher
   # block cipher for this block.
   #
   #   @param {WordArray} word_array The WordArray to operator on
-  #   @param {number} dst_offset The offset to operate on, in wordGs
-  #   @returns {number} the number of blocks encrypted
+  #   @param {Number} dst_offset The offset to operate on, in wordGs
+  #   @returns {Number} the number of blocks encrypted
   encryptBlock : (word_array, dst_offset = 0) ->
     pad = @get_pad()
     n_words = Math.min(word_array.words.length - dst_offset, @bsiw)
