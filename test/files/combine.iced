@@ -5,17 +5,20 @@ hmac = require '../../lib/hmac'
 {data} = require '../fixed-data/combine'
 {WordArray} = require '../../lib/wordarray'
 
-test_combine = (T, d) ->
+test_vector = (T, d) ->
   (d[k] = WordArray.from_hex(v) for k,v of d)
   arg = { key : d.key, input : d.msg }
   c = Concat.sign arg
+  x = XOR.sign arg
   s5 = hmac.sign arg
   arg.klass = SHA3
   s3 = hmac.sign arg
-  c2 = s5.concat s3
-  T.equal c.to_hex(), c2.to_hex(), "combinations work"
+  c2 = s5.clone().concat s3
+  T.equal c.to_hex(), c2.to_hex(), "Concats work"
+  x2 = s5.xor s3, {}
+  T.equal x.to_hex(), x2.to_hex(), "XORs works"
 
-exports.test_combines = (T, cb) ->
+exports.test_vectors = (T, cb) ->
   for v in data
-    test_combine T, v
+    test_vector T, v
   cb()
