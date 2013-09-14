@@ -34,21 +34,26 @@ exports.test_vectors = (T,cb) ->
 class NullHash 
   constructor : ->
   @output_size : SHA512.output_size
+  @blockSize : SHA512.blockSize
   output_size : NullHash.output_size
+  blockSize : NullHash.blockSize 
   update : ->
   finalize : -> new WordArray [], 0
   reset : -> @
 
 #--------
 
-null_hash = (T,cb) ->
-  new_h0 = (k) -> new hmax.HMAX k, [ SHA512, NullHash ], { skip_compose : 0 }
-  new_h1 = (k) -> new HMAC k, SHA512
+exports.null_hash = (T,cb) ->
+  mac_makers = [
+    ((k) -> new hmax.HMAX k, [ SHA512, NullHash ], { skip_compose : 0 })
+    ((k) -> new hmax.HMAX k, [ NullHash, SHA512 ], { skip_compose : 1 })
+    ((k) -> new HMAC k, SHA512)
+  ]
   for v,i in data
     key = WordArray.from_hex v.key
     input = WordArray.from_hex v.msg
-    h0 = new_h0 key
-    h1 = new_h1 key
-    s0 = h0.finalize input
-    s1 = h1.finalize input
-    T.equal s0.to_hex(), s1.to_hex(), "null hash equality #{i} w/ Null,SHA-512"
+    macs = (m key.clone() for m in mac_makers)
+    s = (m.finalize input.clone() for m in macs)
+    T.equal s[0].to_hex(), s[1].to_hex(), "null hash equality #{i} (compare orders)"
+    T.equal s[1].to_hex(), s[2].to_hex(), "null hash equality #{i} (compare to HMAC)"
+  cb()

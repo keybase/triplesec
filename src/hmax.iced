@@ -38,8 +38,8 @@ exports.HMAX = class HMAX
     @hashers = (new klass() for klass in klasses)
     unless @hashers[0].output_size is @hashers[1].output_size
       throw new Error "hashers need the same blocksize"
-    @hasher_output_size_bytes = @hashers[0].output_size # in bytes
-    @hasher_output_size = @hasher_output_size_bytes / 4 # in 32-bit words
+    @hasher_output_size = @hashers[0].blockSize # in bytes
+    @hasher_output_size_bytes = @hasher_output_size * 4 # in 32-bit words
 
     # Allow arbitrary length keys
     @key = @XOR_compose @key if @key.sigBytes > @hasher_output_size_bytes
@@ -113,7 +113,9 @@ exports.HMAX = class HMAX
   #     hmac = hmacHasher.finalize(wordArray)
   #
   finalize : (wa) ->
-    innerHashes = (h.finalize wa for h in @hashers)
+    innerHashes = []
+    for h,i in @hashers
+      innerHashes.push h.finalize wa
     innerPayload = @_oKey.clone()
     for h in innerHashes
       innerPayload.concat h

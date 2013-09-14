@@ -84,7 +84,11 @@ exports.HMAC = class HMAC
   finalize : (wa) ->
     innerHash = @hasher.finalize wa
     @hasher.reset()
-    @hasher.finalize @_oKey.clone().concat innerHash
+    innerHash2 = @_oKey.clone().concat innerHash
+    out = @hasher.finalize innerHash2
+    innerHash.scrub()
+    innerHash2.scrub()
+    out
 
   scrub : ->
     @key.scrub()
