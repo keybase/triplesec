@@ -39,13 +39,10 @@ class NullHash
   finalize : -> new WordArray [], 0
   reset : -> @
 
-console.log SHA512.output_size
-console.log NullHash.output_size
-
 #--------
 
-exports.null_hash = (T,cb) ->
-  new_h0 = (k) -> new hmax.HMAX k, [ SHA512, NullHash ]
+null_hash = (T,cb) ->
+  new_h0 = (k) -> new hmax.HMAX k, [ SHA512, NullHash ], { skip_compose : 0 }
   new_h1 = (k) -> new HMAC k, SHA512
   for v,i in data
     key = WordArray.from_hex v.key

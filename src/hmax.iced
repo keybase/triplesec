@@ -2,6 +2,7 @@
 {SHA512} = require './sha512'
 {SHA3} = require './sha3'
 util = require './util'
+{WordArray} = require './wordarray'
 
 #=======================================================================
 
@@ -12,9 +13,6 @@ exports.HMAX = class HMAX
   keySize : HMAX.keySize
   @outputSize : 512/8
   outputSize : HMAX.outputSize
-
-  compose : (x) ->
-    @hashers[0].finalize(x).xor @hashers[1].finalize(x), {}
 
   #
   # Initializes a newly created HMAX.
@@ -27,7 +25,7 @@ exports.HMAX = class HMAX
   # HMAX(key,m) ->
   #   1. Derive ikey and okey from key as in HMAC
   #   2. Compute inner = (okey || H1(ikey || m) || H2(ikey || m))
-  #   3. Output H1(inner) XOR H2(inner)
+  #   3. Output H1(1 || inner) XOR H2(2 || inner)
   #
   # Properties:
   #   1. If (H2 = (x) -> null), then HMAX = HMAC.
@@ -36,7 +34,7 @@ exports.HMAX = class HMAX
   #
   #     hmacHasher = new HMAX(key)
   #
-  constructor : (@key, klasses = [SHA512, SHA3]) ->
+  constructor : (@key, klasses = [SHA512, SHA3], @opts = {}) ->
     @hashers = (new klass() for klass in klasses)
     unless @hashers[0].output_size is @hashers[1].output_size
       throw new Error "hashers need the same blocksize"
@@ -44,7 +42,7 @@ exports.HMAX = class HMAX
     @hasher_output_size = @hasher_output_size_bytes / 4 # in 32-bit words
 
     # Allow arbitrary length keys
-    @key = @compose(@key) if @key.sigBytes > @hasher_output_size_bytes
+    @key = @XOR_compose @key if @key.sigBytes > @hasher_output_size_bytes
     @key.clamp()
 
     # Clone key for inner and outer pads
@@ -60,6 +58,22 @@ exports.HMAX = class HMAX
 
     # Set initial values
     @reset()
+
+  # Combine hashes through XOR. By default, we chain the hashes
+  # together, but 
+  XOR_compose : (x) ->
+    if (hn = @opts.skip_compose)?
+      out = @hashers[hn].reset().finalize(x)
+    else  
+      x = (new WordArray [0]).concat x
+      out = @hashers[0].reset().finalize x
+      for h,i in @hashers[1...]
+        x.words[0] = i
+        tmp = h.reset().finalize x
+        out.xor tmp, {}
+        tmp.scrub()
+      x.scrub()
+    out
 
   #
   # get the output blocksize
@@ -104,13 +118,7 @@ exports.HMAX = class HMAX
     for h in innerHashes
       innerPayload.concat h
       h.scrub()
-    terms = for h in @hashers
-      h.reset()
-      h.finalize innerPayload
-    out = terms[0]
-    for t in terms[1...]
-      out.xor t, {}
-      t.scrub()
+    out = @XOR_compose innerPayload
     innerPayload.scrub()
     out
 
