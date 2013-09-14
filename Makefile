@@ -32,7 +32,8 @@ $(BUILD_STAMP): \
 	lib/drbg.js \
 	lib/lock.js \
 	lib/sha3.js \
-	lib/hmax.js
+	lib/hmax.js \
+	lib/combine.js
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)

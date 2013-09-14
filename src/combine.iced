@@ -1,3 +1,6 @@
+{HMAC} = require './hmac'
+{SHA512} = require './sha512'
+{SHA3} = require './sha3'
 
 #=============================================
 
@@ -9,7 +12,7 @@ class Base
   outputSize : Base.outputSize
 
   constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
-    @hashers = (new HMAC(klass, key) for klass in klasses)
+    @hashers = (new HMAC(key, klass) for klass in klasses)
   reset : ->
     (h.reset() for h in @hashers)
     @
@@ -31,8 +34,13 @@ class Base
 
 exports.Concat = class Concat extends Base
   coalesce : (out, h) -> out.concat h
+  @sign : ( { key , input } ) -> (new Concat key).finalize(input)
+
+#=============================================
+
 exports.XOR = class XOR extends Base
   coalesce : (out, h) -> out.xor h, {}
-  
+  @sign : ( { key , input } ) -> (new XOR key).finalize(input)
+
 #=============================================
 

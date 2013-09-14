@@ -97,24 +97,21 @@ exports.HMAC = class HMAC
 
 #=======================================================================
 
-exports.sign = ({key, input}) -> 
-  (new HMAC key).finalize(input.clamp())
+exports.sign = ({key, input, klass}) -> 
+  (new HMAC key, (klass or SHA512)).finalize(input.clamp())
 
 #=======================================================================
 
-exports.bulk_sign = ({key, input, progress_hook, klass}, cb) ->
+exports.bulk_sign = ({key, input, progress_hook, klass, what}, cb) ->
   klass or= HMAC
+  what or= "hmac_sha512"
   eng = new klass key
   input.clamp()
   slice_args = 
     update    : (lo,hi) -> eng.update input[lo...hi]
     finalize  : ()      -> eng.finalize()
     default_n : eng.hasherBlockSize * 1000
-  async_args = {
-    what : "hmac_sha512"
-    progress_hook
-    cb
-  }
+  async_args = { what, progress_hook, cb }
   util.bulk input.sigBytes, slice_args, async_args
 
 #=======================================================================
