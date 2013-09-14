@@ -59,6 +59,10 @@ test/json/HMAC_DRBG_reseed.json: test/rsp/HMAC_DRBG_reseed.rsp
 test/json/SHA3_short.json: test/rsp/SHA3_short.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
+	
+test/json/SHA3_long.json: test/rsp/SHA3_long.rsp
+	@mkdir -p test/json/
+	$(RSP2JSON) $< > $@
 
 $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha512_long.js \
@@ -71,6 +75,8 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/drbg_hmac_reseed.js \
 		test/json/SHA3_short.json \
 		test/data/sha3_short.js \
+		test/json/SHA3_long.json \
+		test/data/sha3_long.js \
 		test/browser/test.js 
 	date > $@
 
