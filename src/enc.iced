@@ -4,7 +4,7 @@ salsa20       = require './salsa20'
 {AES}         = require './aes'
 {TwoFish}     = require './twofish'
 ctr           = require './ctr'
-hmax          = require './hmax'
+{XOR,Concat}  = require './combine'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
 util          = require './util'
@@ -40,7 +40,7 @@ exports.Base = class Base
     if not (keys = @derived_keys[salt_hex])?
 
       lens = 
-        hmac    : hmax.HMAX.keySize
+        hmac    : XOR.keySize
         aes     : AES.keySize
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
@@ -51,7 +51,7 @@ exports.Base = class Base
       args = {
         key : @key.clone()
         c : @version.pbkdf2_iters
-        klass : hmax.HMAX
+        klass : XOR
         dkLen : tot
         progress_hook
         salt 
@@ -72,7 +72,7 @@ exports.Base = class Base
 
   sign : ({input, key, salt, progress_hook}, cb) ->
     input = (new WordArray @version.header ).concat(salt).concat(input)
-    await hmax.bulk_sign { key, input, progress_hook}, defer(out)
+    await Concat.bulk_sign { key, input, progress_hook}, defer(out)
     cb out
 
   #---------------

@@ -62,8 +62,8 @@ exports.PBKDF2 = class PBKDF2
 
 #=========================================================
 
-exports.pbkdf2 = pkbdf2 = ({key, salt, c, dkLen, progress_hook}, cb) ->
-  eng = new PBKDF2 { key, salt, c}
+exports.pbkdf2 = pkbdf2 = ({key, salt, c, dkLen, progress_hook, klass}, cb) ->
+  eng = new PBKDF2 { key, salt, c, klass}
   await eng.gen { dkLen, progress_hook }, defer out
   cb out
 

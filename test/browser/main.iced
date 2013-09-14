@@ -12,6 +12,7 @@ mods =
   drbg : require '../files/drbg.iced'
   sha3 : require '../files/sha3.iced'
   combine : require '../files/combine.iced'
+  hmax : require '../files/hmax.iced'
 
 {BrowserRunner} = require('iced-test')
 

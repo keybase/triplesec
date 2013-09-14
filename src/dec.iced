@@ -4,7 +4,7 @@ salsa20       = require './salsa20'
 {AES}         = require './aes'
 {TwoFish}     = require './twofish'
 ctr           = require './ctr'
-hmac          = require './hmac'
+{Concat}      = require './combine'
 {SHA512}      = require './sha512'
 {pbkdf2}      = require './pbkdf2'
 {Salsa20}     = require './salsa20'
@@ -44,7 +44,7 @@ exports.Decryptor = class Decryptor extends Base
   #----------------------
 
   verify_sig : (key, cb) ->
-    if not (received = @ct.unshift(hmac.HMAC.outputSize/4))?
+    if not (received = @ct.unshift(Concat.outputSize/4))?
       err = new Error "Ciphertext underrun in signature"
     else
       await @sign { input : @ct, key, @salt }, defer computed
