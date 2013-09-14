@@ -319,9 +319,13 @@ var plaintext = buff.toString();</pre>
                   random salt value, generate four separate secret keys, one
                   for each cipher (see Step 3), and a final key for
                   signing the ciphertext (see Step 4).  This "key stretching" is done via
-                  <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a> 
-                  using the <a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> 
-                  hash primitive.  The output of this step is four seperate keys, 
+                  <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>.
+                  The "PRF" passed to PBKDF2 is the XOR
+                  of <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a>-<a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> and HMAC-<a href="http://en.wikipedia.org/wiki/SHA-3">SHA3</a>. We use the XOR composition here 
+                  to preserve and boost the pseudorandom property of the 
+                  underlying two HMACs, therefore adding resilience to a break
+                  of other SHA-512 or SHA3 (which are fundamentally different algorithms).
+                  The output of this step is four seperate keys, 
                   used below.
                 </li>
 
@@ -371,9 +375,10 @@ var plaintext = buff.toString();</pre>
                   <b>HMAC (or "sign") the ciphertext.</b> Finally, TripleSec "signs" the ciphertext
                   to ensure that no adversary tampers with it. The data to be signed
                   is everything generated to date: a small header that encapsulates the version
-                  of the algorithm (now at <tt>1</tt>); the salt used in key derivation; and
-                  the output of the AES stage of the cascading encryption above.  TripleSec uses
-                  <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a> with SHA-512 to prepare a mac.  The final output is a concatenation of:
+                  of the algorithm (now at <code>1</code>); the salt used in key derivation; and
+                  the output of the AES stage of the cascading encryption above.  TripleSec "macs" with a <b>concatenation</b> of two HMACs: 
+                  HMAC-SHA-512, and HMAC-SHA3.  
+                  The final output is a concatenation of:
                   the header; the salt; the signature; and the outermost ciphertext.
                 </li>
 
@@ -398,6 +403,18 @@ var plaintext = buff.toString();</pre>
               independent ciphers used.
             </p>
 
+            <p>
+              Similarly, TripleSec protects against a break in HMAC-SHA-512 by always
+              combining it with an HMAC based on <a href="http://keccak.noekeon.org/">Keccak hash algorithm</a> (soon to become the <a href="http://en.wikipedia.org/wiki/SHA-3">SHA-3</a> standard).  Note that TripleSec combines these HMACs in two different ways.
+              For PBKDF2 in Stage 1, TripleSec XORs the result of the two HMACs for pseudorandomness. For "signing" in Stage 4, TripleSec concatenates the
+              two results to preserve collision-resistance.  Unlike the suspect
+              compositions in TLS and SSH, these simple compositions don't require
+              either SHA-512 or SHA-3 to be strongly collision-resistant; rather,
+              just weakly collision-resistant in line with the
+              <a href="http://cseweb.ucsd.edu/~mihir/papers/kmd5.pdf">original construction</a>.  See <a href="http://tuprints.ulb.tu-darmstadt.de/2094/1/thesis.lehmann.pdf">Anja Lehmann's</a> dissertation
+              for more details on combinations of hashes.
+            </p>
+
           </div><!-- /.design -->
 
           <div class="questions subsection">
@@ -419,11 +436,23 @@ var plaintext = buff.toString();</pre>
               </p>
               <p class="answer">
                 You may alternatively provide your own random number generator for encryption. Pass an <code>rng</code> function
-                along with your other data. This function should behave just like [...].
+                along with your other data. This function should take two 
+                arguments: the number of bytes needed,
+                and a callback that you fire with a <code>triplesec.WordArray</code>
+                containing the random data.  You can create a <code>WordArray</code>
+                from a <code>triplesec.Buffer</code> by simply calling <code>WordArray.from_buffer(buffer)</code>.
               </p>
               <h5>How are passphrases salted?</h5>
               <p class="answer">
-                Max to write this.
+                PBKDF2 takes as input a salt in addition to a secret passphrase. The
+                idea here is to prevent an adversary from cracking lots of TripleSec-encrypted data  in parallel.  Thus, passphrases are salted with a 
+                random 8-byte sequence that's included with the ciphertext.  By 
+                default, TripleSec's <code>triplesec.Encryptor</code> object
+                uses the same salt until you call <code>triplesec.Encryptor.resalt</code>.
+                The advantage of salt reuse is that it's faster, since the PBKDF2 step
+                is intentionally slow.  The disadvantage is that an adversary can tell
+                if two different ciphertexts were encrypted in the same session if
+                the salt is not reset.
               </p>
               <h5>Can I encrypt files with it, in the browser?</h5>
               <p class="answer">
@@ -447,11 +476,30 @@ var plaintext = buff.toString();</pre>
                 idea, and we expect that proofs and/or proven constructions for cascading encryption will 
                 be available shortly. 
               </p>
-              <h5>Why should I believe HMAX is secure?</h5>
-              <p>
+              <h5>If the input message size is <i>n</i>, how big is the ciphertext?</h5>
+              <p class="answer">
+                <i>n</i> + 200.  The additive term is broken down as:
+                <ul>
+                  <li>8 bytes for the header (which is <code>[0x1c94d7de, 0x1]</code>).</li>
+                  <li>8 bytes for PBKDF2 salt</i>
+                  <li>64 bytes for the HMAC-SHA512 signature</i>
+                  <li>64 bytes for the HMAC-SHA3 signature</i>
+                  <li>16 bytes for AES-256 IV</i>
+                  <li>16 bytes for Twofish IV</i>
+                  <li>24 bytes for Salsa20 IV</i>
+                </ul>
               </p>
               <h5>How do I verify the implementation against known test vectors?</h5>
-              <p>
+              <p class="answer">
+                If you have Node.js on your system, you can clone the 
+                <a href="http://github.com/keybase/triplesec">github repo</a>
+                and run <code>make test</code>.  We've checked all algorithms
+                against known test vectors, with the exception of the XSalsa20
+                extension to Salsa20, which
+                doesn't have published test vectors.
+                For the XSals20 extension, we check outputs against the official
+                <a href="https://code.google.com/p/go/source/browse/?repo=crypto">Go Language Crypto library</a>. We still check the underlying Salsa20
+                core against published test vectors.
               </p>
             </div>
           </div>
