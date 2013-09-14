@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='../assets/codo.css' type='text/css'>
+  <script src='../assets/codo.js'></script>
+  <script src='../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../README.md.html' title='Triplesec'>Triplesec</a>
+    &raquo;
+    <a href='../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>WordArray</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../class_list.html'>Classes</a>
+      <a id='file_list_link' href='../file_list.html'>Files</a>
+      <a id='method_list_link' href='../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        WordArray
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src&#47;wordarray.iced</td>
+        </tr>
+      </table>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#from_buffer-class'>
+        + (void) <strong>from_buffer</strong>(b)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_buffer_le-class'>
+        + (void) <strong>from_buffer_le</strong>(b)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_utf8-class'>
+        + (void) <strong>from_utf8</strong>(s)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_utf8_le-class'>
+        + (void) <strong>from_utf8_le</strong>(s)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_hex-class'>
+        + (void) <strong>from_hex</strong>(s)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_hex_le-class'>
+        + (void) <strong>from_hex_le</strong>(s)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(words, sigBytes)
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      Initializes a newly created word array.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#concat-instance'>
+        - (WordArray) <strong>concat</strong>(wordArray)
+      </a>
+    </span>
+    <span class='desc'>
+      Concatenates a word array to this word array.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clamp-instance'>
+        - (void) <strong>clamp</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Removes insignificant bits.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clone-instance'>
+        - (WordArray) <strong>clone</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Creates a copy of this word array.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_buffer-instance'>
+        - (void) <strong>to_buffer</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_utf8-instance'>
+        - (void) <strong>to_utf8</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_hex-instance'>
+        - (void) <strong>to_hex</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_uint8_array-instance'>
+        - (void) <strong>to_uint8_array</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#equal-instance'>
+        - (void) <strong>equal</strong>(wa)
+      </a>
+    </span>
+    <span class='desc'>
+      Important! Don&#39;t short-circuit since that enables a forging attack....
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#xor-instance'>
+        - (void) <strong>xor</strong>(wa2, )
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#truncate-instance'>
+        - (void) <strong>truncate</strong>(n_bytes)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#unshift-instance'>
+        - (void) <strong>unshift</strong>(n_words)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#scrub-instance'>
+        - (void) <strong>scrub</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#slice-instance'>
+        - (void) <strong>slice</strong>(low, hi)
+      </a>
+    </span>
+    <span class='desc'>
+      @param{number} low The low word to include in the output slice @param{number} hi The hi word to include in the output slice (exclusive)
+    </span>
+  </li>
+</ul>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='from_buffer-class'>
+      + (void) <strong>from_buffer</strong>(b)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_buffer_le-class'>
+      + (void) <strong>from_buffer_le</strong>(b)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_utf8-class'>
+      + (void) <strong>from_utf8</strong>(s)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_utf8_le-class'>
+      + (void) <strong>from_utf8_le</strong>(s)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_hex-class'>
+      + (void) <strong>from_hex</strong>(s)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_hex_le-class'>
+      + (void) <strong>from_hex_le</strong>(s)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(words, sigBytes)
+    </p>
+    <div class='docstring'>
+  <p>Initializes a newly created word array.</p><p> @param {Array} words (Optional) An array of 32-bit words.
+ @param {number} sigBytes (Optional) The number of significant bytes in the words.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffee'>
+wordArray = new WordArray
+wordArray = new WordArray [0x00010203, 0x04050607]
+wordArray = new WordArray [0x00010203, 0x04050607], 6</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='concat-instance'>
+      - (WordArray) <strong>concat</strong>(wordArray)
+    </p>
+    <div class='docstring'>
+  <p>Concatenates a word array to this word array.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffee'>
+  wordArray1.concat(wordArray2)</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>wordArray</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The word array to append.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      &mdash;
+      <span class='desc'>This word array.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clamp-instance'>
+      - (void) <strong>clamp</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Removes insignificant bits.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clone-instance'>
+      - (WordArray) <strong>clone</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Creates a copy of this word array.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      &mdash;
+      <span class='desc'>The clone.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_buffer-instance'>
+      - (void) <strong>to_buffer</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_utf8-instance'>
+      - (void) <strong>to_utf8</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_hex-instance'>
+      - (void) <strong>to_hex</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_uint8_array-instance'>
+      - (void) <strong>to_uint8_array</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='equal-instance'>
+      - (void) <strong>equal</strong>(wa)
+    </p>
+    <div class='docstring'>
+  <p>Important! Don&#39;t short-circuit since that enables a
+forging attack....</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='xor-instance'>
+      - (void) <strong>xor</strong>(wa2, )
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='truncate-instance'>
+      - (void) <strong>truncate</strong>(n_bytes)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='unshift-instance'>
+      - (void) <strong>unshift</strong>(n_words)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='scrub-instance'>
+      - (void) <strong>scrub</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='slice-instance'>
+      - (void) <strong>slice</strong>(low, hi)
+    </p>
+    <div class='docstring'>
+  <p>@param{number} low The low word to include in the output slice
+@param{number} hi The hi word to include in the output slice (exclusive)</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sat Sep 14 2013 12:22:46 GMT-0400 (EDT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.8.1
+  (Node.js v0.10.15).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>
