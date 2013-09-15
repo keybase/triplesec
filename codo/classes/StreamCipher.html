@@ -114,6 +114,13 @@
           <td>src&#47;algbase.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>A base class for a stream cipher. This will be used for bonafide stream ciphers
+like <a href='../classes/Salsa20.html'>Salsa20</a> but also for <a href='../classes/BlockCipher.html'>BlockCipher</a>s running in CTR mode.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Direct Known Subclasses</h2>
       <p class='children'>
         <a href='../classes/Cipher.html'>Cipher</a>
@@ -135,7 +142,7 @@
   <li>
     <span class='signature'>
       <a href='#encryptBlock-instance'>
-        - (void) <strong>encryptBlock</strong>(word_array, dst_offset = 0)
+        - (Number) <strong>encryptBlock</strong>(word_array, dst_offset = 0)
       </a>
     </span>
     <span class='desc'>
@@ -145,11 +152,11 @@
   <li>
     <span class='signature'>
       <a href='#encrypt-instance'>
-        - (void) <strong>encrypt</strong>(word_array)
+        - (WordArray) <strong>encrypt</strong>(word_array)
       </a>
     </span>
     <span class='desc'>
-      
+      Encrypt an entire word array in place, overwriting the original plaintext with the cipher text.
     </span>
   </li>
   <li>
@@ -159,7 +166,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Like <code>encrypt</code> but with an asynchronous preemptable interface.
     </span>
   </li>
 </ul>
@@ -177,37 +184,129 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='encryptBlock-instance'>
-      - (void) <strong>encryptBlock</strong>(word_array, dst_offset = 0)
+      - (Number) <strong>encryptBlock</strong>(word_array, dst_offset = 0)
     </p>
     <div class='docstring'>
   <p>Encrypt one block&#39;s worth of data. Use the next block
 in the keystream (order matters here!). Call into the 
 virtual @get_pad() function to get the pad from the underlying
-block cipher for this block.
- @param <a href='../classes/WordArray.html'>WordArray</a> word_array The WordArray to operator on @param {Number} dst_offset The offset to operate on, in wordGs @returns {Number} the number of blocks encrypted</p>
+block cipher for this block.</p>
 </div>
 <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>word_array</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The WordArray to operator on</span>
+    </li>
+    <li>
+      <span class='name'>dst_offset</span>
+      <span class='type'>
+        (<tt>Number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The offset to operate on, in wordGs</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Number</tt>)
+      &mdash;
+      <span class='desc'>the number of blocks encrypted</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='encrypt-instance'>
-      - (void) <strong>encrypt</strong>(word_array)
+      - (WordArray) <strong>encrypt</strong>(word_array)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Encrypt an entire word array in place, overwriting the original
+plaintext with the cipher text.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>word_array</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The plaintext and also the ciphertext location.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      &mdash;
+      <span class='desc'>Return <code>word_array</code> too just for convenient chaining.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='bulk_encrypt-instance'>
       - (void) <strong>bulk_encrypt</strong>({input, progress_hook, what}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Like <code>encrypt</code> but with an asynchronous preemptable interface.  Good
+for encrypting big payloads without blocking up the process. As above,
+encrypt in place, so the output ciphertext will be where the input
+plaintext was.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input cipher text</span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook</span>
+    </li>
+    <li>
+      <span class='name'>what</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>What the progress hook should say we are doing.</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback with the completed ciphertext after completion.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 16:52:32 GMT-0400 (EDT)
+  Sun Sep 15 2013 17:20:01 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

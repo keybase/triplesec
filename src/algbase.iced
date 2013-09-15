@@ -17,16 +17,15 @@ util = require './util'
 #
 # @property {Number} _minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0
 #
-exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm 
+class BufferedBlockAlgorithm 
 
   _minBufferSize : 0
 
+  # Does little other than eset/initialize internal state.
   constructor : () ->
     @reset()
 
-  #
   # Resets this block algorithm's data buffer to its initial state.
-  #
   reset : () ->
     @_data = new WordArray()
     @_nDataBytes = 0
@@ -44,14 +43,13 @@ exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm
   #
   # Processes available data blocks.
   # 
-  # This method invokes _doProcessBlock(offset), which must be implemented by a concrete subtype.
+  # This method invokes _doProcessBlock(offset), which must be implemented 
+  # by a concrete subtype.
   #
   # @param {boolean} doFlush Whether all blocks and partial blocks should be processed.
-  #
   # @return {WordArray} The processed data.
   #
   # @example
-  # 
   #   processedData = bufferedBlockAlgorithm._process();
   #   processedData = bufferedBlockAlgorithm._process(!!'flush');
   #
@@ -90,15 +88,19 @@ exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm
     # Return processed words
     new WordArray processedWords, nBytesReady
 
+  # Copy the contents of the algorithm base to the given target
+  # object (of the same class). Used in cloning.
+  #
+  # @param {BufferedBlockAlgorithm} out The object to copy to.
+  copy_to : (out) ->
+    out._data = @_data.clone()
+    out._nDataBytes = @_nDataBytes
+
   #
   # Creates a copy of this object.
   #
   # @return {Object} The clone.
   #
-  copy_to : (out) ->
-    out._data = @_data.clone()
-    out._nDataBytes = @_nDataBytes
-
   clone : ->
     obj = new BufferedBlockAlgorithm()
     @copy_to obj
@@ -112,20 +114,15 @@ exports.BufferedBlockAlgorithm = class BufferedBlockAlgorithm
 # @property {Number} blockSize The number of 32-bit words this hasher 
 #   operates on. Default: 16 (512 bits)
 #
-exports.Hasher = class Hasher extends BufferedBlockAlgorithm
+class Hasher extends BufferedBlockAlgorithm
 
-  #
-  # Initializes a newly created hasher.
-  # 
-  # @param {Object} cfg (Optional) The configuration options to use 
-  #    for this hash computation.
-  # 
-  constructor : (@cfg) ->
+  constructor : () ->
     super()
 
   #
   # Resets this hasher to its initial state.
   #
+  # @return {Hasher} Return `this` object for chaining
   reset : () ->
     super()
     # Perform concrete-hasher logic
@@ -137,7 +134,7 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
   #
   # @param {WordArray} messageUpdate The message to append.
   #
-  # @return {Hasher} This hasher.
+  # @return {Hasher} This hasher for chaining.
   #
   update : (messageUpdate) ->
     @_append(messageUpdate)
@@ -150,11 +147,9 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
   #  read-once operation.
   #
   # @param {WordArray} messageUpdate (Optional) A final message update.
-  #
-  # @return {WordArray} The hash.
+  # @return {WordArray} The output hash message digest.
   #
   # @example
-  #
   #     hash = hasher.finalize()
   #     hash = hasher.finalize(wordArray)
   #
@@ -170,7 +165,9 @@ exports.BlockCipher = class BlockCipher
     
 #=======================================================================
 
-exports.StreamCipher = class StreamCipher
+# A base class for a stream cipher. This will be used for bonafide stream ciphers
+# like {Salsa20} but also for {BlockCipher}s running in CTR mode.
+class StreamCipher
 
   constructor : () ->
 
@@ -179,9 +176,9 @@ exports.StreamCipher = class StreamCipher
   # virtual @get_pad() function to get the pad from the underlying
   # block cipher for this block.
   #
-  #   @param {WordArray} word_array The WordArray to operator on
-  #   @param {Number} dst_offset The offset to operate on, in wordGs
-  #   @returns {Number} the number of blocks encrypted
+  # @param {WordArray} word_array The WordArray to operator on
+  # @param {Number} dst_offset The offset to operate on, in wordGs
+  # @return {Number} the number of blocks encrypted
   encryptBlock : (word_array, dst_offset = 0) ->
     pad = @get_pad()
     n_words = Math.min(word_array.words.length - dst_offset, @bsiw)
@@ -191,6 +188,11 @@ exports.StreamCipher = class StreamCipher
 
   #---------------------
 
+  # Encrypt an entire word array in place, overwriting the original
+  # plaintext with the cipher text.
+  # 
+  # @param {WordArray} word_array The plaintext and also the ciphertext location.
+  # @return {WordArray} Return `word_array` too just for convenient chaining.
   encrypt : (word_array) ->
     for i in [0...word_array.words.length] by @bsiw
       @encryptBlock word_array, i
@@ -198,6 +200,15 @@ exports.StreamCipher = class StreamCipher
 
   #---------------------
 
+  # Like `encrypt` but with an asynchronous preemptable interface.  Good
+  # for encrypting big payloads without blocking up the process. As above,
+  # encrypt in place, so the output ciphertext will be where the input
+  # plaintext was.
+  #
+  # @param {WordArray} input The input cipher text
+  # @param {Function} progress_hook A standard progress hook
+  # @param {String} what What the progress hook should say we are doing.
+  # @param {callback} cb Callback with the completed ciphertext after completion.
   bulk_encrypt : ({input, progress_hook, what}, cb) ->
     slice_args = 
       update : (lo,hi) =>
@@ -210,3 +221,7 @@ exports.StreamCipher = class StreamCipher
 
 #=======================================================================
 
+exports.BlockCipher = BlockCipher
+exports.Hasher = Hasher
+exports.BufferedBlockAlgorithm = BufferedBlockAlgorithm 
+exports.StreamCipher = StreamCipher

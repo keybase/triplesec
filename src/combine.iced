@@ -80,7 +80,10 @@ class Concat extends CombineBase
   @sign : ( { key , input } ) -> (new Concat key).finalize(input)
 
   # Sign using the bulk async callback-based interface.
-  # @option
+  # @option arg {WordArray} key The key to use for signing.
+  # @option arg {WordArray} input The input to sign
+  # @option arg {Function} progress_hook A standard progress hook
+  # @param {callback} cb Calls back with a signature as a {WordArray} 
   @bulk_sign : (args, cb) ->
     args.klass = Concat
     args.what = "hmac-sha512-cat-sha3"
@@ -118,6 +121,8 @@ class XOR extends CombineBase
   # Sign using the bulk async callback-based interface.
   # @option arg {WordArray} key The key to use for signing.
   # @option arg {WordArray} input The input to sign
+  # @option arg {Function} progress_hook A standard progress hook
+  # @param {callback} cb Calls back with a signature as a {WordArray} 
   @bulk_sign : (arg, cb) ->
     arg.klass = XOR
     arg.what = "HMAC-SHA512-XOR-SHA3"

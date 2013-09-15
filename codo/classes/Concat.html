@@ -243,10 +243,50 @@ which is HMAC(SHA512) || HMAC(SHA3).</p>
       + (void) <strong>bulk_sign</strong>(args, cb)
     </p>
     <div class='docstring'>
-  <p>Sign using the bulk async callback-based interface.
-@option</p>
+  <p>Sign using the bulk async callback-based interface.</p>
 </div>
 <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Calls back with a signature as a <a href='../classes/WordArray.html'>WordArray</a> </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (arg):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The key to use for signing.</span>
+    </li>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input to sign</span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
@@ -277,7 +317,7 @@ using the default Class parameters (SHA512 + SHA3).</p>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 16:52:32 GMT-0400 (EDT)
+  Sun Sep 15 2013 17:20:01 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

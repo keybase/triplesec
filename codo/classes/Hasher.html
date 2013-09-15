@@ -120,6 +120,12 @@
           </td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Abstract hasher template.</p><p>blockSize The number of 32-bit words this hasher  operates on. Default: 16 (512 bits)</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Direct Known Subclasses</h2>
       <p class='children'>
                 <a href='../classes/SHA3.html'>SHA3</a>,
@@ -130,18 +136,18 @@
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(cfg)
+        - (void) <strong>constructor</strong>()
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      Initializes a newly created hasher.
+      
     </span>
   </li>
   <li>
     <span class='signature'>
       <a href='#reset-instance'>
-        - (void) <strong>reset</strong>()
+        - (Hasher) <strong>reset</strong>()
       </a>
     </span>
     <span class='desc'>
@@ -188,23 +194,9 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(cfg)
+      - (void) <strong>constructor</strong>()
     </p>
-    <div class='docstring'>
-  <p>Initializes a newly created hasher.</p><p>   for this hash computation.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>cfg</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>(Optional) The configuration options to use </span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
 </div>
@@ -212,12 +204,21 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='reset-instance'>
-      - (void) <strong>reset</strong>()
+      - (Hasher) <strong>reset</strong>()
     </p>
     <div class='docstring'>
   <p>Resets this hasher to its initial state.</p>
 </div>
 <div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/Hasher.html'>Hasher</a></tt>)
+      &mdash;
+      <span class='desc'>Return <code>this</code> object for chaining</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -245,7 +246,7 @@
       <span class='type'></span>
       (<tt><a href='../classes/Hasher.html'>Hasher</a></tt>)
       &mdash;
-      <span class='desc'>This hasher.</span>
+      <span class='desc'>This hasher for chaining.</span>
     </li>
   </ul>
 </div>
@@ -263,8 +264,7 @@ Note that the finalize operation is effectively a destructive,
     <h4>
       
     </h4>
-    <pre><code class='coffee'>
-  hash = hasher.finalize()
+    <pre><code class='coffee'>  hash = hasher.finalize()
   hash = hasher.finalize(wordArray)</code></pre>
   </div>
 </div>
@@ -286,7 +286,7 @@ Note that the finalize operation is effectively a destructive,
       <span class='type'></span>
       (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
       &mdash;
-      <span class='desc'>The hash.</span>
+      <span class='desc'>The output hash message digest.</span>
     </li>
   </ul>
 </div>
@@ -295,7 +295,7 @@ Note that the finalize operation is effectively a destructive,
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 16:52:32 GMT-0400 (EDT)
+  Sun Sep 15 2013 17:20:01 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

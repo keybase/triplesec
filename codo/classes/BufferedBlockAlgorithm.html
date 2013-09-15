@@ -114,6 +114,12 @@
           <td>src&#47;algbase.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Abstract buffered block algorithm template.</p><p>The property blockSize must be implemented in a concrete subtype.</p><p>_minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Direct Known Subclasses</h2>
       <p class='children'>
         <a href='../classes/Hasher.html'>Hasher</a>
@@ -128,7 +134,7 @@
     </span>
     <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
+      Does little other than eset/initialize internal state.
     </span>
   </li>
   <li>
@@ -164,21 +170,21 @@
   <li>
     <span class='signature'>
       <a href='#copy_to-instance'>
-        - (Object) <strong>copy_to</strong>(out)
+        - (void) <strong>copy_to</strong>(out)
       </a>
     </span>
     <span class='desc'>
-      Creates a copy of this object.
+      Copy the contents of the algorithm base to the given target object (of the same class).
     </span>
   </li>
   <li>
     <span class='signature'>
       <a href='#clone-instance'>
-        - (void) <strong>clone</strong>()
+        - (Object) <strong>clone</strong>()
       </a>
     </span>
     <span class='desc'>
-      
+      Creates a copy of this object.
     </span>
   </li>
 </ul>
@@ -188,7 +194,10 @@
     <p class='signature' id='constructor-instance'>
       - (void) <strong>constructor</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Does little other than eset/initialize internal state.</p>
+</div>
+<div class='tags'>
 </div>
   </div>
 </div>
@@ -237,14 +246,14 @@
       - (WordArray) <strong>_process</strong>(doFlush)
     </p>
     <div class='docstring'>
-  <p>Processes available data blocks.</p><p>This method invokes _doProcessBlock(offset), which must be implemented by a concrete subtype.</p>
+  <p>Processes available data blocks.</p><p>This method invokes _doProcessBlock(offset), which must be implemented 
+by a concrete subtype.</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       
     </h4>
-    <pre><code class='coffee'>
-processedData = bufferedBlockAlgorithm._process();
+    <pre><code class='coffee'>processedData = bufferedBlockAlgorithm._process();
 processedData = bufferedBlockAlgorithm._process(!!&#39;flush&#39;);</code></pre>
   </div>
 </div>
@@ -273,7 +282,29 @@ processedData = bufferedBlockAlgorithm._process(!!&#39;flush&#39;);</code></pre>
   </div>
   <div class='method_details'>
     <p class='signature' id='copy_to-instance'>
-      - (Object) <strong>copy_to</strong>(out)
+      - (void) <strong>copy_to</strong>(out)
+    </p>
+    <div class='docstring'>
+  <p>Copy the contents of the algorithm base to the given target
+object (of the same class). Used in cloning.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>out</span>
+      <span class='type'>
+        (<tt><a href='../classes/BufferedBlockAlgorithm.html'>BufferedBlockAlgorithm</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The object to copy to.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clone-instance'>
+      - (Object) <strong>clone</strong>()
     </p>
     <div class='docstring'>
   <p>Creates a copy of this object.</p>
@@ -290,18 +321,11 @@ processedData = bufferedBlockAlgorithm._process(!!&#39;flush&#39;);</code></pre>
   </ul>
 </div>
   </div>
-  <div class='method_details'>
-    <p class='signature' id='clone-instance'>
-      - (void) <strong>clone</strong>()
-    </p>
-    <div class='tags'>
-</div>
-  </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 16:52:32 GMT-0400 (EDT)
+  Sun Sep 15 2013 17:20:01 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
