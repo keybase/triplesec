@@ -1,6 +1,7 @@
 
 hmac = require '../../lib/hmac'
 {SHA3} = require '../../lib/sha3'
+{SHA512} = require '../../lib/sha512'
 {Concat,XOR} = require '../../lib/combine'
 {data} = require '../fixed-data/combine'
 {WordArray} = require '../../lib/wordarray'
@@ -21,6 +22,10 @@ test_xor = (T, d) ->
   m3 = (new hmac.HMAC d.key, SHA3).update(new WordArray [1]).finalize(d.msg)
   m5.xor m3, {}
   T.equal m5.to_hex(), x1.to_hex(), "XOR works"
+  x2 = (new XOR d.key, [ SHA3, SHA512]).finalize d.msg
+  # The order matters in Combine.XOR since we prepend with the index
+  # of the HMAC to avoid 00s in the case using the same HMAC in both places.
+  T.assert not (x1.to_hex() is x2.to_hex())
 
 exports.test_vectors = (T, cb) ->
   for d in data
