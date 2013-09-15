@@ -135,32 +135,12 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#PRF-instance'>
-        - (void) <strong>PRF</strong>(input)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#gen_T_i-instance'>
-        - (void) <strong>gen_T_i</strong>({i, progress_hook}, cb)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#gen-instance'>
         - (void) <strong>gen</strong>({dkLen, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
-      
+      Generate dkLen worth of key material.
     </span>
   </li>
 </ul>
@@ -190,7 +170,7 @@
     <li>
       <span class='name'>c</span>
       <span class='type'>
-        (<tt>number</tt>)
+        (<tt>Number</tt>)
       </span>
       &mdash;
       <span class='desc'>the number of iterations</span>
@@ -198,7 +178,7 @@
     <li>
       <span class='name'>dkLen</span>
       <span class='type'>
-        (<tt>number</tt>)
+        (<tt>Number</tt>)
       </span>
       &mdash;
       <span class='desc'>the needed length of output data</span>
@@ -209,7 +189,7 @@
         (<tt>Class</tt>)
       </span>
       &mdash;
-      <span class='desc'>The klass of the HMAC to use. By default it is HMAC-SHA512, but you can consder passing combine.XOR, which is the XOR of HMAC-SHA512 and HMAC-SHA3.</span>
+      <span class='desc'>The Class of the HMAC to use. Default it is HMAC-SHA512.</span>
     </li>
   </ul>
 </div>
@@ -218,31 +198,47 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='PRF-instance'>
-      - (void) <strong>PRF</strong>(input)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='gen_T_i-instance'>
-      - (void) <strong>gen_T_i</strong>({i, progress_hook}, cb)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='gen-instance'>
       - (void) <strong>gen</strong>({dkLen, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Generate dkLen worth of key material.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>dkLen</span>
+      <span class='type'>
+        (<tt>Number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The total length of the derived key material (in bytes)</span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook for the UI</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Calls back with a WordArray of key-material.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 12:31:25 GMT-0400 (EDT)
+  Sun Sep 15 2013 14:47:00 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
