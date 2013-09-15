@@ -151,8 +151,20 @@ exports.Encryptor = class Encryptor extends Base
  
   #---------------
 
+  # @method run
+  #
+  # The main point of entry into the TripleSec Encryption system.  The main
+  # points of the algorithm are:
+  #
+  #  1. Encrypt PT with Salsa20
+  #  1. Encrypt the result of 1 with 2Fish-256-CTR
+  #  1. Encrypt the result of 2 with AES-256-CTR
+  #  1. MAC with HMAC-SHA512 || HMAC-SHA3
+  #
   # @param {Buffer} data the data to encrypt 
+  # @param {Function} progress_hook Call this to update the U/I about progress
   # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
+  #
   run : ( { data, progress_hook }, cb ) ->
     await @resalt { progress_hook }, defer() unless @salt?
     await @pick_random_ivs { progress_hook }, defer ivs
@@ -167,13 +179,14 @@ exports.Encryptor = class Encryptor extends Base
 
 #========================================================================
 
-# 
-# encrypt data using the triple-sec 3x security engine, which is:
 #
-#      1. Encrypt PT with Salsa20
-#      2. Encrypt the result of 1 with 2Fish-256-CTR
-#      3. Encrypt the result of 2 with AES-256-CTR
-#      4. MAC with HMAX-SHA512-SHA3
+# @method encrypt
+# 
+# A wrapper around:
+#
+#   1. Creating a new Encryptor instance with the given key
+#   1. Calling `run` just once.
+#   1. Scrubbing and deleting all state.
 #
 # @param {Buffer} key The secret key.  This data is scrubbed after use, so copy it
 #   if you want to keep track of it.

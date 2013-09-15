@@ -160,7 +160,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      The main point of entry into the TripleSec Encryption system.
     </span>
   </li>
 </ul>
@@ -213,7 +213,17 @@ same salt.</p>
     <p class='signature' id='run-instance'>
       - (void) <strong>run</strong>({data, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>The main point of entry into the TripleSec Encryption system.  The main
+points of the algorithm are:</p><ol>
+<li>Encrypt PT with Salsa20</li>
+<li>Encrypt the result of 1 with 2Fish-256-CTR</li>
+<li>Encrypt the result of 2 with AES-256-CTR</li>
+<li>MAC with HMAC-SHA512 || HMAC-SHA3</li>
+</ol>
+
+</div>
+<div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
@@ -223,6 +233,14 @@ same salt.</p>
       </span>
       &mdash;
       <span class='desc'>the data to encrypt </span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Call this to update the U/I about progress</span>
     </li>
     <li>
       <span class='name'>cb</span>
@@ -239,7 +257,7 @@ same salt.</p>
     </div>
     <div id='footer'>
   Generated on
-  Sat Sep 14 2013 21:51:13 GMT-0400 (EDT)
+  Sat Sep 14 2013 22:10:39 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
