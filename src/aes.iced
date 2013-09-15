@@ -4,12 +4,18 @@
 ##
 ##   https://code.google.com/p/crypto-js/
 ##
-
 {BlockCipher} = require './algbase'
 {scrub_vec} = require './util'
 
 #=======================================================================
 
+#
+# @private Global
+#
+# Global state used in all instances of AES, which is either
+# immutable, or safe for one block only (if trampled by others).
+#
+#
 class Global
   constructor : -> 
     @SBOX = []
@@ -66,7 +72,19 @@ G = new Global()
 
 #=======================================================================
 
-exports.AES = class AES extends BlockCipher
+#
+# ### Advanced Encyrption Standard (AES).
+#
+# An implementation of standard AES, forked from 
+# [Jeff Mott's CryptoJS](https://code.google.com/p/crypto-js/).
+# See [Wikipedia](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
+# for a high-level overview, and [FIPS 197](http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf)
+# for more information on the standard.
+#
+# Here, we have implemented AES-256, which takes a 256-bit key, block input
+# of 128-bits, and outputs blocks of 128-bits.
+#
+class AES extends BlockCipher
 
   # Blocksize in bytes --- Each round transforms 4 32-bit
   # words, so 16 bytes in total
@@ -193,5 +211,9 @@ exports.AES = class AES extends BlockCipher
     M[offset + 1] = t1
     M[offset + 2] = t2
     M[offset + 3] = t3
+
+#=======================================================================
+
+exports.AES = AES
 
 #=======================================================================
