@@ -2,6 +2,7 @@
 more_entropy = require 'more-entropy'
 {ADRBG} = require './drbg'
 {WordArray} = require './wordarray'
+{XOR} = require './combine'
 
 #===============================================
 
@@ -30,7 +31,7 @@ exports.PRNG = class PRNG
 
   constructor : () ->
     @meg = new more_entropy.Generator()
-    @adrbg = new ADRBG (n,cb) => @gen_seed n, cb
+    @adrbg = new ADRBG ((n,cb) => @gen_seed n, cb), XOR.sign
 
   now_to_buffer : () ->
     d = Date.now()

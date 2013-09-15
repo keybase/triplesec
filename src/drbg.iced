@@ -1,6 +1,8 @@
 
 hmac = require './hmac'
+{XOR} = require './combine'
 sha512 = require './sha512'
+sha3 = require './sha3'
 {WordArray} = require './wordarray'
 {Lock} = require './lock'
 
@@ -16,7 +18,8 @@ exports.DRBG = class DRBG
 
   #-----------------
 
-  constructor : (entropy, personalization_string) ->
+  constructor : (entropy, personalization_string, hm) ->
+    @hmac = hm or hmac.sign
     # Only run at the most secure strength
     @security_strength = 256
     entropy = @check_entropy entropy
@@ -30,7 +33,11 @@ exports.DRBG = class DRBG
       throw new Error "entropy must be at least #{1.5 * @security_strength} bits."
     else if entropy.SigBytes * 8 > 1000 
       # if too many bits, then just hash them down to size
+      # Hash with both SHAs and then XOR together.
       out = sha512.transform entropy
+      tmp = sha3.transform entropy
+      out.xor tmp, {}
+      tmp.scrub()
       entropy.scrub()
       out
     else entropy
@@ -38,7 +45,7 @@ exports.DRBG = class DRBG
   #-----------------
 
   # Just for convenience and succinctness
-  _hmac : (key, input) -> hmac.sign { key, input }
+  _hmac : (key, input) -> @hmac { key, input }
 
   #-----------------
 
@@ -94,7 +101,7 @@ exports.DRBG = class DRBG
 
 exports.ADRBG = class ADRBG
 
-  constructor : (@gen_seed) ->
+  constructor : (@gen_seed, @hmac) ->
     @drbg = null
     @lock = new Lock()
 
@@ -102,7 +109,7 @@ exports.ADRBG = class ADRBG
     await @lock.acquire defer()
     if not @drbg?
       await @gen_seed 256, defer seed
-      @drbg = new DRBG seed
+      @drbg = new DRBG seed, null, @hmac
     if @drbg.reseed_counter > 100
       await @gen_seed 256, defer seed
       @drbg.reseed seed

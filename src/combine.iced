@@ -4,10 +4,10 @@
 
 #=============================================
 
-class Base
+class CombineBase
 
   @keySize : HMAC.keySize
-  keySize : Base.keySize
+  keySize : CombineBase.keySize
 
   constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
     @hashers = (new HMAC(key, klass) for klass in klasses)
@@ -32,7 +32,7 @@ class Base
 
 #=============================================
 
-exports.Concat = class Concat extends Base
+exports.Concat = class Concat extends CombineBase
   @outputSize : HMAC.outputSize*2
   outputSize : Concat.outputSize
   coalesce : (out, h) -> out.concat h
@@ -44,7 +44,7 @@ exports.Concat = class Concat extends Base
 
 #=============================================
 
-exports.XOR = class XOR extends Base
+exports.XOR = class XOR extends CombineBase
   @outputSize : HMAC.outputSize
   outputSize : XOR.outputSize
   coalesce : (out, h) -> out.xor h, {}
