@@ -1,6 +1,7 @@
 {HMAC,bulk_sign} = require './hmac'
 {SHA512} = require './sha512'
 {SHA3} = require './sha3'
+{WordArray} = require './wordarray'
 
 #=============================================
 
@@ -15,6 +16,7 @@ class CombineBase
     @hashers = (new HMAC(key, klass) for klass in klasses)
     @hasherBlockSize = @hashers[0].hasherBlockSize
     @hasherBlockSizeBytes = @hasherBlockSize * 4
+    @reset()
 
   # Reset the inner hashers, thereby resetting the combined HMAC.
   # @return {CombineBase} Return `this` for chaining.
@@ -62,7 +64,8 @@ class Concat extends CombineBase
   # @param {WordArray} out The targe accumulator
   # @param {WordArray} h The input HMAC to be combined.
   #
-  _coalesce : (out, h) -> out.concat h
+  _coalesce : (out, h) -> 
+    out.concat h
 
   # Gets the output size of this combination, which can only be known
   # once this Combiner has been allocated.  Call this if you're not
@@ -93,6 +96,14 @@ class Concat extends CombineBase
 
 # The XOR HMAC combiner.  Good when you are shooting for PRF-qualities.
 class XOR extends CombineBase
+
+  # When resetting and reinitializing an XOR-HMAC-combiner, take the
+  # extra precaution of putting a 0,1,2,3.... into the inner HMACs, so 
+  # that even if the same HMAC is used, we don't get zero.
+  reset : () ->
+    super()
+    (h.update(new WordArray [i]) for h,i in @hashers)
+    @
 
   # The default output size if you use the default arguments,
   # which is Math.min(HMAC(SHA512), HMAC(SHA3))

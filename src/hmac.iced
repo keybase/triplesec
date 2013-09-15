@@ -4,7 +4,7 @@ util = require './util'
 
 #=======================================================================
 
-exports.HMAC = class HMAC 
+class HMAC 
 
   # Hard-in-fast output sizes for a 512-bit hash, either SHA-512, or 
   # SHA-3 in 512-bit mode.  This is slightly ugly, but it works for now,
@@ -94,6 +94,10 @@ exports.HMAC = class HMAC
     @key.scrub()
     @_iKey.scrub()
     @_oKey.scrub()
+
+#=======================================================================
+
+exports.HMAC = HMAC
 
 #=======================================================================
 

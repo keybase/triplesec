@@ -163,6 +163,16 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#reset-instance'>
+        - (void) <strong>reset</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      @virtual When resetting and reinitializing an XOR-HMAC-combiner, take the extra precaution of putting a 0,1,2,3....
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#get_output_size-instance'>
         - (Number) <strong>get_output_size</strong>()
       </a>
@@ -292,6 +302,18 @@ which is Math.min(HMAC(SHA512), HMAC(SHA3))</p>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
+    <p class='signature' id='reset-instance'>
+      - (void) <strong>reset</strong>()
+    </p>
+    <div class='docstring'>
+  <p>@virtual</p><p>When resetting and reinitializing an XOR-HMAC-combiner, take the
+extra precaution of putting a 0,1,2,3.... into the HMACs, so that
+even if the same HMAC is used, we don&#39;t get zero.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='get_output_size-instance'>
       - (Number) <strong>get_output_size</strong>()
     </p>
@@ -316,7 +338,7 @@ using the default Class parameters (SHA512 + SHA3).</p>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 17:20:01 GMT-0400 (EDT)
+  Sun Sep 15 2013 17:41:59 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
