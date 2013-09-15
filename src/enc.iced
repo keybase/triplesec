@@ -204,5 +204,4 @@ exports.encrypt = ({ key, data, rng, progress_hook}, cb) ->
   enc.scrub()
   cb err, ret
 
-
 #========================================================================

@@ -84,10 +84,9 @@ class PBKDF2
     @prf.scrub()
     cb new WordArray flat, dkLen
 
-exports.PBKDF2 = PBKDF2
-
 #=========================================================
 
+#
 # @method pbkdf2
 #
 # A convenience method to make a new PBKDF2 object, and then run it just
@@ -100,10 +99,13 @@ exports.PBKDF2 = PBKDF2
 # @param {Class} klass The class to use for inner HMAC, called once per iter. Default is HMAC-SHA512
 # @param {callback} cb Calls back with a WordArray of key-material.
 #
-exports.pbkdf2 = pkbdf2 = ({key, salt, c, dkLen, progress_hook, klass}, cb) ->
+pbkdf2 = ({key, salt, c, dkLen, progress_hook, klass}, cb) ->
   eng = new PBKDF2 { key, salt, c, klass}
   await eng.gen { dkLen, progress_hook }, defer out
   cb out
 
 #=========================================================
+
+exports.pbkdf2 = pbkdf2
+exports.PBKDF2 = PBKDF2
 
