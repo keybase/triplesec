@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='../assets/codo.css' type='text/css'>
+  <script src='../assets/codo.js'></script>
+  <script src='../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../README.md.html' title='Triplesec'>Triplesec</a>
+    &raquo;
+    <a href='../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>CombineBase</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../class_list.html'>Classes</a>
+      <a id='file_list_link' href='../file_list.html'>Files</a>
+      <a id='method_list_link' href='../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        CombineBase
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src&#47;combine.iced</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>A base class for HMAC-combiners.</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+                <a href='../classes/Concat.html'>Concat</a>,
+        <a href='../classes/XOR.html'>XOR</a>
+      </p>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(key, klasses = [SHA512, SHA3])
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      Construct a new HMAC-combiner
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#reset-instance'>
+        - (CombineBase) <strong>reset</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Reset the inner hashers, thereby resetting the combined HMAC.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#update-instance'>
+        - (CombineBase) <strong>update</strong>(w)
+      </a>
+    </span>
+    <span class='desc'>
+      Update both hashers with the given input
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#scrub-instance'>
+        - (CombineBase) <strong>scrub</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Scrub all internal state (including the keys) of both HMACs.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#finalize-instance'>
+        - (CombineBase) <strong>finalize</strong>(w)
+      </a>
+    </span>
+    <span class='desc'>
+      Finalize the cominbed hashers, and do the actual combining.
+    </span>
+  </li>
+</ul>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(key, klasses = [SHA512, SHA3])
+    </p>
+    <div class='docstring'>
+  <p>Construct a new HMAC-combiner</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The key to use in both classes</span>
+    </li>
+    <li>
+      <span class='name'>klasses</span>
+      <span class='type'>
+        (<tt>Vector&lt;Class&gt;</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The classes to combine.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='reset-instance'>
+      - (CombineBase) <strong>reset</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Reset the inner hashers, thereby resetting the combined HMAC.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/CombineBase.html'>CombineBase</a></tt>)
+      &mdash;
+      <span class='desc'>Return <code>this</code> for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='update-instance'>
+      - (CombineBase) <strong>update</strong>(w)
+    </p>
+    <div class='docstring'>
+  <p>Update both hashers with the given input</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>w</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input to the update</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/CombineBase.html'>CombineBase</a></tt>)
+      &mdash;
+      <span class='desc'>Return <code>this</code> for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='scrub-instance'>
+      - (CombineBase) <strong>scrub</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Scrub all internal state (including the keys) of both HMACs.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/CombineBase.html'>CombineBase</a></tt>)
+      &mdash;
+      <span class='desc'>Return <code>this</code> for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='finalize-instance'>
+      - (CombineBase) <strong>finalize</strong>(w)
+    </p>
+    <div class='docstring'>
+  <p>Finalize the cominbed hashers, and do the actual combining.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>w</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input to the update</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/CombineBase.html'>CombineBase</a></tt>)
+      &mdash;
+      <span class='desc'>Return <code>this</code> for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Sep 15 2013 17:41:59 GMT-0400 (EDT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.8.1
+  (Node.js v0.10.15).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>
