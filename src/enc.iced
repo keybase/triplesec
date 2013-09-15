@@ -153,13 +153,13 @@ exports.Encryptor = class Encryptor extends Base
 
   # @method run
   #
-  # The main point of entry into the TripleSec Encryption system.  The main
-  # points of the algorithm are:
+  # The main point of entry into the TripleSec Encryption system.  The 
+  # steps of the algorithm are:
   #
   #  1. Encrypt PT with Salsa20
   #  1. Encrypt the result of 1 with 2Fish-256-CTR
   #  1. Encrypt the result of 2 with AES-256-CTR
-  #  1. MAC with HMAC-SHA512 || HMAC-SHA3
+  #  1. MAC with (HMAC-SHA512 || HMAC-SHA3)
   #
   # @param {Buffer} data the data to encrypt 
   # @param {Function} progress_hook Call this to update the U/I about progress
@@ -182,11 +182,11 @@ exports.Encryptor = class Encryptor extends Base
 #
 # @method encrypt
 # 
-# A wrapper around:
+# A convenience wrapper for:
 #
-#   1. Creating a new Encryptor instance with the given key
-#   1. Calling `run` just once.
-#   1. Scrubbing and deleting all state.
+# 1. Creating a new Encryptor instance with the given key
+# 1. Calling `run` just once.
+# 1. Scrubbing and deleting all state.
 #
 # @param {Buffer} key The secret key.  This data is scrubbed after use, so copy it
 #   if you want to keep track of it.
@@ -198,10 +198,11 @@ exports.Encryptor = class Encryptor extends Base
 # @param {callback} cb Callback with an (err,res) pair. The err is an Error object
 #   (if encountered), and res is a Buffer object (on success).
 #
-exports.encrypt = encrypt = ({ key, data, rng, progress_hook}, cb) ->
+exports.encrypt = ({ key, data, rng, progress_hook}, cb) ->
   enc = new Encryptor { key, rng }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()
   cb err, ret
+
 
 #========================================================================

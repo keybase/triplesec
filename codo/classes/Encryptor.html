@@ -214,12 +214,12 @@ same salt.</p>
       - (void) <strong>run</strong>({data, progress_hook}, cb)
     </p>
     <div class='docstring'>
-  <p>The main point of entry into the TripleSec Encryption system.  The main
-points of the algorithm are:</p><ol>
+  <p>The main point of entry into the TripleSec Encryption system.  The 
+steps of the algorithm are:</p><ol>
 <li>Encrypt PT with Salsa20</li>
 <li>Encrypt the result of 1 with 2Fish-256-CTR</li>
 <li>Encrypt the result of 2 with AES-256-CTR</li>
-<li>MAC with HMAC-SHA512 || HMAC-SHA3</li>
+<li>MAC with (HMAC-SHA512 || HMAC-SHA3)</li>
 </ol>
 
 </div>
@@ -257,7 +257,7 @@ points of the algorithm are:</p><ol>
     </div>
     <div id='footer'>
   Generated on
-  Sat Sep 14 2013 22:10:39 GMT-0400 (EDT)
+  Sat Sep 14 2013 22:28:22 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
