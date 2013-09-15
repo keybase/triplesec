@@ -44,7 +44,7 @@ exports.Decryptor = class Decryptor extends Base
   #----------------------
 
   verify_sig : (key, cb) ->
-    if not (received = @ct.unshift(Concat.outputSize/4))?
+    if not (received = @ct.unshift(Concat.get_output_size()/4))?
       err = new Error "Ciphertext underrun in signature"
     else
       await @sign { input : @ct, key, @salt }, defer computed

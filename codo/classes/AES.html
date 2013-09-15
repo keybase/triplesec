@@ -218,7 +218,8 @@ of 128-bits, and outputs blocks of 128-bits.</p>
     </p>
     <div class='docstring'>
   <p>Encrypt one AES-block of input ciphertext <em>in place</em>. Replace the 
-plaintext with the output ciphertext.</p>
+plaintext with the output ciphertext.  </p><p>This is a lower-level function that should not be called directly, but only by 
+higher-level routines.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -248,7 +249,8 @@ plaintext with the output ciphertext.</p>
     </p>
     <div class='docstring'>
   <p>Decrypt one AES-block of input ciphertext <em>in place</em>. Replace the 
-ciphertext with the output plaintext.</p>
+ciphertext with the output plaintext.</p><p>This is a lower-level function that should not be called directly, but only by 
+higher-level routines.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -286,7 +288,7 @@ ciphertext with the output plaintext.</p>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 15:20:40 GMT-0400 (EDT)
+  Sun Sep 15 2013 16:52:32 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

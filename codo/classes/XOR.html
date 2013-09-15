@@ -120,26 +120,42 @@
           </td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>The XOR HMAC combiner.  Good when you are shooting for PRF-qualities.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#sign-class'>
-        + (void) <strong>sign</strong>({key, input})
+      <a href='#get_output_size-class'>
+        + (void) <strong>get_output_size</strong>()
       </a>
     </span>
     <span class='desc'>
-      
+      The default output size if you use the default arguments, which is Math.min(HMAC(SHA512), HMAC(SHA3))
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#sign-class'>
+        + (WordArray) <strong>sign</strong>({key, input})
+      </a>
+    </span>
+    <span class='desc'>
+      Sign an input with the given key using this technique.
     </span>
   </li>
   <li>
     <span class='signature'>
       <a href='#bulk_sign-class'>
-        + (void) <strong>bulk_sign</strong>(args, cb)
+        + (void) <strong>bulk_sign</strong>(arg, cb)
       </a>
     </span>
     <span class='desc'>
-      
+      Sign using the bulk async callback-based interface.
     </span>
   </li>
 </ul>
@@ -147,22 +163,12 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#coalesce-instance'>
-        - (void) <strong>coalesce</strong>(out, h)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#get_output_size-instance'>
-        - (void) <strong>get_output_size</strong>()
+        - (Number) <strong>get_output_size</strong>()
       </a>
     </span>
     <span class='desc'>
-      
+      Gets the output size of this combination, which can only be known once this Combiner has been allocated.
     </span>
   </li>
 </ul>
@@ -183,41 +189,115 @@
       <h2>Class Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='sign-class'>
-      + (void) <strong>sign</strong>({key, input})
+    <p class='signature' id='get_output_size-class'>
+      + (void) <strong>get_output_size</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>The default output size if you use the default arguments,
+which is Math.min(HMAC(SHA512), HMAC(SHA3))</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='sign-class'>
+      + (WordArray) <strong>sign</strong>({key, input})
+    </p>
+    <div class='docstring'>
+  <p>Sign an input with the given key using this technique.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The key to sign with.</span>
+    </li>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input data to sign.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      &mdash;
+      <span class='desc'>the HMAC signatures</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='bulk_sign-class'>
-      + (void) <strong>bulk_sign</strong>(args, cb)
+      + (void) <strong>bulk_sign</strong>(arg, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sign using the bulk async callback-based interface.</p>
+</div>
+<div class='tags'>
+  <h3>
+    Options Hash:
+    (arg):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The key to use for signing.</span>
+    </li>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input to sign</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='coalesce-instance'>
-      - (void) <strong>coalesce</strong>(out, h)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='get_output_size-instance'>
-      - (void) <strong>get_output_size</strong>()
+      - (Number) <strong>get_output_size</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Gets the output size of this combination, which can only be known
+once this Combiner has been allocated.  Call this if you&#39;re not
+using the default Class parameters (SHA512 + SHA3).</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Number</tt>)
+      &mdash;
+      <span class='desc'>The output size in bytes.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 15:20:40 GMT-0400 (EDT)
+  Sun Sep 15 2013 16:52:32 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
