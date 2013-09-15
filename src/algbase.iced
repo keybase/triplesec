@@ -164,7 +164,7 @@ exports.Hasher = class Hasher extends BufferedBlockAlgorithm
 
 #=======================================================================
 
-exports.BlockCipher = class BlockCipheGr
+exports.BlockCipher = class BlockCipher
   constructor : (key) ->
   encryptBlock : (M, offset) ->
     

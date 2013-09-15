@@ -126,7 +126,7 @@
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>()
+        - (void) <strong>constructor</strong>({key})
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -137,7 +137,7 @@
   <li>
     <span class='signature'>
       <a href='#pbkdf2-instance'>
-        - (void) <strong>pbkdf2</strong>(, cb)
+        - (void) <strong>pbkdf2</strong>({salt, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -147,7 +147,7 @@
   <li>
     <span class='signature'>
       <a href='#sign-instance'>
-        - (void) <strong>sign</strong>(, cb)
+        - (void) <strong>sign</strong>({input, key, salt, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -157,7 +157,7 @@
   <li>
     <span class='signature'>
       <a href='#run_salsa20-instance'>
-        - (void) <strong>run_salsa20</strong>(, cb)
+        - (void) <strong>run_salsa20</strong>({input, key, iv, output_iv, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -167,7 +167,7 @@
   <li>
     <span class='signature'>
       <a href='#run_twofish-instance'>
-        - (void) <strong>run_twofish</strong>(, cb)
+        - (void) <strong>run_twofish</strong>({input, key, iv, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -177,7 +177,7 @@
   <li>
     <span class='signature'>
       <a href='#run_aes-instance'>
-        - (void) <strong>run_aes</strong>(, cb)
+        - (void) <strong>run_aes</strong>({input, key, iv, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -199,7 +199,7 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>()
+      - (void) <strong>constructor</strong>({key})
     </p>
     <div class='tags'>
 </div>
@@ -209,35 +209,35 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='pbkdf2-instance'>
-      - (void) <strong>pbkdf2</strong>(, cb)
+      - (void) <strong>pbkdf2</strong>({salt, progress_hook}, cb)
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='sign-instance'>
-      - (void) <strong>sign</strong>(, cb)
+      - (void) <strong>sign</strong>({input, key, salt, progress_hook}, cb)
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='run_salsa20-instance'>
-      - (void) <strong>run_salsa20</strong>(, cb)
+      - (void) <strong>run_salsa20</strong>({input, key, iv, output_iv, progress_hook}, cb)
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='run_twofish-instance'>
-      - (void) <strong>run_twofish</strong>(, cb)
+      - (void) <strong>run_twofish</strong>({input, key, iv, progress_hook}, cb)
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='run_aes-instance'>
-      - (void) <strong>run_aes</strong>(, cb)
+      - (void) <strong>run_aes</strong>({input, key, iv, progress_hook}, cb)
     </p>
     <div class='tags'>
 </div>
@@ -253,7 +253,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Sat Sep 14 2013 12:22:46 GMT-0400 (EDT)
+  Sat Sep 14 2013 21:51:13 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

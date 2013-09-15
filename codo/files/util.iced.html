@@ -149,7 +149,7 @@
   <li>
     <span class='signature'>
       <a href='#bulk-class'>
-        + (void) <strong>bulk</strong>(n_input_bytes, , )
+        + (void) <strong>bulk</strong>(n_input_bytes, {update, finalize, default_n}, {delay, n, cb, what, progress_hook})
       </a>
     </span>
     <span class='desc'>
@@ -182,7 +182,7 @@
   </div>
   <div class='method_details'>
     <p class='signature' id='bulk-class'>
-      + (void) <strong>bulk</strong>(n_input_bytes, , )
+      + (void) <strong>bulk</strong>(n_input_bytes, {update, finalize, default_n}, {delay, n, cb, what, progress_hook})
     </p>
     <div class='docstring'>
   <p>Perform a bulk crypto operation, inserting delay slots as
@@ -274,7 +274,7 @@ needs be.</p><p>   and high position <strong>in words</strong>, for which window
     </div>
     <div id='footer'>
   Generated on
-  Sat Sep 14 2013 12:22:46 GMT-0400 (EDT)
+  Sat Sep 14 2013 21:51:13 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

@@ -125,7 +125,7 @@
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>()
+        - (void) <strong>constructor</strong>({key, rng})
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -136,7 +136,7 @@
   <li>
     <span class='signature'>
       <a href='#pick_random_ivs-instance'>
-        - (void) <strong>pick_random_ivs</strong>(, cb)
+        - (void) <strong>pick_random_ivs</strong>({progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -146,7 +146,7 @@
   <li>
     <span class='signature'>
       <a href='#resalt-instance'>
-        - (void) <strong>resalt</strong>(, cb)
+        - (void) <strong>resalt</strong>({progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -156,7 +156,7 @@
   <li>
     <span class='signature'>
       <a href='#run-instance'>
-        - (void) <strong>run</strong>(, cb)
+        - (void) <strong>run</strong>({data, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -182,7 +182,7 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>()
+      - (void) <strong>constructor</strong>({key, rng})
     </p>
     <div class='tags'>
 </div>
@@ -192,14 +192,14 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='pick_random_ivs-instance'>
-      - (void) <strong>pick_random_ivs</strong>(, cb)
+      - (void) <strong>pick_random_ivs</strong>({progress_hook}, cb)
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='resalt-instance'>
-      - (void) <strong>resalt</strong>(, cb)
+      - (void) <strong>resalt</strong>({progress_hook}, cb)
     </p>
     <div class='docstring'>
   <p>Regenerate the salt. Reinitialize the keys. You have to do this
@@ -211,7 +211,7 @@ same salt.</p>
   </div>
   <div class='method_details'>
     <p class='signature' id='run-instance'>
-      - (void) <strong>run</strong>(, cb)
+      - (void) <strong>run</strong>({data, progress_hook}, cb)
     </p>
     <div class='tags'>
   <h3>Parameters:</h3>
@@ -239,7 +239,7 @@ same salt.</p>
     </div>
     <div id='footer'>
   Generated on
-  Sat Sep 14 2013 12:22:46 GMT-0400 (EDT)
+  Sat Sep 14 2013 21:51:13 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
