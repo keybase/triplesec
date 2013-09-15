@@ -114,6 +114,12 @@
           <td>src&#47;pbkdf2.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Standard PBKDF2, as per RFC 2898 and/or PKCS #5 v2</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -165,6 +171,47 @@
       - (void) <strong>constructor</strong>({key, salt, c, klass})
     </p>
     <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Will be destroyed after it&#39;s used</span>
+    </li>
+    <li>
+      <span class='name'>salt</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>c</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>the number of iterations</span>
+    </li>
+    <li>
+      <span class='name'>dkLen</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>the needed length of output data</span>
+    </li>
+    <li>
+      <span class='name'>klass</span>
+      <span class='type'>
+        (<tt>Class</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The klass of the HMAC to use. By default it is HMAC-SHA512, but you can consder passing combine.XOR, which is the XOR of HMAC-SHA512 and HMAC-SHA3.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
@@ -195,7 +242,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Sat Sep 14 2013 22:28:22 GMT-0400 (EDT)
+  Sun Sep 15 2013 12:31:25 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

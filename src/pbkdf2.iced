@@ -5,14 +5,16 @@ util = require './util'
 
 #=========================================================
 
-exports.PBKDF2 = class PBKDF2
+#
+# Standard PBKDF2, as per RFC 2898 and/or PKCS #5 v2
+# 
+class PBKDF2
 
   # @param {WordArray} key Will be destroyed after it's used
   # @param {WordArray} salt
   # @param {number} c the number of iterations
   # @param {number} dkLen the needed length of output data
-  #
-  
+  # @param {Class} klass The klass of the HMAC to use. Default it is HMAC-SHA512.
   constructor : ({@key, @salt, @c, klass}) ->
     klass or= HMAC
     @prf = new klass @key
@@ -59,6 +61,8 @@ exports.PBKDF2 = class PBKDF2
     @key.scrub()
     @prf.scrub()
     cb new WordArray flat, dkLen
+
+exports.PBKDF2 = PBKDF2
 
 #=========================================================
 
