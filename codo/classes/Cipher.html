@@ -197,7 +197,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 17:41:59 GMT-0400 (EDT)
+  Sun Sep 15 2013 18:48:30 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
@@ -210,5 +210,62 @@
   <a href='https://mksoft.ch'>mksoft.ch</a>
 </div>
   </body>
-</html>/body>
+</html>      &mdash;
+      <span class='desc'>A random IV, please don&#39;t reuse an old one!</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='scrub-instance'>
+      - (void) <strong>scrub</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Scrub out all potentially sensitive data.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_pad-instance'>
+      - (WordArray) <strong>get_pad</strong>()
+    </p>
+    <div class='docstring'>
+  <p>In fulfillment of the <a href='../classes/StreamCipher.html'>StreamCipher</a> interface, get a random pad
+that&#39;s the same size as the block size of the underlying BlockCipher.
+Increment the counter as necessary, so we obviously get a different value
+in the next iteration..</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      &mdash;
+      <span class='desc'>The encrypted pad that&#39;s going to be XORed with the plaintext.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Sep 15 2013 18:48:30 GMT-0400 (EDT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.8.1
+  (Node.js v0.10.15).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
 </html>

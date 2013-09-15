@@ -184,6 +184,13 @@ exports.WordArray = class WordArray
 
   #--------------
 
+  is_scrubbed : () ->
+    for w in @words when w isnt 0
+      return false
+    true
+    
+  #--------------
+
   scrub : () ->
     util.scrub_vec @words
 

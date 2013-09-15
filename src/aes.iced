@@ -103,7 +103,7 @@ class AES extends BlockCipher
   # @param {WordArray} key The encryption key
   # 
   constructor : (key) ->
-    @_key = key
+    @_key = key.clone()
     @_doReset()
 
   #-------------------------
@@ -202,6 +202,7 @@ class AES extends BlockCipher
   scrub : () ->
     scrub_vec @_keySchedule
     scrub_vec @_invKeySchedule
+    @_key.scrub()
 
   #-------------------------
  

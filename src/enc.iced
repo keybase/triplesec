@@ -86,15 +86,19 @@ exports.Base = class Base
   #---------------
 
   run_twofish : ({input, key, iv, progress_hook}, cb) ->
+    throw new Error "Refuse to encrypt w/ a scrubbed key" if key.is_scrubbed()
     block_cipher = new TwoFish key
     await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "twofish" }, defer ct
+    block_cipher.scrub()
     cb iv.clone().concat(ct)
 
   #---------------
 
   run_aes : ({input, key, iv, progress_hook}, cb) ->
+    throw new Error "Refuse to encrypt w/ a scrubbed key" if key.is_scrubbed()
     block_cipher = new AES key
     await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "aes" }, defer ct
+    block_cipher.scrub()
     cb iv.clone().concat(ct)
 
   #---------------

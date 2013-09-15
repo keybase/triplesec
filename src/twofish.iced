@@ -151,7 +151,8 @@ exports.TwoFish = class TwoFish extends BlockCipher
   @ivSize : TwoFish.blockSize
   ivSize : TwoFish.ivSize
 
-  constructor : (@_key) ->
+  constructor : (key) ->
+    @_key = key.clone()
     @gMDS0 = []
     @gMDS1 = []
     @gMDS2 = []
@@ -347,6 +348,7 @@ exports.TwoFish = class TwoFish extends BlockCipher
   scrub : () ->
     scrub_vec @gSubKeys
     scrub_vec @gSBox
+    @_key.scrub()
 
   #----------------
 
