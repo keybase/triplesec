@@ -102,11 +102,15 @@ class AES extends BlockCipher
   #
   # @param {WordArray} key The encryption key
   # 
-  constructor : (@_key) ->
+  constructor : (key) ->
+    @_key = key
     @_doReset()
 
   #-------------------------
 
+  # @private method _doReset
+  #
+  # Resets the internal state of the AES cipher
   _doReset : ->
     # Shortcuts
     keyWords = @_key.words
@@ -152,12 +156,35 @@ class AES extends BlockCipher
             G.INV_SUB_MIX[3][G.SBOX[t & 0xff]])
 
   #-------------------------
-  
+ 
+  # @method encryptBlock
+  #
+  # Encrypt one AES-block of input ciphertext *in place*. Replace the 
+  # plaintext with the output ciphertext.  
+  #
+  # This is a lower-level function that should not be called directly, but only by 
+  # higher-level routines.
+  #
+  # @param {Array<uint32>} M An array of uint32s, that can be way longer than an AES block
+  # @param {Number} offset The offset into M, in # of words.
+  #
   encryptBlock : (M, offset = 0) ->
     @_doCryptBlock M, offset, @_keySchedule, G.SUB_MIX, G.SBOX
 
   #-------------------------
-  
+ 
+
+  # @method decryptBlock
+  #
+  # Decrypt one AES-block of input ciphertext *in place*. Replace the 
+  # ciphertext with the output plaintext.
+  #
+  # This is a lower-level function that should not be called directly, but only by 
+  # higher-level routines.
+  #
+  # @param {Array<uint32>} M An array of uint32s, that can be way longer than an AES block
+  # @param {Number} offset The offset into M, in # of words.
+  #
   decryptBlock: (M, offset = 0) ->
     # Swap 2nd and 4th rows
     [ M[offset + 1], M[offset + 3] ] = [ M[offset + 3], M[offset + 1] ]
@@ -169,12 +196,19 @@ class AES extends BlockCipher
 
   #-------------------------
 
+  # @method scrub
+  #
+  # Zero-out all internal state that's sensitive.
   scrub : () ->
     scrub_vec @_keySchedule
     scrub_vec @_invKeySchedule
 
   #-------------------------
-  
+ 
+  # @private _doCryptBlock
+  #
+  # The internal workhouse of the algorithm.
+  # 
   _doCryptBlock: (M, offset, keySchedule, SUB_MIX, SBOX) ->
 
     # Get input, add round key

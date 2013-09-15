@@ -6,9 +6,6 @@
 
 class CombineBase
 
-  @keySize : HMAC.keySize
-  keySize : CombineBase.keySize
-
   constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
     @hashers = (new HMAC(key, klass) for klass in klasses)
     @hasherBlockSize = @hashers[0].hasherBlockSize

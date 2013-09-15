@@ -6,9 +6,9 @@ util = require './util'
 
 exports.HMAC = class HMAC 
 
-  # Suggested key sizes....
-  @keySize : 512/8
-  keySize : HMAC.keySize
+  # Hard-in-fast output sizes for a 512-bit hash, either SHA-512, or 
+  # SHA-3 in 512-bit mode.  This is slightly ugly, but it works for now,
+  # since these are the only two we're using.
   @outputSize : 512/8
   outputSize : HMAC.outputSize
 

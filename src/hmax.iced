@@ -8,9 +8,6 @@ util = require './util'
 
 exports.HMAX = class HMAX
 
-  # Suggested key sizes....
-  @keySize : 512/8
-  keySize : HMAX.keySize
   @outputSize : 512/8
   outputSize : HMAX.outputSize
 

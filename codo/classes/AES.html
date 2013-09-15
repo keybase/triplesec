@@ -126,7 +126,7 @@
 <a href="https://code.google.com/p/crypto-js/">Jeff Mott&#39;s CryptoJS</a>.
 See <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">Wikipedia</a>
 for a high-level overview, and <a href="http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf">FIPS 197</a>
-for more information on the standard.</p><p>We have implemented here AES-256, which takes a 256-bit key, block input
+for more information on the standard.</p><p>Here, we have implemented AES-256, which takes a 256-bit key, block input
 of 128-bits, and outputs blocks of 128-bits.</p>
 </div>
 <div class='tags'>
@@ -136,7 +136,7 @@ of 128-bits, and outputs blocks of 128-bits.</p>
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(_key)
+        - (void) <strong>constructor</strong>(key)
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -146,22 +146,12 @@ of 128-bits, and outputs blocks of 128-bits.</p>
   </li>
   <li>
     <span class='signature'>
-      <a href='#_doReset-instance'>
-        - (void) <strong>_doReset</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#encryptBlock-instance'>
         - (void) <strong>encryptBlock</strong>(M, offset = 0)
       </a>
     </span>
     <span class='desc'>
-      
+      Encrypt one AES-block of input ciphertext <em>in place</em>.
     </span>
   </li>
   <li>
@@ -171,7 +161,7 @@ of 128-bits, and outputs blocks of 128-bits.</p>
       </a>
     </span>
     <span class='desc'>
-      
+      Decrypt one AES-block of input ciphertext <em>in place</em>.
     </span>
   </li>
   <li>
@@ -181,17 +171,7 @@ of 128-bits, and outputs blocks of 128-bits.</p>
       </a>
     </span>
     <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_doCryptBlock-instance'>
-        - (void) <strong>_doCryptBlock</strong>(M, offset, keySchedule, SUB_MIX, SBOX)
-      </a>
-    </span>
-    <span class='desc'>
-      
+      Zero-out all internal state that&#39;s sensitive.
     </span>
   </li>
 </ul>
@@ -210,7 +190,7 @@ of 128-bits, and outputs blocks of 128-bits.</p>
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(_key)
+      - (void) <strong>constructor</strong>(key)
     </p>
     <div class='docstring'>
   <p>Create a new AES encryption engine</p>
@@ -233,45 +213,80 @@ of 128-bits, and outputs blocks of 128-bits.</p>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='_doReset-instance'>
-      - (void) <strong>_doReset</strong>()
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='encryptBlock-instance'>
       - (void) <strong>encryptBlock</strong>(M, offset = 0)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Encrypt one AES-block of input ciphertext <em>in place</em>. Replace the 
+plaintext with the output ciphertext.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>M</span>
+      <span class='type'>
+        (<tt>Array&lt;uint32&gt;</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>An array of uint32s, that can be way longer than an AES block</span>
+    </li>
+    <li>
+      <span class='name'>offset</span>
+      <span class='type'>
+        (<tt>Number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The offset into M, in # of words.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='decryptBlock-instance'>
       - (void) <strong>decryptBlock</strong>(M, offset = 0)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Decrypt one AES-block of input ciphertext <em>in place</em>. Replace the 
+ciphertext with the output plaintext.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>M</span>
+      <span class='type'>
+        (<tt>Array&lt;uint32&gt;</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>An array of uint32s, that can be way longer than an AES block</span>
+    </li>
+    <li>
+      <span class='name'>offset</span>
+      <span class='type'>
+        (<tt>Number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The offset into M, in # of words.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='scrub-instance'>
       - (void) <strong>scrub</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Zero-out all internal state that&#39;s sensitive.</p>
 </div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_doCryptBlock-instance'>
-      - (void) <strong>_doCryptBlock</strong>(M, offset, keySchedule, SUB_MIX, SBOX)
-    </p>
-    <div class='tags'>
+<div class='tags'>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 15:00:02 GMT-0400 (EDT)
+  Sun Sep 15 2013 15:20:40 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1

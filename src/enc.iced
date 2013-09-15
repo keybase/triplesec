@@ -12,12 +12,13 @@ prng          = require './prng'
 
 #========================================================================
 
+# @property {Object} V A lookup table of all supported versions. Only v1 yet.
 exports.V = V = 
   "1" : 
-    header :
-      [ 0x1c94d7de, 1 ]
-    pbkdf2_iters : 1024
-    salt_size : 8 # 8 bytes of salt is good enough!
+    header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
+    pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
+    salt_size     : 8                  # 8 bytes of salt is good enough!
+    hmac_key_size : 512/8              # The size of the key to use for HMAC (our choice)
 
 #========================================================================
 
@@ -40,7 +41,7 @@ exports.Base = class Base
     if not (keys = @derived_keys[salt_hex])?
 
       lens = 
-        hmac    : XOR.keySize
+        hmac    : @version.hmac_key_size
         aes     : AES.keySize
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
