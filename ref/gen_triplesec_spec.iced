@@ -2,26 +2,40 @@
 enc = require '../src/enc'
 {WordArray} = require '../src/wordarray'
 {rng} = require 'crypto'
+{fake_rng} = require '../src/util'
 colors = require 'colors'
 
-fake_rng = (n, cb) ->
-  data = ((n & 0xff) for i in [0...n])
-  buf = new Buffer data
-  cb WordArray.from_buffer buf 
+class MemoRng 
+
+  constructor : () ->
+    @buffers = [] 
+
+  empty : () ->
+    out = Buffer.concat @buffers
+    @buffers = []
+    out
+
+  gen : (n) ->
+    buf = rng n
+    @buffers.push buf
+    WordArray.from_buffer buf
 
 class GenerateSpec
 
   constructor : ->
     @version = 1
     @vectors = []
+    @memo_rng = new MemoRng
+    @rng = (n,cb) => cb @memo_rng.gen n
 
   gen_vector : (len, cb) ->
     key = rng len.key
     data = rng len.msg
     pt = new Buffer data # make a copy!
-    await enc.encrypt { key, data, rng : fake_rng }, defer err, ct
+    await enc.encrypt { key, data, @rng }, defer err, ct
     console.error "+ done with #{JSON.stringify len}".green
-    ret = { key, pt, ct }
+    r = @memo_rng.empty()
+    ret = { key, pt, ct, r }
     (ret[k] = v.toString('hex') for k,v of ret)
     cb ret
 
@@ -29,6 +43,7 @@ class GenerateSpec
     params = [ { key : 10, msg : 100 },
                { key : 20, msg : 300 },
                { key : 40, msg : 1000 },
+               { key : 60, msg : 5000 },
                { key : 100, msg : 10000 },
                { key : 250, msg : 50000 } ]
     for p in params

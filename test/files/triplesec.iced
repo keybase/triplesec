@@ -1,5 +1,7 @@
 {Encryptor,encrypt} = require '../../lib/enc'
 {decrypt} = require '../../lib/dec'
+spec = require '../data/triplesec_spec'
+{WordArray} = require '../../lib/wordarray'
 
 #-------------------------------------------------
 
@@ -41,6 +43,7 @@ run_test = (T, d, i, cb) ->
 
 #-------------------------------------------------
 
+
 exports.run_test_vectors = (T,cb) ->
   for v,i in test_vectors
     await run_test T, v, i, defer()
@@ -62,5 +65,47 @@ exports.check_randomness = (T, cb) ->
       found[ct] = true
   cb()
   
+#-------------------------------------------------
+
+class ReplayRng
+
+  constructor : (@buffer, @T) ->
+    @i = 0
+
+  gen : (n, cb) ->
+    end = @i + n
+    if end > @buffer.length
+      @T.error "Rng underflow @ #{@i} -> #{n}"
+    else
+      bytes = @buffer[@i...end]
+      wa = WordArray.from_buffer bytes
+      @i = end
+      cb wa
+
+#-------------------------------------------------
+
+exports.check_spec = (T,cb) ->
+  for v,i in spec.data
+    await check_spec T, v, i, defer()
+  cb()
+
+check_spec = (T,v,i,cb) ->
+  rng = new ReplayRng (new Buffer v.r, 'hex'), T
+  d = 
+    key : new Buffer v.key, 'hex'
+    data : new Buffer v.pt, 'hex'
+  d.rng = (n,cb) -> rng.gen(n,cb)
+  await encrypt d, defer err, ct
+  T.assert not err?
+  T.equal (ct.toString 'hex'), v.ct, "Ciphertexts match"
+  d.data = ct
+  await decrypt d, defer err, pt
+  T.assert not err?
+  T.equal (pt.toString 'hex'), v.pt, "decryption worked"
+  if T.is_ok()
+    T.waypoint "check test vector #{i}"
+  cb()
+
+
 #-------------------------------------------------
 
