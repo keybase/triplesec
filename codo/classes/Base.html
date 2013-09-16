@@ -167,7 +167,7 @@ and encryption/decryption.</p>
       </a>
     </span>
     <span class='desc'>
-      
+      Run SALSA20, output (IV || ciphertext)
     </span>
   </li>
   <li>
@@ -177,7 +177,7 @@ and encryption/decryption.</p>
       </a>
     </span>
     <span class='desc'>
-      
+      Run Twofish, output (IV || ciphertext).
     </span>
   </li>
   <li>
@@ -187,7 +187,7 @@ and encryption/decryption.</p>
       </a>
     </span>
     <span class='desc'>
-      
+      Run AES, output (IV || ciphertext).
     </span>
   </li>
   <li>
@@ -197,7 +197,7 @@ and encryption/decryption.</p>
       </a>
     </span>
     <span class='desc'>
-      
+      Scrub all internal state that may be sensitive.
     </span>
   </li>
 </ul>
@@ -319,35 +319,161 @@ input <code>key</code> and the randomly-generated salt.</p>
     <p class='signature' id='run_salsa20-instance'>
       - (void) <strong>run_salsa20</strong>({input, key, iv, output_iv, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Run SALSA20, output (IV || ciphertext)</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input plaintext</span>
+    </li>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The Salsa20-specific encryption key (32 bytes)</span>
+    </li>
+    <li>
+      <span class='name'>iv</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The Salsa20-specific IV (24 bytes as per XSalsa20)</span>
+    </li>
+    <li>
+      <span class='name'>output_iv</span>
+      <span class='type'>
+        (<tt>bool</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Whether or not to output the IV with the ciphertext</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback on completion with <code>(err, res)</code>.  <code>res</code> will be a <a href='../classes/WordArray.html'>WordArray</a> of the ciphertext or a concatenation of the IV and  the ciphertext, depending on the <code>output_iv</code> option.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='run_twofish-instance'>
       - (void) <strong>run_twofish</strong>({input, key, iv, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Run Twofish, output (IV || ciphertext).</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input plaintext</span>
+    </li>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The Twofish-specific encryption key (32 bytes)</span>
+    </li>
+    <li>
+      <span class='name'>iv</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The Twofish-specific IV (16 bytes)</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback on completion with <code>(err, res)</code>.  <code>res</code> will be a <a href='../classes/WordArray.html'>WordArray</a> of the concatenation of the IV and  the ciphertext.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='run_aes-instance'>
       - (void) <strong>run_aes</strong>({input, key, iv, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Run AES, output (IV || ciphertext).</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input plaintext</span>
+    </li>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The AES-specific encryption key (32 bytes)</span>
+    </li>
+    <li>
+      <span class='name'>iv</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The AES-specific IV (16 bytes)</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback on completion with <code>(err, res)</code>.  <code>res</code> will be a <a href='../classes/WordArray.html'>WordArray</a> of the concatenation of the IV and  the ciphertext.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='scrub-instance'>
       - (void) <strong>scrub</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Scrub all internal state that may be sensitive.  Use it after you&#39;re done
+with the Encryptor.</p>
+</div>
+<div class='tags'>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 09:41:06 GMT-0400 (EDT)
+  Mon Sep 16 2013 10:41:38 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

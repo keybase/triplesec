@@ -258,6 +258,10 @@ exports.SHA3 = class SHA3 extends Hasher
 
   #----------------
 
+  scrub : () ->
+
+  #----------------
+
   clone : ->
     out = new SHA3()
     @copy_to out

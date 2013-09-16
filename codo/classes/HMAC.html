@@ -114,6 +114,13 @@
           <td>src&#47;hmac.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Standard HMAC, which runs with SHA512 by default, but you can run it
+with other hash algoriths,</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -130,11 +137,11 @@
   <li>
     <span class='signature'>
       <a href='#get_output_size-instance'>
-        - (void) <strong>get_output_size</strong>()
+        - (number) <strong>get_output_size</strong>()
       </a>
     </span>
     <span class='desc'>
-      get the output blocksize
+      
     </span>
   </li>
   <li>
@@ -174,7 +181,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Clean out any sensitive internal state, including our @key (which we copied on construction).
     </span>
   </li>
 </ul>
@@ -207,12 +214,12 @@
       <span class='desc'>The secret key.</span>
     </li>
     <li>
-      <span class='name'>hasher</span>
+      <span class='name'>klass</span>
       <span class='type'>
-        (<tt><a href='../classes/Hasher.html'>Hasher</a></tt>)
+        (<tt>Class</tt>)
       </span>
       &mdash;
-      <span class='desc'>The hash algorithm to use. Optional.</span>
+      <span class='desc'>The class of hash algorithm to use. Optional; choose SHA512 by default.</span>
     </li>
   </ul>
 </div>
@@ -222,12 +229,18 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='get_output_size-instance'>
-      - (void) <strong>get_output_size</strong>()
+      - (number) <strong>get_output_size</strong>()
     </p>
-    <div class='docstring'>
-  <p>get the output blocksize</p>
-</div>
-<div class='tags'>
+    <div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>number</tt>)
+      &mdash;
+      <span class='desc'>The number of bytes in the output size.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -251,7 +264,7 @@
     <h4>
       
     </h4>
-    <pre><code class='coffee'>  hmacHasher.update(wordArray);</code></pre>
+    <pre><code class='coffee'>  hmacHasher.update(wordArray)</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -272,7 +285,7 @@
       <span class='type'></span>
       (<tt><a href='../classes/HMAC.html'>HMAC</a></tt>)
       &mdash;
-      <span class='desc'>This HMAC instance.</span>
+      <span class='desc'>This HMAC instance, for chaining.</span>
     </li>
   </ul>
 </div>
@@ -321,14 +334,18 @@ Note that the finalize operation is effectively a destructive, read-once operati
     <p class='signature' id='scrub-instance'>
       - (void) <strong>scrub</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Clean out any sensitive internal state, including our @key 
+(which we copied on construction).</p>
+</div>
+<div class='tags'>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 09:41:06 GMT-0400 (EDT)
+  Mon Sep 16 2013 10:41:38 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

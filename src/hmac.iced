@@ -4,6 +4,8 @@ util = require './util'
 
 #=======================================================================
 
+# Standard HMAC, which runs with SHA512 by default, but you can run it
+# with other hash algoriths,
 class HMAC 
 
   # Hard-in-fast output sizes for a 512-bit hash, either SHA-512, or 
@@ -16,13 +18,15 @@ class HMAC
   # Initializes a newly created HMAC.
   #
   # @param {WordArray} key The secret key.
-  # @param {Hasher} hasher The hash algorithm to use. Optional.
+  # @param {Class} klass The class of hash algorithm to use.
+  #   Optional; choose SHA512 by default.
   #
   # @example
   #
   #     hmacHasher = new HMAC(key, SHA512)
   #
-  constructor : (@key, klass = SHA512) ->
+  constructor : (key, klass = SHA512) ->
+    @key = key.clone()
     @hasher = new klass()
     @hasherBlockSize = @hasher.blockSize  # in 32-bit words
     @hasherBlockSizeBytes = @hasherBlockSize * 4 # in bytes
@@ -44,25 +48,20 @@ class HMAC
     # Set initial values
     @reset()
 
-  #
-  # get the output blocksize
-  #
+  # @return {number} The number of bytes in the output size.
   get_output_size : () -> @hasher.output_size
 
-  #
   # Resets this HMAC to its initial state.
-  #
   reset : -> @hasher.reset().update @_iKey
 
   #
   # Updates this HMAC with a message.
   #
   # @param {WordArray} messageUpdate The message to append.
-  #
-  # @return {HMAC} This HMAC instance.
+  # @return {HMAC} This HMAC instance, for chaining.
   #
   # @example
-  #     hmacHasher.update(wordArray);
+  #     hmacHasher.update(wordArray)
   #
   update : (wa) ->
     @hasher.update wa
@@ -90,6 +89,8 @@ class HMAC
     innerHash2.scrub()
     out
 
+  # Clean out any sensitive internal state, including our @key 
+  # (which we copied on construction).
   scrub : ->
     @key.scrub()
     @_iKey.scrub()
@@ -97,16 +98,35 @@ class HMAC
 
 #=======================================================================
 
-exports.HMAC = HMAC
+# @method sign
+# 
+# A convenience method that makes a new HMAC instance, the signs, and scrubs.
+#
+# @param {WordArray} key The key to when signing. 
+# @param {WordArray} input The input to sign.
+# @param {Class} hash_class The class to use for the hasher in the HMAC ({SHA512} by default).
+# @return {WordArray} The signature
+sign = ({key, input, hash_class}) -> 
+  eng = new HMAC key, hash_class
+  out = eng.finalize(input.clamp())
+  eng.scrub()
+  out
 
 #=======================================================================
 
-exports.sign = ({key, input, klass}) -> 
-  (new HMAC key, (klass or SHA512)).finalize(input.clamp())
-
-#=======================================================================
-
-exports.bulk_sign = ({key, input, progress_hook, klass, what}, cb) ->
+#
+# Sign a lot of data using the async-interface. By default use 
+# HMAC-SHA512, but this function is also available to interesting
+# HMAC combinations.
+#
+# @param {WordArray} key The secret HMAC key
+# @param {WordArray} input The input to sign.
+# @param {Function} progress_hook A standard progress hook (optional).
+# @param {Class} klass The class to allocate for this HMAC, which is HMAC (with SHA512) by default.
+# @param {String} what What to call this hasher for the sake of the progress hook.
+# @param {callback} cb Callback with the generated hash, in a {WordArray}
+# 
+bulk_sign = ({key, input, progress_hook, klass, what}, cb) ->
   klass or= HMAC
   what or= "hmac_sha512"
   eng = new klass key
@@ -115,8 +135,15 @@ exports.bulk_sign = ({key, input, progress_hook, klass, what}, cb) ->
     update    : (lo,hi) -> eng.update input[lo...hi]
     finalize  : ()      -> eng.finalize()
     default_n : eng.hasherBlockSize * 1000
-  async_args = { what, progress_hook, cb }
-  util.bulk input.sigBytes, slice_args, async_args
+  await util.bulk input.sigBytes, slice_args, { what, progress_hook, cb : defer(res) }
+  eng.scrub()
+  cb res
+
+#=======================================================================
+
+exports.HMAC = HMAC
+exports.sign = sign
+exports.bulk_sign = bulk_sign
 
 #=======================================================================
 

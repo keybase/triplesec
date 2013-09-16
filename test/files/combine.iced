@@ -10,7 +10,7 @@ test_concat = (T, d) ->
   arg = { key : d.key, input : d.msg }
   c = Concat.sign arg
   s5 = hmac.sign arg
-  arg.klass = SHA3
+  arg.hash_class = SHA3
   s3 = hmac.sign arg
   c2 = s5.clone().concat s3
   T.equal c.to_hex(), c2.to_hex(), "Concats work"
