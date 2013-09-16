@@ -132,18 +132,15 @@
                 <a href="http://en.wikipedia.org/wiki/Salsa20" class="salsa20">Salsa 20</a>, 
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>,
-                so that a compromise of 1 or 2 of the ciphers will expose nothing. A good source of
-                cryptographically-strong pseudorandomness is crucial our construction's security, so
-                TripleSec's implementation
-                collects extra entropy from your computer, beyond the "provided" <code>window.crypto.getRandomValues</code>
-                in browsers and <code>crypto.rng</code> in Node.js.
+                so that a compromise of 1 or 2 of the ciphers will expose nothing. Encryption
+                is only part of the battle. TripleSec also: derives keys with
+                <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a> to defend
+                against password-cracking and rainbow tables; authenticates 
+                with <a href="http://en.wikipedia.org/wiki/HMAC">HMAC</a> to protect against 
+                chosen-ciphertext attacks; and supplements native random sources
+                for fear that <code>window.crypto.getRandomValues</code> or
+                <code>crypto.rng</code> in Node.js are weak.
               </p>
-              <p>
-                In other words, <b>TripleSec</b> should work unless <i>all 3</i> of the algorithms have fallen. A dark, dark day that would be.
-              </p>
-            </div>
-            <div class="col-sm-4">
-
             </div>
 
           </div>
@@ -343,11 +340,12 @@ var plaintext = buff.toString();</pre>
 
                   <ol>
                     <li>
-                      <p><b>Salsa20.</b> The innermost cipher is a Salsa20 variant called <a href="http://cr.yp.to/papers.html#xsalsa">XSalsa20</a>. Like Salsa20, XSalsa20 is a stream
+                      <p><b>Salsa20.</b> The innermost cipher is a Salsa20 variant called 
+                      <a href="http://cr.yp.to/papers.html#xsalsa" class="salsa20">XSalsa20</a>.
+                      Like Salsa20, XSalsa20 is a stream
                       cipher, meaning it can encrypt input texts of arbitrary length without a 
                       a block cipher mode of operation.  XSalsa20 takes a 192-bit nonce
-                      rather than Salsa20's 64-bit nonce, but is provably as secure.  We chose
-                      XSalsa20 over Salsa20 for the sake of excess paranoia.
+                      rather than Salsa20's 64-bit nonce, but is provably as secure.
                       Given a key, and an IV, XSalsa20 generates a random pad,
                       which is then XOR'ed with the input message.  This step of the algorithm
                       outputs the concatenation of the IV and the result of the XOR operation.
@@ -355,7 +353,9 @@ var plaintext = buff.toString();</pre>
 
                     <li><b>Twofish-CTR.</b> The output of the previous step 
                       (call it <i>C<sub>1</sub></i>) is the input
-                      of this step, which uses Twofish running in <a href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">CTR</a> mode.
+                      of this step, which uses 
+                      <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>
+                      running in <a href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">CTR</a> mode.
                       Let <i>R<sub>2</sub></i> be the the IV generated for Twofish in Step 2.
                       Twofish-CTR works by encrypting <i>R<sub>2</sub></i>, <i>R<sub>2</sub>+1</i>, <i>R<sub>2</sub>+2</i>,...
                       with Twofish, and concatenating the result to yield a pad the size
@@ -429,11 +429,10 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>How does TripleSec generate randomness/entropy? Can I provide my own?</h5>
               <p class="answer">
-                In the browser, TripleSec starts with <code>window.crypto.getRandomValues</code> and in Node it starts with <code>crypto.rng</code>.
-                Then, for extra entropy -- let's say one of these is intentionally weak -- 
-                TripleSec seeds further
-                with <a href="https://github.com/keybase/more-entropy">more-entropy</a>, which does its own timing of a great
-                number of math operations.
+                TripleSec first derives a random seed from a variety of sources:
+                from <code>window.crypto.getRandomValues</code> in the browser; from <code>crypto.rng</code> in Node.js;
+                from the millisecond field of your system time; and finally, from <a href="https://github.com/keybase/more-entropy">more-entropy</a>, which counts how many floating-point-heavy computations can be done in a set amount of time.
+                This data is then stirred together and becomes the seed for <a href="http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf">HMAC_DRBG</a>, whose HMAC is the XOR of HMAC-SHA-512 and HMAC-SHA3.
               </p>
               <p class="answer">
                 You may alternatively provide your own random number generator for encryption. Pass an <code>rng</code> function
@@ -445,13 +444,14 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>How are passphrases salted?</h5>
               <p class="answer">
-                PBKDF2 takes as input a salt in addition to a secret passphrase. The
-                idea here is to prevent an adversary from cracking lots of TripleSec-encrypted data  in parallel.  Thus, passphrases are salted with a 
+                PBKDF2 takes as input a salt in addition to a secret passphrase,
+                to prevent an adversary from cracking many TripleSec-encrypted ciphtertexts
+                in parallel.  TripleSec salts passphrases with a 
                 random 8-byte sequence that's included with the ciphertext.  By 
                 default, TripleSec's <code>triplesec.Encryptor</code> object
                 uses the same salt until you call <code>triplesec.Encryptor.resalt</code>.
-                The advantage of salt reuse is that it's faster, since the PBKDF2 step
-                is intentionally slow.  The disadvantage is that an adversary can tell
+                The advantage of salt reuse is that it's faster, since it avoids the intentionally
+                slow PBKDF2 step. On the other hand, an adversary can tell
                 if two different ciphertexts were encrypted in the same session if
                 the salt is not reset.
               </p>
