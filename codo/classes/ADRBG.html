@@ -114,6 +114,14 @@
           <td>src&#47;drbg.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <h2>Asynchronous DRBG</h2><p>This is a better interface to the DRBG, since it will politely call you
+back when it&#39;s ready, rather than impolitely throwing an exception
+if you&#39;ve called it inappropriately.  This interface is recommended.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -134,7 +142,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Generate n bytes of random data, and callback when it&#39;s ready.
     </span>
   </li>
 </ul>
@@ -145,6 +153,25 @@
       - (void) <strong>constructor</strong>(gen_seed, hmac)
     </p>
     <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>gen_seed</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A function used to generate a cryptographic seed.</span>
+    </li>
+    <li>
+      <span class='name'>hmac</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The HMAC function to use, or HMAC-SHA512 by default.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
@@ -154,14 +181,37 @@
     <p class='signature' id='generate-instance'>
       - (void) <strong>generate</strong>(n, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Generate n bytes of random data, and callback when it&#39;s ready.
+Calls back with a <a href='../classes/WordArray.html'>WordArray</a> of random data.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>n</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The number of bytes to generate.</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The callback to fire when ready.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 08:23:34 GMT-0400 (EDT)
+  Mon Sep 16 2013 09:00:06 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

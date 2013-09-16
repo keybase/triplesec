@@ -114,57 +114,26 @@
           <td>src&#47;drbg.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Implements an HMAC_DRBG (NIST SP 800-90A) based on HMAC_SHA512
+Supports security strengths up to 256 bits.
+Parameters are based on recommendations provided by Appendix D of NIST SP 800-90A.
+Implementation ported from: <a href="https://github.com/fpgaminer/python-hmac-drbg">https://github.com/fpgaminer/python-hmac-drbg</a></p>
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(entropy, personalization_string, hm)
+        - (void) <strong>constructor</strong>(entropy, personalization_string, hmac_func)
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#check_entropy-instance'>
-        - (void) <strong>check_entropy</strong>(entropy, reseed = false)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_hmac-instance'>
-        - (void) <strong>_hmac</strong>(key, input)
-      </a>
-    </span>
-    <span class='desc'>
-      Just for convenience and succinctness
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_update-instance'>
-        - (void) <strong>_update</strong>(provided_data)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_instantiate-instance'>
-        - (void) <strong>_instantiate</strong>(entropy, personalization_string)
-      </a>
-    </span>
-    <span class='desc'>
-      
+      Seed the DRBG with sufficient entropy -- 384 bits for initial seed, and 256 for a reseed.
     </span>
   </li>
   <li>
@@ -174,17 +143,17 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Reseed the DRBG with yet more entropy.
     </span>
   </li>
   <li>
     <span class='signature'>
       <a href='#generate-instance'>
-        - (void) <strong>generate</strong>(num_bytes)
+        - (WordArray) <strong>generate</strong>(num_bytes)
       </a>
     </span>
     <span class='desc'>
-      
+      Generate bytes from the DRBG.
     </span>
   </li>
 </ul>
@@ -192,64 +161,101 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(entropy, personalization_string, hm)
+      - (void) <strong>constructor</strong>(entropy, personalization_string, hmac_func)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Seed the DRBG with sufficient entropy -- 384 bits for initial seed,
+and 256 for a reseed.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>entropy</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Initial entropy to seed the DRBG</span>
+    </li>
+    <li>
+      <span class='name'>personalization_string</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Salt</span>
+    </li>
+    <li>
+      <span class='name'>hmac_func</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A HMAC function to use; HMAC-SHA512 by default.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='check_entropy-instance'>
-      - (void) <strong>check_entropy</strong>(entropy, reseed = false)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_hmac-instance'>
-      - (void) <strong>_hmac</strong>(key, input)
-    </p>
-    <div class='docstring'>
-  <p>Just for convenience and succinctness</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_update-instance'>
-      - (void) <strong>_update</strong>(provided_data)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_instantiate-instance'>
-      - (void) <strong>_instantiate</strong>(entropy, personalization_string)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='reseed-instance'>
       - (void) <strong>reseed</strong>(entropy)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Reseed the DRBG with yet more entropy.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>entropy</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The add-on entropy.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='generate-instance'>
-      - (void) <strong>generate</strong>(num_bytes)
+      - (WordArray) <strong>generate</strong>(num_bytes)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Generate bytes from the DRBG.  Upper limit is 7500/8 bytes.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>num_bytes</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The number of bytes to pull out of the DRBG.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      &mdash;
+      <span class='desc'>the random bytes</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 08:23:34 GMT-0400 (EDT)
+  Mon Sep 16 2013 09:00:06 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0
