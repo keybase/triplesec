@@ -13,26 +13,32 @@ ctr           = require './ctr'
 
 #========================================================================
 
-#
-# Decrypt the given data with the given key
-#
-#  @param {Buffer} key  A buffer with the keystream data in it
-#  @param {Buffer} salt Salt for key derivation, should be the user's email address
-#
-exports.Decryptor = class Decryptor extends Base
+# The Decryptor class is the high-level access to the TripleSec decryption
+# system.
+class Decryptor extends Base
 
   #----------------------
 
+  # @property {Object} version Right now we only support version 1 of the algorithm
+  # (since there is only one version)
   version : V[1]
 
   #----------------------
 
+  # @param {Buffer} key The input key to use for decryption. Hopefully it's the same
+  # key that was used for encryption! If not, we'll get a signature failure.
   constructor : ( { key } ) ->
     super { key }
     @_i = 0
 
   #----------------------
 
+  # @private
+  # 
+  # Read the header of the ciphertext. 
+  # @param {callback} cb Callback with `null` on success and an {Error} object
+  # if there was an error.
+  #
   read_header : (cb) ->
     err = if not (wa = @ct.unshift 2)?
       new Error "Ciphertext underrun in header"
@@ -43,6 +49,16 @@ exports.Decryptor = class Decryptor extends Base
 
   #----------------------
 
+  # @private
+  #
+  # Given an HMAC key, verify that the ciphertext wasn't corrupted int
+  # transit and that we're using the right decryption key.
+  #
+  # @param {WordArray} key The expanded HMAC key
+  # @param {callback} cb A callback to call when completed. Callback
+  # with null in the case of success, or an {Error} object in the case
+  # of failure.
+  # 
   verify_sig : (key, cb) ->
     if not (received = @ct.unshift(Concat.get_output_size()/4))?
       err = new Error "Ciphertext underrun in signature"
@@ -50,11 +66,21 @@ exports.Decryptor = class Decryptor extends Base
       await @sign { input : @ct, key, @salt }, defer err, computed
       err = if err? then err
       else if received.equal computed then null
-      else new Error 'Signature mismatch!'
+      else new Error 'Signature mismatch or bad decryption key'
     cb err
 
   #----------------------
 
+  # @private
+  #
+  # Unshift n_bytes off of the ciphertext to be treated as an IV
+  #
+  # @param {number} n_bytes The number of bytes to seek.
+  # @param {String} which Which encryption primitive it's for.
+  # @param {callback} cb Callback on completion with `(err,iv)`.
+  # In the case of an error, `err` will be non-null, and otherwise,
+  # `iv` will be nonull. Errors are caused by overruning the end
+  # of the ciphtertext.
   unshift_iv  : (n_bytes, which, cb) ->
     err = if (iv = @ct.unshift(n_bytes/4))? then null
     else new Error "Ciphertext underrun in #{which}"
@@ -62,6 +88,15 @@ exports.Decryptor = class Decryptor extends Base
 
   #----------------------
 
+  # @private
+  #
+  # Read the salt of of the ciphertext.  Much like reading an IV
+  # out of the ciphertext.
+  #
+  # @param {callback} cb A callback to call when completed. Call
+  # with `null` if there's a success (and `@salt`) is set, or 
+  # an {Error} if there was a problem.
+  #
   read_salt : (cb) ->
     err = if not (@salt = @ct.unshift 2)?
       new Error "Ciphertext underrrun in read_salt"
@@ -99,7 +134,7 @@ exports.Decryptor = class Decryptor extends Base
 
 #========================================================================
 
-exports.decrypt = decrypt = ( { key, data, progress_hook } , cb) ->
+decrypt = ( { key, data, progress_hook } , cb) ->
   dec = (new Decryptor { key })
   await dec.run { data, progress_hook }, defer err, pt
   dec.scrub()
@@ -107,3 +142,5 @@ exports.decrypt = decrypt = ( { key, data, progress_hook } , cb) ->
 
 #========================================================================
 
+exports.Decryptor = Decryptor
+exports.decrypt = decrypt

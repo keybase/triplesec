@@ -120,6 +120,13 @@
           </td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>The Decryptor class is the high-level access to the TripleSec decryption
+system.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -130,47 +137,7 @@
     </span>
     <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#read_header-instance'>
-        - (void) <strong>read_header</strong>(cb)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#verify_sig-instance'>
-        - (void) <strong>verify_sig</strong>(key, cb)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#unshift_iv-instance'>
-        - (void) <strong>unshift_iv</strong>(n_bytes, which, cb)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#read_salt-instance'>
-        - (void) <strong>read_salt</strong>(cb)
-      </a>
-    </span>
-    <span class='desc'>
-      
+      key that was used for encryption! If not, we&#39;ll get a signature failure.
     </span>
   </li>
   <li>
@@ -204,6 +171,7 @@
       <p class='inherited'>
                 <a href='../classes/Base.html#constructor-instance'>#constructor</a>,
                 <a href='../classes/Base.html#pbkdf2-instance'>#pbkdf2</a>,
+                <a href='../classes/Base.html#_check_scrubbed-instance'>#_check_scrubbed</a>,
                 <a href='../classes/Base.html#sign-instance'>#sign</a>,
                 <a href='../classes/Base.html#run_salsa20-instance'>#run_salsa20</a>,
                 <a href='../classes/Base.html#run_twofish-instance'>#run_twofish</a>,
@@ -216,40 +184,26 @@
     <p class='signature' id='constructor-instance'>
       - (void) <strong>constructor</strong>({key})
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>key that was used for encryption! If not, we&#39;ll get a signature failure.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The input key to use for decryption. Hopefully it&#39;s the same</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='read_header-instance'>
-      - (void) <strong>read_header</strong>(cb)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='verify_sig-instance'>
-      - (void) <strong>verify_sig</strong>(key, cb)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='unshift_iv-instance'>
-      - (void) <strong>unshift_iv</strong>(n_bytes, which, cb)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='read_salt-instance'>
-      - (void) <strong>read_salt</strong>(cb)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
   <div class='method_details'>
     <p class='signature' id='generate_keys-instance'>
       - (void) <strong>generate_keys</strong>({progress_hook}, cb)
@@ -268,7 +222,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 18:48:30 GMT-0400 (EDT)
+  Sun Sep 15 2013 22:36:49 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.8.1
