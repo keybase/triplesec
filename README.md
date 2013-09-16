@@ -23,6 +23,13 @@ encrypt { key, input : pt1 }, (err, ciphtertext) ->
 ```
 
 ### Reusable Derived Keys
+
+The most expensive part of TripleSec is to derive keys from your
+given passphrase.  This is intentionally so to make it more expensive
+to crack your password in the case that your ciphertext is stolen. 
+However, you can spread this expense over multiple encryptions
+if you plan to be encrypting more than once:
+
 ```coffeescript
 {Encryptor, Decryptor} = require 'triplesec'
 
