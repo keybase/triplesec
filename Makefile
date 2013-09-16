@@ -66,6 +66,13 @@ test/json/SHA3_long.json: test/rsp/SHA3_long.rsp
 
 spec/triplesec.json: ref/gen_triplesec_spec.iced
 	$(ICED) $< $ > $@
+spec/pbkdf2_sha512_sha3.json: ref/gen_pbkdf2_sha512_sha3_spec.iced
+	$(ICED) $< $ > $@
+
+test/data/triplesec_spec.js: spec/triplesec.json 
+	$(ICED) test/gen/spec2js.iced "../../spec/triplesec.json" > $@
+test/data/pbkdf2_sha512_sha3_spec.js: spec/pbkdf2_sha512_sha3.json 
+	$(ICED) test/gen/spec2js.iced "../../spec/pbkdf2_sha512_sha3.json" > $@
 
 $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha512_long.js \
@@ -81,6 +88,7 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/json/SHA3_long.json \
 		test/data/sha3_long.js \
 		test/data/triplesec_spec.js \
+		test/data/pbkdf2_sha512_sha3_spec.js \
 		test/browser/test.js 
 	date > $@
 
@@ -88,7 +96,7 @@ test/data/%.js: test/gen/gen_%.iced
 	@mkdir -p test/data
 	$(ICED) $< > $@
 
-spec: spec/triplesec.json
+spec: spec/triplesec.json spec/pbkdf2_sha512_sha3.json
 
 test: test-server test-browser
 
