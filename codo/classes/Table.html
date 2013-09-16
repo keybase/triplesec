@@ -114,6 +114,12 @@
           <td>src&#47;lock.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>A table of named locks.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -129,22 +135,12 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#create-instance'>
-        - (void) <strong>create</strong>(name)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#acquire-instance'>
         - (void) <strong>acquire</strong>(name, cb, wait)
       </a>
     </span>
     <span class='desc'>
-      
+      Callback with <code>(l,was_open)</code> where <code>l</code> is the <a href='../classes/NamedLock.html'>NamedLock</a> and <code>was_open</code> is a bool saying whether it was open to begin with.
     </span>
   </li>
   <li>
@@ -171,17 +167,33 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='create-instance'>
-      - (void) <strong>create</strong>(name)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='acquire-instance'>
       - (void) <strong>acquire</strong>(name, cb, wait)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>   Callback with <code>(l,was_open)</code> where <code>l</code> is the <a href='../classes/NamedLock.html'>NamedLock</a> and
+   <code>was_open</code> is a bool saying whether it was open to begin with.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The name of the lock to grab or create.</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The callback to fire when acquired;</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -189,13 +201,24 @@
       - (void) <strong>lookup</strong>(name)
     </p>
     <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The name of the lock to grab.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 10:41:38 GMT-0400 (EDT)
+  Mon Sep 16 2013 11:07:29 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0
