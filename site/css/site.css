@@ -19,7 +19,7 @@ a:hover {
   color:#fff;
   background-color:#0cf;
 }
-.nav li {
+.code-nav li {
   margin:10px;
 }
 
@@ -107,3 +107,4 @@ pre, .output-code {
   border-width: 0;
   background-color:#e8e8e8;
 }
+
