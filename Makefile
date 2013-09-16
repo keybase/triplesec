@@ -80,6 +80,7 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha3_short.js \
 		test/json/SHA3_long.json \
 		test/data/sha3_long.js \
+		test/data/triplesec_spec.js \
 		test/browser/test.js 
 	date > $@
 
