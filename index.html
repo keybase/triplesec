@@ -493,15 +493,15 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>How do I verify the implementation against known test vectors?</h5>
               <p class="answer">
+                In the browser, you can visit our-browser based
+                <a href="test/browser/index.html">test page</a>.
                 If you have Node.js on your system, you can clone the 
                 <a href="http://github.com/keybase/triplesec">github repo</a>
                 and run <code>make test</code>.  We've checked all algorithms
                 against known test vectors, with the exception of the XSalsa20
-                extension to Salsa20, which
-                doesn't have published test vectors.
-                For the XSals20 extension, we check outputs against the official
-                <a href="https://code.google.com/p/go/source/browse/?repo=crypto">Go Language Crypto library</a>. We still check the underlying Salsa20
-                core against published test vectors.
+                extension to Salsa20, which doesn't have published test vectors.
+                For the XSalsa20 extension, we check outputs against the official
+                <a href="https://code.google.com/p/go/source/browse/?repo=crypto">Go Language Crypto library</a>. We still check the underlying Salsa20 core against published test vectors.
               </p>
               <h5>I read someplace that it's impossible to write real crypto in
                 JavaScript.</h5>
