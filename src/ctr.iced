@@ -61,57 +61,6 @@ class Counter
 
 #=========================================
 
-# @private
-#
-# Generate a fixed-length key stream of encrypted bytes, given a block 
-# cipher and a random IV.  Implement the pad generation
-# scheme of CTR mode.
-#
-class KeyStream
-
-  # @param {BlockCipher} block_cipher A block cipher to encrypt the counter stream
-  # @param {WordArray} iv The initial value of the counter stream
-  # @pararm {number} len The length of the output in bytes
-  constructor : ({@block_cipher, @iv, @len}) ->
-    unless (@iv.sigBytes is @block_cipher.blockSize)
-      throw new Error "IV is wrong length (#{@iv.sigBytes})"
-
-  # Generate the counter stream by incrementing the counter
-  # and copying out the new values.
-  # @return {WordArray} the counter stream
-  generate_counter_stream : () ->
-    @nblocks = Math.ceil @len / @block_cipher.blockSize
-    ctr = new Counter { value : @iv }
-    pad_words = (ctr.inc().copy().words for i in [0...nblocks])
-    flat = [].concat pad_words...
-    @counter_stream = new WordArray flat, @len
-
-  # Encrypt the the counter stream block by block.
-  encrypt : () ->
-    for i in [0...@len] by @block_cipher.blockSize
-      @block_cipher.encryptBlock @counter_stream.words, i
-
-  # Generate the counter stream, encrypt it, and output it
-  # @return {WordArray} the keystream
-  run : () ->
-    @generate_counter_stream()
-    @encrypt()
-    @counter_stream
-
-#---------------
-
-# Generate a keystream, given a block_cipher, an IV, and 
-# a required length.
-#
-# @param {BlockCipher} block_cipher An initialized block cipher
-# @param {WordArray} iv The initial value, should be random.
-# @param {Number} len The length of the desired output.
-#
-gen_keystream = ({block_cipher, iv, len} ) ->
-  (new KeyStream { block_cipher, iv, len}).run()
-
-#=========================================
-
 # A CTR-mode based cipher.  Takes a BlockCipher and an IV,
 # and yields a StreamCipher
 class Cipher extends StreamCipher
@@ -174,7 +123,6 @@ bulk_encrypt = ({block_cipher, iv, input, progress_hook, what}, cb) ->
 #=========================================
 
 exports.Counter = Counter
-exports.gen_keystream = gen_keystream
 exports.Cipher = Cipher
 exports.encrypt = encrypt
 exports.bulk_encrypt = bulk_encrypt
