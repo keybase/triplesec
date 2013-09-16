@@ -73,7 +73,7 @@ exports.Base = class Base
   #---------------
 
   _check_scrubbed : (key, where, gcb, lcb) ->
-    if not key.is_scrubbed() then gcb()
+    if not key.is_scrubbed() then lcb()
     else gcb (new Error "#{where}: Failed due to scrubbed key!"), null
 
   #---------------

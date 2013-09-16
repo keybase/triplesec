@@ -89,7 +89,7 @@ class Concat extends CombineBase
   # @param {callback} cb Calls back with a signature as a {WordArray} 
   @bulk_sign : (args, cb) ->
     args.klass = Concat
-    args.what = "hmac-sha512-cat-sha3"
+    args.what = "HMAC-SHA512-SHA3"
     bulk_sign args, cb
 
 #=============================================

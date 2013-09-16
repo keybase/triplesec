@@ -504,6 +504,23 @@ var plaintext = buff.toString();</pre>
               <h5>I read someplace that it's impossible to write real crypto in
                 JavaScript.</h5>
               <p class="answer">
+                Some guy did publish a pretty well-known 
+                <a href="http://www.matasano.com/articles/javascript-cryptography/">rant</a> on this topic, but almost all of it is wrong.  Of course
+                you should deliver your Crypto libraries over TLS, we don't see what's so hard about that.  And maybe JavaScript isn't the 
+                most convenient language to write Crypto code in, but to 
+                say the browser is "hostile" to crypto is extreme and untrue. 
+                Browsers have good CSPRNGs now, and even if you don't trust
+                Apple and/or Linux and/or Chrome, we have some good
+                workarounds (see above).
+                True, one needs to take care not to overflow 32-bits, but with
+                a robust testing suite against known test vectors, one
+                can rule out this class of bugs.
+                Of course one shouldn't allow untrusted libraries to trample one's
+                trusted primitives, but that's true of any language (see <code>
+                LD_PRELOAD</code> attacks against libraries written in C).
+                What this author <i>should have said</i> is that JavaScript doesn't offer desctructors, so it's incovenient to scrub 
+                buffers properly. We agree! But TripleSec has taken great care 
+                to do this job manually.  If you spot some unscrubbed buffers, please let us know.
               </p>
             </div>
           </div>
