@@ -4,6 +4,7 @@ RSP2JSON=node_modules/.bin/rsp2json
 BROWSERIFY=node_modules/.bin/browserify
 BUILD_STAMP=build-stamp
 TEST_STAMP=test-stamp
+UGLIFYJS=node_modules/.bin/uglifyjs
 WD=`pwd`
 
 BROWSER=browser/triplesec.js
@@ -91,6 +92,11 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/pbkdf2_sha512_sha3_spec.js \
 		test/browser/test.js 
 	date > $@
+
+release: browser/triplesec.js
+	V=`jsonpipe < package.json | grep version | awk '{ print $$2 }' | sed -e s/\"//g` ; \
+	cp $< rel/triplesec-$$V.js ; \
+	$(UGLIFYJS) -c < rel/triplesec-$$V.js > rel/triplesec-$$V-min.js 
 
 test/data/%.js: test/gen/gen_%.iced
 	@mkdir -p test/data
