@@ -142,22 +142,12 @@ system.</p>
   </li>
   <li>
     <span class='signature'>
-      <a href='#generate_keys-instance'>
-        - (void) <strong>generate_keys</strong>({progress_hook}, cb)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#run-instance'>
         - (void) <strong>run</strong>({data, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
-      
+      The top-level entry into the <a href='../classes/Decryptor.html'>Decryptor</a> object.
     </span>
   </li>
 </ul>
@@ -205,28 +195,50 @@ system.</p>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='generate_keys-instance'>
-      - (void) <strong>generate_keys</strong>({progress_hook}, cb)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='run-instance'>
       - (void) <strong>run</strong>({data, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>The top-level entry into the <a href='../classes/Decryptor.html'>Decryptor</a> object. Call this method
+with an incoming ciphertext, and it will decrypt it or produce an error.
+If you are decrypting a many ciphertexts with the same <key,salt>
+pairs, it makes sense to allocate a <a href='../classes/Decryptor.html'>Decryptor</a> object and keep calling
+<code>run</code> on it with different ciphertexts --- this will save the expense
+of running PBKDF2 over and over again.</p><p>was an error, <code>err</code> will be an <code>Error</code> object; othwerwise, <code>err</code>
+will be <code>null</code> and <code>res</code> will be a <code>Buffer</code> that contains the
+plaintext</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>data</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The incoming ciphtertext</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Fired with an <code>(err,res)</code> pair.  If there</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 22:36:49 GMT-0400 (EDT)
+  Mon Sep 16 2013 08:19:58 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
-  v1.8.1
-  (Node.js v0.10.15).
+  v1.9.0
+  (Node.js v0.10.18).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

@@ -91,8 +91,7 @@ clean:
 	rm -f lib/*.js $(BUILD_STAMP) $(TEST_STAMP)
 
 doc:
-	#node_modules/.bin/codo
-	codo
+	node_modules/.bin/codo
 
 setup:
 	npm install -d

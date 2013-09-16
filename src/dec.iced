@@ -36,7 +36,7 @@ class Decryptor extends Base
   # @private
   # 
   # Read the header of the ciphertext. 
-  # @param {callback} cb Callback with `null` on success and an {Error} object
+  # @param {callback} cb Callback with `null` on success and an Error object
   # if there was an error.
   #
   read_header : (cb) ->
@@ -56,7 +56,7 @@ class Decryptor extends Base
   #
   # @param {WordArray} key The expanded HMAC key
   # @param {callback} cb A callback to call when completed. Callback
-  # with null in the case of success, or an {Error} object in the case
+  # with null in the case of success, or an Error object in the case
   # of failure.
   # 
   verify_sig : (key, cb) ->
@@ -95,7 +95,7 @@ class Decryptor extends Base
   #
   # @param {callback} cb A callback to call when completed. Call
   # with `null` if there's a success (and `@salt`) is set, or 
-  # an {Error} if there was a problem.
+  # an `Error` if there was a problem.
   #
   read_salt : (cb) ->
     err = if not (@salt = @ct.unshift 2)?
@@ -106,12 +106,31 @@ class Decryptor extends Base
 
   #----------------------
 
+  # @private
+  #
+  # Run {PBKDF2} to generate keys.  Usually chews up some CPU.
+  #
+  # @param {Function} progress_hook A standard progress hook.
+  # @param {callback} cb Callback with a {Object} that maps
+  # keytypes to {WordArrays} when done.
   generate_keys : ({progress_hook}, cb) ->
     await @pbkdf2 { @salt, progress_hook }, defer keys
     cb keys
 
   #----------------------
 
+  # The top-level entry into the {Decryptor} object. Call this method
+  # with an incoming ciphertext, and it will decrypt it or produce an error.
+  # If you are decrypting a many ciphertexts with the same <key,salt>
+  # pairs, it makes sense to allocate a {Decryptor} object and keep calling
+  # `run` on it with different ciphertexts --- this will save the expense
+  # of running PBKDF2 over and over again.
+  #
+  # @param {Buffer} data The incoming ciphtertext
+  # @param {callback} cb Fired with an `(err,res)` pair.  If there
+  # was an error, `err` will be an `Error` object; othwerwise, `err`
+  # will be `null` and `res` will be a `Buffer` that contains the
+  # plaintext
   run : ({data, progress_hook}, cb) ->
     
     # esc = "Error Short-Circuiter".  In the case of an error,
@@ -134,6 +153,15 @@ class Decryptor extends Base
 
 #========================================================================
 
+# Given a key and an input ciphertext, decrypt and produce a plaintext.
+# Throw away all internal state after the completion of the call.
+#
+# @param {Buffer} key The encryption/decryption key.
+# @param {Buffer} data The incoming ciphtertext
+# @param {callback} cb Fired with an `(err,res)` pair.  If there
+# was an error, `err` will be an `Error` object; othwerwise, `err`
+# will be `null` and `res` will be a `Buffer` that contains the
+# plaintext
 decrypt = ( { key, data, progress_hook } , cb) ->
   dec = (new Decryptor { key })
   await dec.run { data, progress_hook }, defer err, pt

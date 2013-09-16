@@ -123,7 +123,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Given a key and an input ciphertext, decrypt and produce a plaintext.
     </span>
   </li>
 </ul>
@@ -133,18 +133,51 @@
     <p class='signature' id='decrypt-file'>
       ? (void) <strong>decrypt</strong>({key, data, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Given a key and an input ciphertext, decrypt and produce a plaintext.
+Throw away all internal state after the completion of the call.</p><p>was an error, <code>err</code> will be an <code>Error</code> object; othwerwise, <code>err</code>
+will be <code>null</code> and <code>res</code> will be a <code>Buffer</code> that contains the
+plaintext</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The encryption/decryption key.</span>
+    </li>
+    <li>
+      <span class='name'>data</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The incoming ciphtertext</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Fired with an <code>(err,res)</code> pair.  If there</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 15 2013 22:36:49 GMT-0400 (EDT)
+  Mon Sep 16 2013 08:19:58 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
-  v1.8.1
-  (Node.js v0.10.15).
+  v1.9.0
+  (Node.js v0.10.18).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;
