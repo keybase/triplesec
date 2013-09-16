@@ -26,7 +26,8 @@
     "cryptojs-2fish" : "*",
     "optimist" : "*",
     "rsp2json" : "*",
-    "codo" : "*"
+    "codo" : "*",
+    "uglify-js" : "*"
   },
   "dependencies" : {
     "more-entropy" : "*",
