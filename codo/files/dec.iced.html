@@ -135,9 +135,9 @@
     </p>
     <div class='docstring'>
   <p>Given a key and an input ciphertext, decrypt and produce a plaintext.
-Throw away all internal state after the completion of the call.</p><p>was an error, <code>err</code> will be an <code>Error</code> object; othwerwise, <code>err</code>
-will be <code>null</code> and <code>res</code> will be a <code>Buffer</code> that contains the
-plaintext</p>
+Throw away all internal state after the completion of the call.</p><p>On success, <code>cb</code> will be fired with <code>(null,res)</code>, where <code>res</code>
+is a <code>Buffer</code> object containing the plaintext.  On error,
+<code>cb</code> will be fired with <code>(err,null)</code>, where <code>err</code> is an <code>Error</code> object.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -164,7 +164,7 @@ plaintext</p>
         (<tt>callback</tt>)
       </span>
       &mdash;
-      <span class='desc'>Fired with an <code>(err,res)</code> pair.  If there</span>
+      <span class='desc'>Fired with an <code>(err,res)</code> pair.  </span>
     </li>
   </ul>
 </div>
@@ -173,7 +173,7 @@ plaintext</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 08:19:58 GMT-0400 (EDT)
+  Mon Sep 16 2013 08:23:34 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

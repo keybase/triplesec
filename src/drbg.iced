@@ -14,12 +14,16 @@ sha3 = require './sha3'
 # Parameters are based on recommendations provided by Appendix D of NIST SP 800-90A.
 # Implementation ported from: https://github.com/fpgaminer/python-hmac-drbg
 #
-exports.DRBG = class DRBG
+class DRBG
 
   #-----------------
 
-  constructor : (entropy, personalization_string, hm) ->
-    @hmac = hm or hmac.sign
+  # Seed the DRBG with sufficient entropy.
+  # @param {WordArray} entropy Initial entropy to seed the DRBG
+  # @param {WordArray} personalization_string Salt
+  # @param {Function} hmac_func A HMAC function to use; HMAC-SHA512 by default.
+  constructor : (entropy, personalization_string, hmac_func) ->
+    @hmac = hmac_func or hmac.sign
     # Only run at the most secure strength
     @security_strength = 256
     entropy = @check_entropy entropy
@@ -99,7 +103,7 @@ exports.DRBG = class DRBG
 
 #====================================================================
 
-exports.ADRBG = class ADRBG
+class ADRBG
 
   constructor : (@gen_seed, @hmac) ->
     @drbg = null
@@ -116,5 +120,10 @@ exports.ADRBG = class ADRBG
     ret = @drbg.generate n
     @lock.release()
     cb ret
+
+#====================================================================
+
+exports.DRBG = class DRBG
+exports.ADRBG = class ADRBG
 
 #====================================================================

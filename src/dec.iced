@@ -126,11 +126,13 @@ class Decryptor extends Base
   # `run` on it with different ciphertexts --- this will save the expense
   # of running PBKDF2 over and over again.
   #
+  # On success, `cb` will be fired with `(null,res)`, where `res`
+  # is a `Buffer` object containing the plaintext.  On error,
+  # `cb` will be fired with `(err,null)`, where `err` is an `Error` object.
+  #
   # @param {Buffer} data The incoming ciphtertext
-  # @param {callback} cb Fired with an `(err,res)` pair.  If there
-  # was an error, `err` will be an `Error` object; othwerwise, `err`
-  # will be `null` and `res` will be a `Buffer` that contains the
-  # plaintext
+  # @param {callback} cb Fired with an `(err,res)` pair.
+  #
   run : ({data, progress_hook}, cb) ->
     
     # esc = "Error Short-Circuiter".  In the case of an error,
@@ -156,12 +158,14 @@ class Decryptor extends Base
 # Given a key and an input ciphertext, decrypt and produce a plaintext.
 # Throw away all internal state after the completion of the call.
 #
+# On success, `cb` will be fired with `(null,res)`, where `res`
+# is a `Buffer` object containing the plaintext.  On error,
+# `cb` will be fired with `(err,null)`, where `err` is an `Error` object.
+#
 # @param {Buffer} key The encryption/decryption key.
 # @param {Buffer} data The incoming ciphtertext
-# @param {callback} cb Fired with an `(err,res)` pair.  If there
-# was an error, `err` will be an `Error` object; othwerwise, `err`
-# will be `null` and `res` will be a `Buffer` that contains the
-# plaintext
+# @param cb [callback] Fired with an `(err,res)` pair.  
+#
 decrypt = ( { key, data, progress_hook } , cb) ->
   dec = (new Decryptor { key })
   await dec.run { data, progress_hook }, defer err, pt
