@@ -114,6 +114,14 @@
           <td>src&#47;enc.iced</td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>A base class for the <a href='../classes/Encryptor.html'>Encryptor</a> and <a href='../classes/Decryptor.html'>Decryptor</a> classes.
+Handles a lot of the particulars of signing, key generation,
+and encryption/decryption.</p>
+</div>
+<div class='tags'>
+</div>
       <h2>Direct Known Subclasses</h2>
       <p class='children'>
                 <a href='../classes/Decryptor.html'>Decryptor</a>,
@@ -139,17 +147,7 @@
       </a>
     </span>
     <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_check_scrubbed-instance'>
-        - (void) <strong>_check_scrubbed</strong>(key, where, gcb, lcb)
-      </a>
-    </span>
-    <span class='desc'>
-      
+      Run PBKDF2 to yield the encryption and signing keys, given the input <code>key</code> and the randomly-generated salt.
     </span>
   </li>
   <li>
@@ -159,7 +157,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sign with HMAC-SHA512-SHA-3
     </span>
   </li>
   <li>
@@ -210,6 +208,17 @@
       - (void) <strong>constructor</strong>({key})
     </p>
     <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The private encryption key  </span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
@@ -219,21 +228,91 @@
     <p class='signature' id='pbkdf2-instance'>
       - (void) <strong>pbkdf2</strong>({salt, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Run PBKDF2 to yield the encryption and signing keys, given the
+input <code>key</code> and the randomly-generated salt.</p>
 </div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_check_scrubbed-instance'>
-      - (void) <strong>_check_scrubbed</strong>(key, where, gcb, lcb)
-    </p>
-    <div class='tags'>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>salt</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The salt to use for key generation.</span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook (optional).</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback with an {Object} after completion. The object will map cipher-name to a <a href='../classes/WordArray.html'>WordArray</a> that is the generated key.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='sign-instance'>
       - (void) <strong>sign</strong>({input, key, salt, progress_hook}, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sign with HMAC-SHA512-SHA-3</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The text to sign.</span>
+    </li>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The signing key</span>
+    </li>
+    <li>
+      <span class='name'>salt</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The salt used to generate the derived keys.</span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook (optional).</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Call back with <code>(err,res)</code> upon completion, with <code>res</code> of type <a href='../classes/WordArray.html'>WordArray</a> and containing the signature.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -268,7 +347,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 09:00:06 GMT-0400 (EDT)
+  Mon Sep 16 2013 09:41:06 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

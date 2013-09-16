@@ -120,6 +120,43 @@
           </td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <h3>Encryptor</h3><p>The high-level Encryption engine for TripleSec.  You should allocate one
+instance of this object for each secret key you are dealing with.  Reusing
+the same Encryptor object will allow you to avoid rerunning PBKDF2 with
+each encryption.  If you want to use new salt with every encryption,
+you can call <code>resalt</code> as needed.   The <code>run</code> method is called to 
+run the encryption engine.</p><p>Here is an example of multiple encryptions with salt reuse, in CoffeeScript:</p><pre><code class="lang-coffeescript">key = new Buffer &quot;pitying web andiron impacts bought&quot;
+data = new Buffer &quot;this is my secret data&quot;
+eng = new Encryptor { key } 
+eng.run { data }, (err, res) -&gt;
+   console.log &quot;Ciphertext 1: &quot; + res.toString(&#39;hex&#39;)
+   data = Buffer.concat data, new Buffer &quot; which just got bigger&quot;
+   eng.run { data }, (err, res) -&gt;
+     console.log &quot;Ciphertext 2: &quot; + res.toString(&#39;hex&#39;)</code></pre><p>Or equivalently in JavaScript:</p><pre><code class="lang-javascript">var key = new Buffer(&quot;pitying web andiron impacts bought&quot;);
+var data = new Buffer(&quot;this is my secret data&quot;);
+var eng = new Encryptor({ key : key });
+eng.run({ data : data }, function (err, res) {
+   console.log(&quot;Ciphertext 1: &quot; + res.toString(&#39;hex&#39;));
+   data = Buffer.concat(data, new Buffer(&quot; which just got bigger&quot;));
+   eng.run({ data : data }), function (err, res) {
+     console.log(&quot;Ciphertext 2: &quot; + res.toString(&#39;hex&#39;));
+   });
+});</code></pre><p>In the previous two examples, the same salt was used for both ciphertexts.
+To resalt (and regenerate encryption keys):</p><pre><code class="lang-coffeescript">key = new Buffer &quot;pitying web andiron impacts bought&quot;
+data = new Buffer &quot;this is my secret data&quot;
+eng = new Encryptor { key } 
+eng.run { data }, (err, res) -&gt;
+   console.log &quot;Ciphertext 1: &quot; + res.toString(&#39;hex&#39;)
+   data = Buffer.concat data, new Buffer &quot; which just got bigger&quot;
+   eng.resalt {}, () -&gt;
+     eng.run { data }, (err, res) -&gt;
+       console.log &quot;Ciphertext 2: &quot; + res.toString(&#39;hex&#39;)</code></pre>
+
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -129,16 +166,6 @@
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#pick_random_ivs-instance'>
-        - (void) <strong>pick_random_ivs</strong>({progress_hook}, cb)
-      </a>
-    </span>
     <span class='desc'>
       
     </span>
@@ -174,7 +201,6 @@
       <p class='inherited'>
                 <a href='../classes/Base.html#constructor-instance'>#constructor</a>,
                 <a href='../classes/Base.html#pbkdf2-instance'>#pbkdf2</a>,
-                <a href='../classes/Base.html#_check_scrubbed-instance'>#_check_scrubbed</a>,
                 <a href='../classes/Base.html#sign-instance'>#sign</a>,
                 <a href='../classes/Base.html#run_salsa20-instance'>#run_salsa20</a>,
                 <a href='../classes/Base.html#run_twofish-instance'>#run_twofish</a>,
@@ -188,18 +214,30 @@
       - (void) <strong>constructor</strong>({key, rng})
     </p>
     <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The secret key</span>
+    </li>
+    <li>
+      <span class='name'>rng</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Call it with the number of Rando bytes you need. It should callback with a WordArray of random bytes</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='pick_random_ivs-instance'>
-      - (void) <strong>pick_random_ivs</strong>({progress_hook}, cb)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
   <div class='method_details'>
     <p class='signature' id='resalt-instance'>
       - (void) <strong>resalt</strong>({progress_hook}, cb)
@@ -210,6 +248,25 @@ once, but if you don&#39;t do it again, you&#39;ll just wind up using the
 same salt.</p>
 </div>
 <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook.</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Called back when the resalting completes.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -260,7 +317,7 @@ steps of the algorithm are:</p><ol>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 09:00:06 GMT-0400 (EDT)
+  Mon Sep 16 2013 09:41:06 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

@@ -14,7 +14,7 @@ prng          = require './prng'
 #========================================================================
 
 # @property {Object} V A lookup table of all supported versions. Only v1 yet.
-exports.V = V = 
+V = 
   "1" : 
     header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
     pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
@@ -23,10 +23,14 @@ exports.V = V =
 
 #========================================================================
 
-exports.Base = class Base 
+# A base class for the {Encryptor} and {Decryptor} classes.
+# Handles a lot of the particulars of signing, key generation,
+# and encryption/decryption.
+class Base 
 
   #---------------
-  
+
+  # @param {WordArray} key The private encryption key  
   constructor : ( { key } ) ->
     @key = WordArray.from_buffer key
 
@@ -35,6 +39,16 @@ exports.Base = class Base
 
   #---------------
 
+  # @method pbkdf2
+  #
+  # Run PBKDF2 to yield the encryption and signing keys, given the
+  # input `key` and the randomly-generated salt.
+  #
+  # @param {WordArray} salt The salt to use for key generation.
+  # @param {Function} progress_hook A standard progress hook (optional).
+  # @param {callback} cb Callback with an {Object} after completion.
+  #   The object will map cipher-name to a {WordArray} that is the generated key.
+  #
   pbkdf2 : ({salt, progress_hook}, cb) ->
     # Check the cache first
     salt_hex = salt.to_hex()
@@ -72,12 +86,31 @@ exports.Base = class Base
  
   #---------------
 
-  _check_scrubbed : (key, where, gcb, lcb) ->
-    if not key.is_scrubbed() then lcb()
-    else gcb (new Error "#{where}: Failed due to scrubbed key!"), null
+  # @private
+  # 
+  # Check that a key isn't scrubbed. If it is, it's a huge problem, and we should short-circuit
+  # encryption.
+  # 
+  # @param {WordArray} key The key to check for having been scrubbed.
+  # @param {String} where Where the check is happening.
+  # @param {callback} ecb The callback to fire with an Error, in the case of a scrubbed key.
+  # @param {callback} okcb The callback to fire if we're OK to proceed.
+  # 
+  _check_scrubbed : (key, where, ecb, okcb) ->
+    if not key.is_scrubbed() then okcb()
+    else ecb (new Error "#{where}: Failed due to scrubbed key!"), null
 
   #---------------
 
+  # Sign with HMAC-SHA512-SHA-3
+  #
+  # @param {WordArray} input The text to sign.
+  # @param {WordArray} key The signing key
+  # @param {WordArray} salt The salt used to generate the derived keys.
+  # @param {Function} progress_hook A standard progress hook (optional).
+  # @param {callback} cb Call back with `(err,res)` upon completion,
+  #   with `res` of type {WordArray} and containing the signature.
+  #
   sign : ({input, key, salt, progress_hook}, cb) ->
     await @_check_scrubbed key, "HMAC", cb, defer()
     input = (new WordArray @version.header ).concat(salt).concat(input)
@@ -120,22 +153,70 @@ exports.Base = class Base
 
 #========================================================================
 
+# ### Encryptor
 #
-# Encrypt the given data with the given key
+# The high-level Encryption engine for TripleSec.  You should allocate one
+# instance of this object for each secret key you are dealing with.  Reusing
+# the same Encryptor object will allow you to avoid rerunning PBKDF2 with
+# each encryption.  If you want to use new salt with every encryption,
+# you can call `resalt` as needed.   The `run` method is called to 
+# run the encryption engine.
 #
-#  @param {Buffer} key  A buffer with the keystream data in it
-#  @param {Buffer} salt Salt for key derivation, should be the user's email address
-#  @param {Function} rng Call it with the number of Rando bytes you need. It should
-#    callback with a WordArray of random bytes
+# Here is an example of multiple encryptions with salt reuse, in CoffeeScript:
+# @example 
+# ```coffeescript
+# key = new Buffer "pitying web andiron impacts bought"
+# data = new Buffer "this is my secret data"
+# eng = new Encryptor { key } 
+# eng.run { data }, (err, res) ->
+#    console.log "Ciphertext 1: " + res.toString('hex')
+#    data = Buffer.concat data, new Buffer " which just got bigger"
+#    eng.run { data }, (err, res) ->
+#      console.log "Ciphertext 2: " + res.toString('hex')
+#```
+# 
+# Or equivalently in JavaScript:
+# @example 
+# ```javascript
+# var key = new Buffer("pitying web andiron impacts bought");
+# var data = new Buffer("this is my secret data");
+# var eng = new Encryptor({ key : key });
+# eng.run({ data : data }, function (err, res) {
+#    console.log("Ciphertext 1: " + res.toString('hex'));
+#    data = Buffer.concat(data, new Buffer(" which just got bigger"));
+#    eng.run({ data : data }), function (err, res) {
+#      console.log("Ciphertext 2: " + res.toString('hex'));
+#    });
+# });
+# ```
 #
-exports.Encryptor = class Encryptor extends Base
+# In the previous two examples, the same salt was used for both ciphertexts.
+# To resalt (and regenerate encryption keys):
+# @example 
+# ```coffeescript
+# key = new Buffer "pitying web andiron impacts bought"
+# data = new Buffer "this is my secret data"
+# eng = new Encryptor { key } 
+# eng.run { data }, (err, res) ->
+#    console.log "Ciphertext 1: " + res.toString('hex')
+#    data = Buffer.concat data, new Buffer " which just got bigger"
+#    eng.resalt {}, () ->
+#      eng.run { data }, (err, res) ->
+#        console.log "Ciphertext 2: " + res.toString('hex')
+#```
+# 
+#
+class Encryptor extends Base
 
   #---------------
 
+  # @property {Object} version The version to encrypt with (only V1 now works).
   version : V[1]
 
   #---------------
-  
+ 
+  # @param {Buffer} key The secret key
+  # @param {Function} rng Call it with the number of Rando bytes you need. It should callback with a WordArray of random bytes
   constructor : ( { key, rng } ) ->
     super { key }
     @rng = rng or prng.generate
@@ -143,6 +224,14 @@ exports.Encryptor = class Encryptor extends Base
 
   #---------------
 
+  # @private
+  # 
+  # Pick random IVS, one for each crypto algoritm. Call back
+  # with an Object, mapping cipher engine name to a {WordArray}
+  # containing the IV.
+  #
+  # @param {Function} progress_hook A standard progress hook.
+  # @param {callback} cb Called back when the resalting completes.
   pick_random_ivs : ({progress_hook}, cb) ->
     iv_lens =
       aes : AES.ivSize
@@ -158,6 +247,9 @@ exports.Encryptor = class Encryptor extends Base
   # Regenerate the salt. Reinitialize the keys. You have to do this
   # once, but if you don't do it again, you'll just wind up using the
   # same salt.
+  #
+  # @param {Function} progress_hook A standard progress hook.
+  # @param {callback} cb Called back when the resalting completes.
   resalt : ({progress_hook}, cb) ->
     await @rng @version.salt_size, defer @salt
     await @pbkdf2 {progress_hook, @salt}, defer @keys
@@ -218,10 +310,17 @@ exports.Encryptor = class Encryptor extends Base
 # @param {callback} cb Callback with an (err,res) pair. The err is an Error object
 #   (if encountered), and res is a Buffer object (on success).
 #
-exports.encrypt = ({ key, data, rng, progress_hook}, cb) ->
+encrypt = ({ key, data, rng, progress_hook}, cb) ->
   enc = new Encryptor { key, rng }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()
   cb err, ret
+
+#========================================================================
+
+exports.V = V
+exports.encrypt = encrypt
+exports.Base = Base 
+exports.Encryptor = Encryptor 
 
 #========================================================================
