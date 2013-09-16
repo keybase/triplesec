@@ -9,6 +9,7 @@ ctr           = require './ctr'
 {pbkdf2}      = require './pbkdf2'
 util          = require './util'
 prng          = require './prng'
+{make_esc}    = require 'iced-error'
 
 #========================================================================
 
@@ -71,35 +72,43 @@ exports.Base = class Base
  
   #---------------
 
+  _check_scrubbed : (key, where, gcb, lcb) ->
+    if not key.is_scrubbed() then gcb()
+    else gcb (new Error "#{where}: Failed due to scrubbed key!"), null
+
+  #---------------
+
   sign : ({input, key, salt, progress_hook}, cb) ->
+    await @_check_scrubbed key, "HMAC", cb, defer()
     input = (new WordArray @version.header ).concat(salt).concat(input)
     await Concat.bulk_sign { key, input, progress_hook}, defer(out)
-    cb out
+    cb null, out
 
   #---------------
 
   run_salsa20 : ({ input, key, iv, output_iv, progress_hook }, cb) ->
+    await @_check_scrubbed key, "Salsa20", cb, defer()
     await salsa20.bulk_encrypt { input, key, iv, progress_hook}, defer ct
     ct = iv.clone().concat(ct) if output_iv
-    cb ct
+    cb null, ct
 
   #---------------
 
   run_twofish : ({input, key, iv, progress_hook}, cb) ->
-    throw new Error "Refuse to encrypt w/ a scrubbed key" if key.is_scrubbed()
+    await @_check_scrubbed key, "Twofish", cb, defer()
     block_cipher = new TwoFish key
     await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "twofish" }, defer ct
     block_cipher.scrub()
-    cb iv.clone().concat(ct)
+    cb null, iv.clone().concat(ct)
 
   #---------------
 
   run_aes : ({input, key, iv, progress_hook}, cb) ->
-    throw new Error "Refuse to encrypt w/ a scrubbed key" if key.is_scrubbed()
+    await @_check_scrubbed key, "AES", cb, defer()
     block_cipher = new AES key
     await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "aes" }, defer ct
     block_cipher.scrub()
-    cb iv.clone().concat(ct)
+    cb null, iv.clone().concat(ct)
 
   #---------------
 
@@ -171,13 +180,19 @@ exports.Encryptor = class Encryptor extends Base
   # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
   #
   run : ( { data, progress_hook }, cb ) ->
+
+    # esc = "Error Short-Circuiter".  In the case of an error,
+    # we'll forget about the rest of the function and just call back
+    # the outer-level cb with the error.  If no error, then proceed as normal.
+    esc = make_esc cb, "Encryptor::run"
+
     await @resalt { progress_hook }, defer() unless @salt?
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
-    await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, defer ct1
-    await @run_twofish { input : ct1, key : @keys.twofish, progress_hook, iv : ivs.twofish }, defer ct2
-    await @run_aes     { input : ct2, key : @keys.aes,     progress_hook, iv : ivs.aes     }, defer ct3
-    await @sign        { input : ct3, key : @keys.hmac,    progress_hook, @salt            }, defer sig
+    await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
+    await @run_twofish { input : ct1, key : @keys.twofish, progress_hook, iv : ivs.twofish }, esc defer ct2
+    await @run_aes     { input : ct2, key : @keys.aes,     progress_hook, iv : ivs.aes     }, esc defer ct3
+    await @sign        { input : ct3, key : @keys.hmac,    progress_hook, @salt            }, esc defer sig
     ret = (new WordArray(@version.header)).concat(@salt).concat(sig).concat(ct3).to_buffer()
     util.scrub_buffer data
     cb null, ret

@@ -47,8 +47,9 @@ exports.Decryptor = class Decryptor extends Base
     if not (received = @ct.unshift(Concat.get_output_size()/4))?
       err = new Error "Ciphertext underrun in signature"
     else
-      await @sign { input : @ct, key, @salt }, defer computed
-      err = if received.equal computed then null
+      await @sign { input : @ct, key, @salt }, defer err, computed
+      err = if err? then err
+      else if received.equal computed then null
       else new Error 'Signature mismatch!'
     cb err
 
@@ -89,11 +90,11 @@ exports.Decryptor = class Decryptor extends Base
     await @generate_keys { progress_hook }, defer @keys
     await @verify_sig @keys.hmac, esc defer()
     await @unshift_iv AES.ivSize, "AES", esc defer iv
-    await @run_aes { iv, input : @ct, key : @keys.aes, progress_hook }, defer ct2
+    await @run_aes { iv, input : @ct, key : @keys.aes, progress_hook }, esc defer ct2
     await @unshift_iv TwoFish.ivSize, "2fish", esc defer iv
-    await @run_twofish { iv, input : @ct, key : @keys.twofish, progress_hook }, defer ct1
+    await @run_twofish { iv, input : @ct, key : @keys.twofish, progress_hook }, esc defer ct1
     await @unshift_iv Salsa20.ivSize, "Salsa", esc defer iv
-    await @run_salsa20 { iv, input : @ct, key : @keys.salsa20, output_iv : false, progress_hook }, defer pt
+    await @run_salsa20 { iv, input : @ct, key : @keys.salsa20, output_iv : false, progress_hook }, esc defer pt
     cb null, pt.to_buffer()
 
 #========================================================================
