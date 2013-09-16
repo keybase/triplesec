@@ -64,6 +64,9 @@ test/json/SHA3_long.json: test/rsp/SHA3_long.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 
+spec/triplesec.json: ref/gen_triplesec_spec.iced
+	$(ICED) $< $ > $@
+
 $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha512_long.js \
 		test/data/twofish_ecb_tbl.js \
@@ -84,6 +87,8 @@ test/data/%.js: test/gen/gen_%.iced
 	@mkdir -p test/data
 	$(ICED) $< > $@
 
+spec: spec/triplesec.json
+
 test: test-server test-browser
 
 clean:
@@ -95,4 +100,4 @@ doc:
 setup:
 	npm install -d
 
-.PHONY: clean setup test test-browser-buffer doc
+.PHONY: clean setup test test-browser-buffer doc spec
