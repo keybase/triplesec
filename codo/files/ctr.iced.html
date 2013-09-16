@@ -118,16 +118,6 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#gen_keystream-file'>
-        ? (void) <strong>gen_keystream</strong>({block_cipher, iv, len})
-      </a>
-    </span>
-    <span class='desc'>
-      Generate a keystream, given a block_cipher, an IV, and a required length.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#encrypt-file'>
         ? (WordArray) <strong>encrypt</strong>({block_cipher, iv, input})
       </a>
@@ -149,44 +139,6 @@
 </ul>
       <h2>Method Details</h2>
       <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='gen_keystream-file'>
-      ? (void) <strong>gen_keystream</strong>({block_cipher, iv, len})
-    </p>
-    <div class='docstring'>
-  <p>Generate a keystream, given a block_cipher, an IV, and 
-a required length.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>block_cipher</span>
-      <span class='type'>
-        (<tt><a href='../classes/BlockCipher.html'>BlockCipher</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'>An initialized block cipher</span>
-    </li>
-    <li>
-      <span class='name'>iv</span>
-      <span class='type'>
-        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The initial value, should be random.</span>
-    </li>
-    <li>
-      <span class='name'>len</span>
-      <span class='type'>
-        (<tt>Number</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The length of the desired output.</span>
-    </li>
-  </ul>
-</div>
-  </div>
   <div class='method_details'>
     <p class='signature' id='encrypt-file'>
       ? (WordArray) <strong>encrypt</strong>({block_cipher, iv, input})
@@ -299,7 +251,7 @@ Do it an an async-fashion so as not to lock up the process.</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 09:41:06 GMT-0400 (EDT)
+  Mon Sep 16 2013 11:07:29 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

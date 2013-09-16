@@ -115,10 +115,20 @@ class Base
     await @_check_scrubbed key, "HMAC", cb, defer()
     input = (new WordArray @version.header ).concat(salt).concat(input)
     await Concat.bulk_sign { key, input, progress_hook}, defer(out)
+    input.scrub()
     cb null, out
 
   #---------------
 
+  # Run SALSA20, output (IV || ciphertext)
+  #
+  # @param {WordArray} input The input plaintext
+  # @param {WordArray} key The Salsa20-specific encryption key (32 bytes)
+  # @param {WordArray} iv The Salsa20-specific IV (24 bytes as per XSalsa20)
+  # @param {bool} output_iv Whether or not to output the IV with the ciphertext
+  # @param {callback} cb Callback on completion with `(err, res)`.  `res` will
+  #   be a {WordArray} of the ciphertext or a concatenation of the IV and 
+  #   the ciphertext, depending on the `output_iv` option.
   run_salsa20 : ({ input, key, iv, output_iv, progress_hook }, cb) ->
     await @_check_scrubbed key, "Salsa20", cb, defer()
     await salsa20.bulk_encrypt { input, key, iv, progress_hook}, defer ct
@@ -127,6 +137,14 @@ class Base
 
   #---------------
 
+  # Run Twofish, output (IV || ciphertext).
+  #
+  # @param {WordArray} input The input plaintext
+  # @param {WordArray} key The Twofish-specific encryption key (32 bytes)
+  # @param {WordArray} iv The Twofish-specific IV (16 bytes)
+  # @param {callback} cb Callback on completion with `(err, res)`.  `res` will
+  #   be a {WordArray} of the concatenation of the IV and 
+  #   the ciphertext.
   run_twofish : ({input, key, iv, progress_hook}, cb) ->
     await @_check_scrubbed key, "Twofish", cb, defer()
     block_cipher = new TwoFish key
@@ -136,6 +154,14 @@ class Base
 
   #---------------
 
+  # Run AES, output (IV || ciphertext).
+  #
+  # @param {WordArray} input The input plaintext
+  # @param {WordArray} key The AES-specific encryption key (32 bytes)
+  # @param {WordArray} iv The AES-specific IV (16 bytes)
+  # @param {callback} cb Callback on completion with `(err, res)`.  `res` will
+  #   be a {WordArray} of the concatenation of the IV and 
+  #   the ciphertext.
   run_aes : ({input, key, iv, progress_hook}, cb) ->
     await @_check_scrubbed key, "AES", cb, defer()
     block_cipher = new AES key
@@ -145,6 +171,8 @@ class Base
 
   #---------------
 
+  # Scrub all internal state that may be sensitive.  Use it after you're done
+  # with the Encryptor.
   scrub : () ->
     @key.scrub()
     for salt,key_ring of @derived_keys

@@ -119,21 +119,21 @@
   <li>
     <span class='signature'>
       <a href='#browser_rng-file'>
-        ? (void) <strong>browser_rng</strong>(n)
+        ? (Buffer) <strong>browser_rng</strong>(n)
       </a>
     </span>
     <span class='desc'>
-      
+      A wrapper around the standard browser PRNG.
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#generate-class'>
-        + (void) <strong>generate</strong>(n, cb)
+      <a href='#generate-file'>
+        ? (void) <strong>generate</strong>(n, cb)
       </a>
     </span>
     <span class='desc'>
-      
+      Call into a global <a href='../classes/PRNG.html'>PRNG</a> class.
     </span>
   </li>
 </ul>
@@ -141,23 +141,69 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='browser_rng-file'>
-      ? (void) <strong>browser_rng</strong>(n)
+      ? (Buffer) <strong>browser_rng</strong>(n)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>A wrapper around the standard browser PRNG.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>n</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The number of random bytes to grab.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Buffer</tt>)
+      &mdash;
+      <span class='desc'>A buffer of <code>n</code> random bytes.</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='generate-class'>
-      + (void) <strong>generate</strong>(n, cb)
+    <p class='signature' id='generate-file'>
+      ? (void) <strong>generate</strong>(n, cb)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Call into a global <a href='../classes/PRNG.html'>PRNG</a> class.  Generate random bytes and callback
+with the given bytes.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>n</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The number of bytes to generate.</span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (<tt>callback</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback with the random data when ready, packaged as a <a href='../classes/WordArray.html'>WordArray</a>.</span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 09:41:06 GMT-0400 (EDT)
+  Mon Sep 16 2013 11:07:29 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0
