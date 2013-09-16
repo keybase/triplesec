@@ -1,31 +1,38 @@
 {
   "name" : "triplesec",
-  "version" : "0.0.0",
+  "version" : "0.0.1",
   "description" : "A CommonJS-compliant system for secure encryption of smallish secrets",
-  "homepage" : "https://github.com/maxtaco/triplesec",
+  "homepage" : "https://github.com/keybase/triplesec",
   "repository" : { 
     "type" : "git",
-     "url" : "https://github.com/maxtaco/triplesec.git"
+     "url" : "https://github.com/keybase/triplesec.git"
   },
+  "directories" : {
+    "lib" : "lib"
+  },
+  "scripts" : {
+    "test" : "make test",
+    "build" : "make"
+  },
+  "main" : "lib/main",
   "devDependencies" : {
     "browserify" : "*",
     "icsify" : "*",
     "iced-utils" : "*",
     "iced-test" : "*",
-    "iced-error" : "*",
     "iced-coffee-script" : "*",
     "colors" : "*",
     "deep-equal" : "*",
     "cryptojs-2fish" : "*",
-    "more-entropy" : "*",
     "optimist" : "*",
     "rsp2json" : "*",
     "codo" : "*"
-
   },
   "dependencies" : {
-    "purepack" : "*"
+    "more-entropy" : "*",
+    "iced-error" : "*"
   },
+  "author" : "keybase",
   "licenses": [{
       "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"
