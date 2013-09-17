@@ -456,6 +456,12 @@ var plaintext = buff.toString();</pre>
                 buffers properly. We agree! But TripleSec has taken great care 
                 to do this job manually.  If you spot some unscrubbed buffers, please let us know.
               </p>
+              <p class="answer">
+                Anyway, crypto in JS is <i>needed</i>. It's needed as long as JavaScript is the programming
+                language of web apps, as long as app providers wish to stay blind to their users' data. In light of 
+                recent news about the NSA and government data access at the server level, it's more needed than ever.
+              </p>
+
               <h5>Is there a streaming interface?</h5>
               <p class="answer">
                 Not yet, it's in progress.  The current interface requires the file to be fully loaded into memory
