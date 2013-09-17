@@ -118,8 +118,9 @@
           <div class="how-to-use subsection">
             <h3>How to Use It</h3>
             <p>
-            Encryption is performed by the <code>encrypt</code> function. It is non-blocking on the CPU
-            and calls back with <code>(err, buffer)</code>.
+            Encryption is performed by the <code>encrypt</code> function. It periodically yields
+            control to not lock up your CPU.  When done, it
+            calls back with <code>(err, buffer)</code>.
             </p>
 
             <!--
