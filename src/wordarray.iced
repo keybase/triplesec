@@ -89,6 +89,16 @@ exports.WordArray = class WordArray
 
   #--------------
 
+  # Split the word array into n slices
+  # Don't be too smart about slicing in between words, just puke if we can't make it work.
+  split : (n) ->
+    throw new Error "bad key alignment" unless ((@sigBytes % 4) is 0) and ((@words.length % n) is 0)
+    sz = @words.length / n
+    out = (new WordArray @words[i...(i+sz)] for i in [0...@words.length] by sz)
+    out
+
+  #--------------
+
   to_utf8 : () -> @to_buffer().toString 'utf8'
   to_hex : () -> @to_buffer().toString 'hex'
   to_uint8_array : () -> new Uint8Array @to_buffer()

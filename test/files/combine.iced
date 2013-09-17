@@ -9,8 +9,11 @@ hmac = require '../../lib/hmac'
 test_concat = (T, d) ->
   arg = { key : d.key, input : d.msg }
   c = Concat.sign arg
+  l = d.key.words.length
+  arg.key = new WordArray d.key.words[0...(l/2)]
   s5 = hmac.sign arg
   arg.hash_class = SHA3
+  arg.key = new WordArray d.key.words[(l/2)...]
   s3 = hmac.sign arg
   c2 = s5.clone().concat s3
   T.equal c.to_hex(), c2.to_hex(), "Concats work"
