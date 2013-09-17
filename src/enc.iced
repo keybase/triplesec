@@ -19,7 +19,7 @@ V =
     header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
     pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
     salt_size     : 8                  # 8 bytes of salt is good enough!
-    hmac_key_size : 768/8              # The size of the key to use for HMAC (our choice)
+    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
 
 #========================================================================
 
