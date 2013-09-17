@@ -16,10 +16,11 @@ npm install triplesec
 {encrypt, decrypt} = require 'triplesec'
 
 key = new Buffer 'top-secret-pw'
-pt1 = new Buffer 'the secret!'
+pt0 = new Buffer 'the secret!'
+pt1 = new Buffer pt0
 encrypt { key, data : pt1 }, (err, ciphertext) ->
 	decrypt { key, data : ciphertext }, (err, pt2) ->
-		console.log "Right back the start! #{pt1} is #{pt2}"
+		console.log "Right back the start! #{pt0} is #{pt2}"
 ```
 
 ### Reusable Derived Keys
@@ -37,11 +38,13 @@ key = new Buffer 'top-secret-pw'
 enc = new Encryptor { key }
 dec = new Decryptor { key }
 pt0 = new Buffer 'the secret!'
+pt1 = new Buffer pt0
+pt2 = new Buffer pt0
 enc.run { data : pt1 }, (err, ct1) ->
-	enc.run { data : pt1 }, (err, ct2) ->
-		decrypt { key, data : ct1 }, (err, pt1) ->
-			decrypt { key, data : ct2 }, (err, pt2) ->
-				console.log "Right back the start! #{pt0} is #{pt1} is #{pt2}"
+	enc.run { data : pt2 }, (err, ct2) ->
+		dec.run { data : ct1 }, (err, pt3) ->
+			dec.run { data : ct2 }, (err, pt4) ->
+				console.log "Right back the start! #{pt0} is #{pt3} is #{pt4}"
 ```
 
 If you want to resalt derived keys with every encryption, you should explicitly
@@ -50,8 +53,8 @@ ask for that. Otherwise, salt will be reused to speed up encryption
 
 ```coffeescript
 enc.run { data : pt1 }, (err, ct1) ->
-	resalt {}, () ->
-		enc.run { data : pt1 }, (err, ct2) ->
+	enc.resalt {}, () ->
+		enc.run { data : pt2 }, (err, ct2) ->
 ```
 
 ### Full API Documentation
