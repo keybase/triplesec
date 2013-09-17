@@ -226,8 +226,18 @@ var plaintext = buff.toString();</pre>
 
           </div><!-- /.how-to-use -->
 
+          <div class="anatomy subsection">
+            <h3>Anatomy of Output</h3>
+            <p>
+              Output is the xor of 4 rows. The following is not 
+              drawn to horizontal scale. But, through column alignment, you
+              can see what goes into the output.
+            </p>
+            <img src="site/img/anatomy.png" width="600" height="233">
+          </div>
+
           <div class="design subsection">
-            <h3>Algorithm Design</h3>
+            <h3>Algorithm Design</h3>            
 
             <p>The TripleSec library encrypts data in four steps:
               <ol>
@@ -377,7 +387,11 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>Can I encrypt files with it, in the browser?</h5>
               <p class="answer">
-                Yes, using HTML5 features you can access file data without uploading it to a server. Note that TripleSec is not super fast.
+                Yes, using HTML5 features you can access file data without uploading it to a server.
+                We're also likely to add an additional interface to the encrypt and decrypt functions, where you provide a data <i>function</i> instead of a single Buffer,
+                for large data performance. TripleSec was planned with this feature in mind, and it'll be easy to use.
+              </p>
+              <p class="answer">
                 If you implement a file-hosting service using TripleSec, let us know, and we'll link to it in the "Who's Using It" section below.
               </p>
               <h5>Why isn't library X good enough (for X in Clipperz, Forge, SJCL, CryptoJS, etc.)?</h5>
