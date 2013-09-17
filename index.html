@@ -36,7 +36,7 @@
               </p>
               <ul>
                 <li>the USA may compel websites &amp; businesses to "cooperate"</li>
-                <li>the NSA may have already broken a popular cipher</li>
+                <li>security agencies may have already broken a popular cipher</li>
               </ul>
               <p>
                 If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
@@ -450,16 +450,19 @@ var plaintext = buff.toString();</pre>
                 of bugs. Of course one shouldn't allow untrusted libraries to
                 trample one's trusted primitives, but that's true of any
                 language (see <code> LD_PRELOAD</code> attacks against
-                libraries written in C). What this author <i>should have
-                said</i> is that JavaScript doesn't offer desctructors, so
-                it's incovenient to scrub  buffers properly. We agree! But
-                TripleSec has taken great care  to do this job manually.  If
+                libraries written in C). A point not made 
+                in the above article is that 
+                JavaScript doesn't offer desctructors, so
+                it's incovenient to scrub  buffers properly. 
+                TripleSec has taken care to do this job manually.  If
                 you spot some unscrubbed buffers, please let us know.
               </p>
-              <p class="answer">
-                Anyway, crypto in JS is <i>needed</i>. It's needed as long as JavaScript is the programming
-                language of web apps, as long as app providers wish to stay blind to their users' data. In light of 
-                recent news about the NSA and government data access at the server level, it's more needed than ever.
+              <p class="answer">We are as worried as anyone else about 
+                XSS attacks and the ability of third party code to tamper
+                with vetted Crypto code.  But it seems unncessarily fatalistic to let this
+                reservation curtail development of new, more secure Web applications. 
+                Better to work with the technology we've got (JavaScript) than
+                abandon hope.
               </p>
 
               <h5>Is there a streaming interface?</h5>
