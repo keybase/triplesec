@@ -251,8 +251,8 @@ var plaintext = buff.toString();</pre>
                   of <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a>-<a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> and HMAC-<a href="http://en.wikipedia.org/wiki/SHA-3">SHA3</a>. We use the XOR composition here 
                   to preserve and boost the pseudorandom property of the 
                   underlying two HMACs, therefore adding resilience to a break
-                  of other SHA-512 or SHA3 (which are fundamentally different algorithms).
-                  The output of this step is four seperate keys, 
+                  of either SHA-512 or SHA3 (which are fundamentally different algorithms).
+                  The output of this step is five seperate keys, 
                   used below.
                 </li>
 
@@ -504,7 +504,7 @@ var plaintext = buff.toString();</pre>
           <div class="whos-using subsection">
             <h3>Can I help?</h3>
             <p>
-              Please! Above all else, we encourage review of both our algorithm and <a href="http://github.com/keybase/triplesec">the source code</a>. If anyone has a spare proof of IND-CCA2 security sitting around the house, we'd love to it!
+              Please! Above all else, we encourage review of both our algorithm and <a href="http://github.com/keybase/triplesec">the source code</a>.
             </p>
           </div>
 
