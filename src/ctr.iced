@@ -28,6 +28,8 @@ class Counter
     go = true
     i = @_value.words.length - 1
     while go and i >= 0
+      # This would be a horrible idea in C with 32-bit Uints, but
+      # in JavaScript 64-bit float land, we get away with it.
       if ((++@_value.words[i]) > Counter.WORD_MAX) then @_value.words[i] = 0
       else go = false
       i--
