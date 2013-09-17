@@ -243,7 +243,7 @@ var plaintext = buff.toString();</pre>
                 <li>
                   <b>Key derivation.</b> Given a user-provided password, and a
                   random salt value, generate four separate secret keys, one
-                  for each cipher (see Step 3), and a final key for
+                  for each cipher (see Step 3), and two final keys for
                   signing the ciphertext (see Step 4).  This "key stretching" is done via
                   <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>.
                   The "PRF" passed to PBKDF2 is the XOR
@@ -306,7 +306,7 @@ var plaintext = buff.toString();</pre>
                   is everything generated to date: a small header that encapsulates the version
                   of the algorithm (now at <code>1</code>); the salt used in key derivation; and
                   the output of the AES stage of the cascading encryption above.  TripleSec "macs" with a <b>concatenation</b> of two HMACs: 
-                  HMAC-SHA-512, and HMAC-SHA3.  
+                  HMAC-SHA-512, and HMAC-SHA3, each run with a seperate key.
                   The final output is a concatenation of:
                   the header; the salt; the signature; and the outermost ciphertext.
                 </li>
