@@ -403,13 +403,9 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>Is this provably secure?</h5>
               <p class="answer">
-                We don't know. We think that TripleSec can only be broken if all three algorithms are broken, but 
-                we don't have a proof. We furthmore think that TripleSec is non-malleable (and hence IND-CCA2 secure)
-                due to the HMAC step. Current events and insider leaks are changing all cryptographic assumptions.
-                A few months ago, TripleSec's cryptographic redudancy would be seen as a kinky fetish.
-                But going forward, double- or triple-protection seems like a good
-                idea, and we expect that proofs and/or proven constructions for cascading encryption will 
-                be available shortly. 
+                We don't have a proof but we're pretty sure TripleSec can only be broken if all three algorithms are broken.
+                We furthmore think that TripleSec is non-malleable (and hence IND-CCA2 secure)
+                due to the HMAC step. Let us know if there's a simple proof (or a citation) that we missed.
               </p>
               <h5>If the input message size is <i>n</i>, how big is the ciphertext?</h5>
               <p class="answer">
