@@ -17,8 +17,8 @@ npm install triplesec
 
 key = new Buffer 'top-secret-pw'
 pt1 = new Buffer 'the secret!'
-encrypt { key, input : pt1 }, (err, ciphtertext) ->
-	decrypt { key, input : ciphertext }, (err, pt2) ->
+encrypt { key, data : pt1 }, (err, ciphertext) ->
+	decrypt { key, data : ciphertext }, (err, pt2) ->
 		console.log "Right back the start! #{pt1} is #{pt2}"
 ```
 
@@ -37,10 +37,10 @@ key = new Buffer 'top-secret-pw'
 enc = new Encryptor { key }
 dec = new Decryptor { key }
 pt0 = new Buffer 'the secret!'
-enc.run { input : pt1 }, (err, ct1) ->
-	enc.run { input : pt1 }, (err, ct2) ->
-		decrypt { key, input : ct1 }, (err, pt1) ->
-			decrypt { key, input : ct2 }, (err, pt2) ->
+enc.run { data : pt1 }, (err, ct1) ->
+	enc.run { data : pt1 }, (err, ct2) ->
+		decrypt { key, data : ct1 }, (err, pt1) ->
+			decrypt { key, data : ct2 }, (err, pt2) ->
 				console.log "Right back the start! #{pt0} is #{pt1} is #{pt2}"
 ```
 
@@ -49,9 +49,9 @@ ask for that. Otherwise, salt will be reused to speed up encryption
 (and decryption).
 
 ```coffeescript
-enc.run { input : pt1 }, (err, ct1) ->
+enc.run { data : pt1 }, (err, ct1) ->
 	resalt {}, () ->
-		enc.run { input : pt1 }, (err, ct2) ->
+		enc.run { data : pt1 }, (err, ct2) ->
 ```
 
 ### Full API Documentation
