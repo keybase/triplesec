@@ -444,6 +444,12 @@ var plaintext = buff.toString();</pre>
                 buffers properly. We agree! But TripleSec has taken great care 
                 to do this job manually.  If you spot some unscrubbed buffers, please let us know.
               </p>
+              <h5>Is there a streaming interface?</h5>
+              <p class="answer">
+                Not yet, it's in progress.  The current interface requires the file to be fully loaded into memory
+                before it's encrypted, but the current file format is compatible with streaming (with a single seek to
+                write the HMACs).
+              </p>
             </div>
           </div>
 
