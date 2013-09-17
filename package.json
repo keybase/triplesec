@@ -1,6 +1,6 @@
 {
   "name" : "triplesec",
-  "version" : "0.0.2",
+  "version" : "1.0.0",
   "description" : "A CommonJS-compliant system for secure encryption of smallish secrets",
   "homepage" : "https://github.com/keybase/triplesec",
   "repository" : { 
