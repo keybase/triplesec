@@ -43,23 +43,21 @@
                 provided sources of entropy (possibly intentionally weak).
               </p>
               <p>
-                <b>TripleSec</b> is a simple, open-source symmetric encryption library for the browser and Node.js. It aims for unbreakable encryption
-                 using
+                <b>TripleSec</b> is a simple, open-source triple-paranoid symmetric encryption library for the 
+                 browser and Node.js.  It encrypts data with
                 <a href="http://en.wikipedia.org/wiki/Salsa20" class="salsa20">Salsa 20</a>, 
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>, 
-                using a technique inspired by Bruce Schneier's <i>Applied Cryptography</i>
-                 (details below), so that a compromise of 1 or 2 of the ciphers will expose nothing.
+                so that a compromise of one or two of the ciphers will expose nothing.
               </p>
               <p>
-                Of course,  Encryption
-                is only part of the battle. TripleSec also: derives keys with
+                Of course, encryption is only part of the story. TripleSec also: derives keys with
                 <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a> to defend
                 against password-cracking and rainbow tables; authenticates 
                 with <a href="http://en.wikipedia.org/wiki/HMAC">HMAC</a> to protect against 
-                chosen-ciphertext attacks; and supplements native random sources
-                for fear that <code>window.crypto.getRandomValues</code> or
-                <code>crypto.rng</code> in Node.js are weak.
+                (adaptive) chosen-ciphertext attacks; and supplements the native entropy sources
+                (<code>window.crypto.getRandomValues</code> in the browser and <code>crypto.rng</code> in Node.js)
+                for fear they are weak.
               </p>
             </div>
 
@@ -120,8 +118,9 @@
           <div class="how-to-use subsection">
             <h3>How to Use It</h3>
             <p>
-            Encryption is performed by the <code>encrypt</code> function. It is non-blocking on the CPU
-            and calls back with <code>(err, buffer)</code>.
+            Encryption is performed by the <code>encrypt</code> function. It periodically yields
+            control to not lock up your CPU.  When done, it
+            calls back with <code>(err, buffer)</code>.
             </p>
 
             <!--

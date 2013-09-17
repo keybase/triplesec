@@ -21,7 +21,8 @@ if window?.crypto?.getRandomValues?
   native_rng = browser_rng
 else
   try
-    {rng} = require('crypto')
+    # trick Browserify --- we don't want crypto on the browser!
+    {rng} = require('cry' + 'pto')
     native_rng = rng if rng?
   catch e
     # pass
