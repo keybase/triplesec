@@ -17,7 +17,7 @@ npm install triplesec
 
 key = new Buffer 'top-secret-pw'
 pt1 = new Buffer 'the secret!'
-encrypt { key, data : pt1 }, (err, ciphtertext) ->
+encrypt { key, data : pt1 }, (err, ciphertext) ->
 	decrypt { key, data : ciphertext }, (err, pt2) ->
 		console.log "Right back the start! #{pt1} is #{pt2}"
 ```
