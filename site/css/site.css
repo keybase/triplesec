@@ -3,12 +3,12 @@ body {
 }
 a {
   text-decoration: underline;
-  color:#0cf;
+  color:#009;
 }
 a:hover {
   /*color:#0ad;*/
   text-decoration:none;
-  color:#0cf;
+  color:#009;
 }
 
 .nav li a, .nav li a:hover {
