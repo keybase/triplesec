@@ -32,16 +32,11 @@
             
             <div class="col-sm-8 intro">
               <p>
-                <b>Governments wield great power</b>. Consider:
-              </p>
-              <ul>
-                <li>the USA may compel websites &amp; businesses to "cooperate"</li>
-                <li>security agencies may have already broken a popular cipher</li>
-              </ul>
-              <p>
-                If you're a programmer and wish to store user data that <u>only the user can read</u> -- excluding both you and governments -- you must 
-                encrypt in the browser or client app with care; you should avoid single encryption algorithms (possibly broken) and
-                provided sources of entropy (possibly intentionally weak).
+                Nowadays, responsible programmers should consider encrypting sensitive user
+                data on the browser before it arrives at their servers. They furthermore ought to
+                consider the possibility of weaknesses
+                in popular cryptography (e.g., AES and SHA1) 
+                or cryptographic resources (e.g. system entropy sources).
               </p>
               <p>
                 <b>TripleSec</b> is a simple, open-source triple-paranoid symmetric encryption library for the 
@@ -350,6 +345,14 @@ var plaintext = buff.toString();</pre>
           <div class="questions subsection">
             <h3>Anticipated Questions</h3>
             <div class="question">
+              <h5>I can understand double encryption, but triple encryption is madness!</h5>
+              <p class="answer">
+                User data uploaded to a remote cloud-hosted server is nearly impossible to delete,
+                so any encryption scheme has to be future-proof.  The amount of time
+                spent encrypting reasonably-sized plaintexts pales in comparison to 
+                (1) PBKDF2, which is intentionally slow; and (2) how long it will sit on the server.
+                Why not go the extra mile?
+              </p>
               <h5>What's triplesec.Buffer?</h5>
               <p class="answer">
                 It is a wrapper around either Node.js's Buffer or a browser equivalent. When you generate
