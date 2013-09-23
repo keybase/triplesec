@@ -104,6 +104,7 @@ generate = (n, cb) ->
 
 exports.PRNG = PRNG
 exports.generate = generate
+exports.native_rng = native_rng
 
 #===============================================
 
