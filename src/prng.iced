@@ -3,6 +3,7 @@ more_entropy = require 'more-entropy'
 {ADRBG} = require './drbg'
 {WordArray} = require './wordarray'
 {XOR} = require './combine'
+util = require './util'
 
 #===============================================
 
@@ -70,7 +71,10 @@ class PRNG
     bufs.push new Buffer words
     bufs.push native_rng nbytes
     bufs.push @now_to_buffer()
-    wa = WordArray.from_buffer Buffer.concat bufs
+    cat = Buffer.concat bufs
+    wa = WordArray.from_buffer cat
+    util.scrub_buffer cat
+    (util.scrub_buffer b for b in bufs)
     cb wa
 
   # @method generate
