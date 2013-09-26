@@ -38,7 +38,6 @@ class SHA1 extends Hasher
     c = H[2]
     d = H[3]
     e = H[4]
-    console.log "a #{a}"
 
     # Computation
     for i in [0...80]
@@ -108,11 +107,15 @@ class SHA1 extends Hasher
 
 #=================================================================
 
-exports.transform = transform = (x) ->
+transform = transform = (x) ->
   out = (new SHA1).finalize x
   x.scrub()
   out
 
-console.log transform(WordArray.from_buffer new Buffer 'abcdefgh').to_hex()
+#=================================================================
+
+exports.SHA1 = SHA1
+exports.transform = transform 
+
 #=================================================================
 

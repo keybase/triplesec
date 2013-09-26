@@ -11,6 +11,7 @@ mods =
   triplesec : require '../files/triplesec.iced'
   drbg : require '../files/drbg.iced'
   sha3 : require '../files/sha3.iced'
+  sha1 : require '../files/sha1.iced'
   combine : require '../files/combine.iced'
 
 {BrowserRunner} = require('iced-test')

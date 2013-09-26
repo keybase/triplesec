@@ -71,6 +71,14 @@ test/json/SHA3_long.json: test/rsp/SHA3_long.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 
+test/json/SHA1ShortMsg.json: test/rsp/SHA1ShortMsg.rsp
+	@mkdir -p test/json/
+	$(RSP2JSON) $< > $@
+	
+test/json/SHA1LongMsg.json: test/rsp/SHA1LongMsg.rsp
+	@mkdir -p test/json/
+	$(RSP2JSON) $< > $@
+
 spec/triplesec.json: ref/gen_triplesec_spec.iced
 	$(ICED) $< $ > $@
 spec/pbkdf2_sha512_sha3.json: ref/gen_pbkdf2_sha512_sha3_spec.iced
@@ -96,6 +104,10 @@ $(TEST_STAMP): test/data/sha512_short.js \
 		test/data/sha3_long.js \
 		test/data/triplesec_spec.js \
 		test/data/pbkdf2_sha512_sha3_spec.js \
+		test/json/SHA1ShortMsg.json \
+		test/json/SHA1LongMsg.json \
+		test/data/sha1_short.js \
+		test/data/sha1_long.js \
 		test/browser/test.js 
 	date > $@
 

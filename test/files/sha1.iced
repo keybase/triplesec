@@ -1,12 +1,12 @@
 data =
-  short : require('../data/sha3_short').data
-  long : require('../data/sha3_long').data
+  short : require('../data/sha1_short').data
+  long : require('../data/sha1_long').data
 
-{SHA3} = require '../../lib/sha3'
+{SHA1} = require '../../lib/sha1'
 {WordArray} = require '../../lib/wordarray'
 
 test_case = (T, which, i, test) ->
-  s = new SHA3()
+  s = new SHA1()
   input = WordArray.from_hex test.Msg
   expected = test.MD.toLowerCase()
   s.update input
@@ -22,5 +22,5 @@ exports.long = (T,cb) ->
   cb()
 
 test_cases = (T, which) ->
-  for v,i in data[which] 
+  for v,i in data[which]
     test_case T, which, i, v
