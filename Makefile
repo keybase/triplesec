@@ -34,6 +34,7 @@ $(BUILD_STAMP): \
 	lib/lock.js \
 	lib/sha3.js \
 	lib/combine.js \
+	lib/sha256.js \
 	lib/sha1.js
 	date > $@
 
@@ -63,7 +64,7 @@ test/json/HMAC_DRBG_reseed.json: test/rsp/HMAC_DRBG_reseed.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 
-test/json/SHA3_short.json: test/rsp/SHA3_short.rsp
+test/json/sha%.json: test/rsp/sha%.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 	
@@ -89,25 +90,31 @@ test/data/triplesec_spec.js: spec/triplesec.json
 test/data/pbkdf2_sha512_sha3_spec.js: spec/pbkdf2_sha512_sha3.json 
 	$(ICED) test/gen/spec2js.iced "../../spec/pbkdf2_sha512_sha3.json" > $@
 
-$(TEST_STAMP): test/data/sha512_short.js \
-		test/data/sha512_long.js \
-		test/data/twofish_ecb_tbl.js \
+$(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 		test/data/salsa20_key128.js \
 		test/data/salsa20_key256.js \
 		test/data/pbkdf2.js \
 		test/data/drbg_hmac_no_reseed.js \
 		test/json/HMAC_DRBG_reseed.json \
 		test/data/drbg_hmac_reseed.js \
-		test/json/SHA3_short.json \
+		test/json/sha512_short.json \
+		test/json/sha512_long.json \
+		test/json/sha1_short.json \
+		test/json/sha1_long.json \
+		test/json/sha3_long.json \
+		test/json/sha3_short.json \
+		test/json/sha256_long.json \
+		test/json/sha256_short.json \
 		test/data/sha3_short.js \
-		test/json/SHA3_long.json \
 		test/data/sha3_long.js \
-		test/data/triplesec_spec.js \
-		test/data/pbkdf2_sha512_sha3_spec.js \
-		test/json/SHA1ShortMsg.json \
-		test/json/SHA1LongMsg.json \
+		test/data/sha512_long.js \
+		test/data/sha512_short.js \
 		test/data/sha1_short.js \
 		test/data/sha1_long.js \
+		test/data/sha256_short.js \
+		test/data/sha256_long.js \
+		test/data/triplesec_spec.js \
+		test/data/pbkdf2_sha512_sha3_spec.js \
 		test/browser/test.js 
 	date > $@
 
@@ -116,9 +123,9 @@ release: browser/triplesec.js
 	cp $< rel/triplesec-$$V.js ; \
 	$(UGLIFYJS) -c < rel/triplesec-$$V.js > rel/triplesec-$$V-min.js 
 
-test/data/%.js: test/gen/gen_%.iced
+test/data/sha%.js: test/json/sha%.json
 	@mkdir -p test/data
-	$(ICED) $< > $@
+	$(ICED) test/gen/gen_sha.iced "../../$<" > $@
 
 spec: spec/triplesec.json spec/pbkdf2_sha512_sha3.json
 

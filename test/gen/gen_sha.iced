@@ -1,4 +1,4 @@
-raw = require '../json/SHA3_short.json'
+raw = require process.argv[2]
 
 vectors = raw[0].clusters
 out = for v in vectors when ((l = parseInt(v.Len)) % 8 is 0)
