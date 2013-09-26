@@ -439,14 +439,13 @@ var plaintext = buff.toString();</pre>
               <h5>I read someplace that it's impossible to write real crypto in
                 JavaScript.</h5>
               <p class="answer">
-                There is a pretty well-known <a
-                href="http://www.matasano.com/articles/javascript-
-                cryptography/">article</a> on this topic, but we don't agree
-                with a lot of it. Of course you should deliver your Crypto
+                There are well-read
+                articles on this topic, but we don't agree
+                with a lot of the rhetoric. Of course you should deliver your Crypto
                 libraries over TLS, and nowadays, that's accepted and common.
                 And maybe JavaScript isn't the  most convenient language to
-                write Crypto code in, but to  say the browser is "hostile" to
-                crypto is extreme.  Browsers have good CSPRNGs now,
+                write Crypto code in, but it still can express all the necessary primitives.
+                Browsers have good CSPRNGs now,
                 and even if you don't trust Apple and/or Linux and/or Chrome,
                 we have some good workarounds (see above). True, one needs to
                 take care not to overflow 32-bits, but with a robust testing
@@ -454,19 +453,20 @@ var plaintext = buff.toString();</pre>
                 of bugs. Of course one shouldn't allow untrusted libraries to
                 trample one's trusted primitives, but that's true of any
                 language (see <code> LD_PRELOAD</code> attacks against
-                libraries written in C). A point not made 
-                in the above article is that 
+                libraries written in C). A shortcoming we encountered
+                in writing TripleSec is that 
                 JavaScript doesn't offer desctructors, so
                 it's incovenient to scrub  buffers properly. 
                 TripleSec has taken care to do this job manually.  If
                 you spot some unscrubbed buffers, please let us know.
               </p>
               <p class="answer">We are as worried as anyone else about 
-                XSS attacks and the ability of third party code to tamper
-                with vetted Crypto code.  But it seems unncessarily fatalistic to let this
-                reservation curtail development of new, more secure Web applications. 
-                Better to work with the technology we've got (JavaScript) than
-                abandon hope.
+                XSS attacks, CSRF attacks and the ability of third party code to tamper
+                with vetted Crypto code. But these attacks and the quality of
+                Crypto libraries are othogonal concerns. Those sites with
+                high quality JS libraries should feel confident encrypting
+                data with TripleSec.  Those with lots of unvetted third party
+                JS code won't gain much.
               </p>
 
               <h5>Is there a streaming interface?</h5>
