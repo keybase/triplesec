@@ -1,5 +1,23 @@
 {WordArray} = require '../../lib/wordarray'
 
+# need to be explicit for browserify
+data_mods =
+  sha1 :
+    long : require '../data/sha1_long'
+    short : require '../data/sha1_short'
+  sha224 :
+    long : require '../data/sha224_long'
+    short : require '../data/sha224_short'
+  sha256 :
+    long : require '../data/sha256_long'
+    short : require '../data/sha256_short'
+  sha512:
+    long : require '../data/sha512_long'
+    short : require '../data/sha512_short'
+  sha3:
+    long : require '../data/sha3_long'
+    short : require '../data/sha3_short'
+
 exports.test_sha1 = (T,cb) ->
   run_test T, require('../../lib/sha1').SHA1, 'sha1'
   cb()
@@ -22,7 +40,7 @@ exports.test_sha224 = (T,cb) ->
 
 run_test = (T, klass, alg) ->
   for type in [ 'short', 'long' ]
-    data = require("../data/#{alg}_#{type}").data
+    data = data_mods[alg][type].data
     for test,i in data
       hash = new klass()
       input = WordArray.from_hex test.Msg
