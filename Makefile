@@ -35,6 +35,7 @@ $(BUILD_STAMP): \
 	lib/sha3.js \
 	lib/combine.js \
 	lib/sha256.js \
+	lib/sha224.js \
 	lib/sha1.js
 	date > $@
 
@@ -97,14 +98,6 @@ $(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 		test/data/drbg_hmac_no_reseed.js \
 		test/json/HMAC_DRBG_reseed.json \
 		test/data/drbg_hmac_reseed.js \
-		test/json/sha512_short.json \
-		test/json/sha512_long.json \
-		test/json/sha1_short.json \
-		test/json/sha1_long.json \
-		test/json/sha3_long.json \
-		test/json/sha3_short.json \
-		test/json/sha256_long.json \
-		test/json/sha256_short.json \
 		test/data/sha3_short.js \
 		test/data/sha3_long.js \
 		test/data/sha512_long.js \
@@ -113,6 +106,8 @@ $(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 		test/data/sha1_long.js \
 		test/data/sha256_short.js \
 		test/data/sha256_long.js \
+		test/data/sha224_long.js \
+		test/data/sha224_short.js \
 		test/data/triplesec_spec.js \
 		test/data/pbkdf2_sha512_sha3_spec.js \
 		test/browser/test.js 

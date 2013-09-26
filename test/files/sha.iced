@@ -16,6 +16,10 @@ exports.test_sha256 = (T,cb) ->
   run_test T, require('../../lib/sha256').SHA256, 'sha256'
   cb()
 
+exports.test_sha224 = (T,cb) ->
+  run_test T, require('../../lib/sha224').SHA224, 'sha224'
+  cb()
+
 run_test = (T, klass, alg) ->
   for type in [ 'short', 'long' ]
     data = require("../data/#{alg}_#{type}").data
