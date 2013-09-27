@@ -157,6 +157,21 @@ class Hasher extends BufferedBlockAlgorithm
     @_append messageUpdate if messageUpdate
     @_doFinalize()
 
+
+  #
+  # Hashes from a buffer to a buffer
+  #
+  # @param {Buffer} input
+  # @return {Buffer} output
+  #
+  bufhash : (input) -> 
+    wa_in = WordArray.from_buffer input 
+    wa_out = @finalize wa_in
+    out = wa_out.to_buffer()
+    wa_in.scrub()
+    wa_out.scrub()
+    out
+
 #=======================================================================
 
 exports.BlockCipher = class BlockCipher

@@ -282,6 +282,16 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
       return this._doFinalize();
     };
 
+    Hasher.prototype.bufhash = function(input) {
+      var out, wa_in, wa_out;
+      wa_in = WordArray.from_buffer(input);
+      wa_out = this.finalize(wa_in);
+      out = wa_out.to_buffer();
+      wa_in.scrub();
+      wa_out.scrub();
+      return out;
+    };
+
     return Hasher;
 
   })(BufferedBlockAlgorithm);
