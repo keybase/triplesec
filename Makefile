@@ -122,6 +122,10 @@ test/data/sha%.js: test/json/sha%.json
 	@mkdir -p test/data
 	$(ICED) test/gen/gen_sha.iced "../../$<" > $@
 
+test/data/%.js: test/gen/gen_%.iced
+	@mkdir -p test/data
+	$(ICED) $< > $@
+
 spec: spec/triplesec.json spec/pbkdf2_sha512_sha3.json
 
 test: test-server test-browser
