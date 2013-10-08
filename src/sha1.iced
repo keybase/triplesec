@@ -18,7 +18,7 @@ W = []
 class SHA1 extends Hasher
   @blockSize : 512/32
   blockSize : SHA1.blockSize
-  @output_size : 5
+  @output_size : 20 # in bytes!
   output_size : SHA1.output_size
 
   #-------

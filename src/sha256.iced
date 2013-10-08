@@ -48,7 +48,7 @@ class SHA256 extends Hasher
 
   @blockSize : 512/32
   blockSize : SHA256.blockSize
-  @output_size : 256/32
+  @output_size : 256/8 # in bytes!
   output_size : SHA256.output_size
 
   _doReset : () ->
