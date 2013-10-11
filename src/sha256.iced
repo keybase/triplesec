@@ -54,6 +54,8 @@ class SHA256 extends Hasher
   _doReset : () ->
     @_hash = new WordArray glbl.H[0...]
 
+  get_output_size : () -> @output_size
+
   _doProcessBlock: (M, offset) ->
     # Shortcut
     H = @_hash.words
@@ -134,6 +136,9 @@ class SHA256 extends Hasher
 
     # Return final computed hash
     @_hash
+
+  scrub : () ->
+    @_hash.scrub()
 
   copy_to : (obj) ->
     super obj
