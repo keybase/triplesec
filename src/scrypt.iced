@@ -6,7 +6,8 @@
 
 #====================================================================
 
-blkcpy = (D,S,d_offset,s_offset,len) -> D.set(S.subarray(s_offset, s_offset + len), d_offset)
+blkcpy = (D,S,d_offset,s_offset,len) 
+  -> D.set(S.subarray(s_offset, s_offset + len), d_offset)
 
 blkxor = (D,S,d_offset,s_offset,len) ->
   for i in [d_offset...(d_offset+len)]
@@ -14,7 +15,7 @@ blkxor = (D,S,d_offset,s_offset,len) ->
   true 
 
 # @param {Uint8Array} B
-le32dec = (B) -> (B[0] | (B[1] >> 8) | (B[2] >> 16) | (B[3] >> 24))
+le32dec = (B) -> (B[0] | (B[1] << 8) | (B[2] << 16) | (B[3] << 24))
 
 # @param {Uint8Array} B the target array
 # @param {number} w the intput word 
@@ -42,7 +43,7 @@ class Scrypt
     @p or= 2
     @klass or= HMAC_SHA256
     @X64_tmp = new Uint8Array(64)
-    @s20ic = new Salsa20InnerCore()
+    @s20ic = new Salsa20InnerCore(8)
 
   #------------
 
@@ -163,9 +164,16 @@ class Scrypt
 progress_hook = (obj) ->
   console.log obj
 
-key = new Buffer "hello man xxxx", "utf8"
+key = new Buffer ""
 {rng} = require 'crypto'
-salt = rng 8
-scrypt = new Scrypt {}
-await scrypt.run { progress_hook, key, salt, dkLen : 1024 }, defer out
+salt = ''
+scrypt = new Scrypt { N : 1, p : 1, r : 16 }
+await scrypt.run { progress_hook, key, salt, dkLen : 64 }, defer out
 console.log out
+
+#B = new Uint8Array(new Buffer "7e879a214f3ec9867ca940e641718f26baee555b8c61c1b50df846116dcd3b1dee24f319df9b3d8514121e4b5ac5aa3276021d2909c74829edebc68db8b8c25e", "hex")
+#console.log B.length
+#scrypt.salsa20_8(B)
+#console.log (new Buffer B).toString 'hex'
+#console.log B
+

@@ -31,7 +31,7 @@ class Salsa20InnerCore
 
   _core : (v) ->
     [ x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15 ] = v
-
+    
     for i in [0...@rounds] by 2
       u = x0  + x12 ;   x4  ^= (u<<7)  | (u>>>(32-7))
       u = x4  + x0  ;   x8  ^= (u<<9)  | (u>>>(32-9))
