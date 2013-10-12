@@ -149,7 +149,7 @@ exports.test_scrypt = (T,cb) ->
   progress_hook = (obj) ->
     if obj.what is 'scrypt'
       T.waypoint "scrypt: #{obj.i} / #{obj.total}"
-  for v,i in test_vectors
+  for v,i in test_vectors[0...1]
     v.progress_hook = progress_hook
     scrypt = new Scrypt v.params
     await scrypt.run v, defer buf
