@@ -1,19 +1,26 @@
 
-{Scrypt} = require '../../src/scrypt'
+{buffer_to_ui8a,Scrypt} = require '../../lib/scrypt'
 
+#====================================================================
+
+ui8a_to_buffer = (v) ->
+  ret = new Buffer v.length
+  for i in [0...v.length]
+    ret.writeUInt8(v[i], i)
+  ret
 
 #====================================================================
 
 strip = (x) -> x.split(/\s+/).join("")
-hex_to_ui8a = (x) -> new Uint8Array(new Buffer (strip(x)), 'hex')
-ui8a_to_hex = (v) -> (new Buffer v).toString 'hex'
+hex_to_ui8a = (x) -> buffer_to_ui8a(new Buffer (strip(x)), 'hex')
+ui8a_to_hex = (v) -> ui8a_to_buffer(v).toString 'hex'
 
 #====================================================================
 
 exports.test_salsa20 = (T,cb) ->
 
   # From http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-01; Section 7
-  input = strip """7e879a21 4f3ec986 7ca940e6 41718f26
+  input = hex_to_ui8a """7e879a21 4f3ec986 7ca940e6 41718f26
    baee555b 8c61c1b5 0df84611 6dcd3b1d
    ee24f319 df9b3d85 14121e4b 5ac5aa32
    76021d29 09c74829 edebc68d b8b8c25e"""
@@ -21,11 +28,9 @@ exports.test_salsa20 = (T,cb) ->
    044b2181 a2fd337d fd7b1c63 96682f29
    b4393168 e3c9e6bc fe6bc5b7 a06d96ba
    e424cc10 2c91745c 24ad673d c7618f81"""
-  input = new Uint8Array(new Buffer input, 'hex')
   scrypt = new Scrypt {}
   scrypt.salsa20_8(input)
-  buf = new Buffer input
-  T.equal buf.toString('hex'), output, "salsa20 subroutine works"
+  T.equal ui8a_to_hex(input), output, "salsa20 subroutine works"
   cb()
 
 #====================================================================
@@ -112,6 +117,13 @@ exports.test_pbkdf2 = (T, cb) ->
 #====================================================================
 
 exports.test_scrypt = (T,cb) ->
+  #
+  # From http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-01; Section 11
+  #
+  # BUT, note we made a change and lowered the constants here, lest we
+  # take forever to run the regression tests.  The new data was collected
+  # with the Reference C Implementation, Version 1.1.6
+  #
   test_vectors = [
     {
       key : new Buffer([])
@@ -127,7 +139,7 @@ exports.test_scrypt = (T,cb) ->
       key : new Buffer("pleaseletmein"), 
       salt : new Buffer("SodiumChloride"),
       dkLen : 64,
-      params : { N : 1024, r : 8, p : 1 },
+      params : { N : 1024, r : 8, p : 1 }, # Used to be N=2^14
       output : strip """
           54 17 36 87 d2 65 e4 32 26 bd 91 4b 01 52 67 e2
           fd d4 10 8a a0 59 37 fb 54 9e ce b0 c2 76 a2 85
@@ -137,7 +149,7 @@ exports.test_scrypt = (T,cb) ->
     {
       key : new Buffer("password"), 
       salt : new Buffer("NaCl"),
-      params : { N:64, r:8, p:16}, 
+      params : { N:64, r:8, p:16},  # Used to be N=2^10
       dkLen : 64
       output : strip """
           7e 9c 6d 04 bd 24 20 13 da aa ce 3a d2 38 33 da

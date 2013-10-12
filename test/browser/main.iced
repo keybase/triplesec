@@ -1,5 +1,6 @@
 
 mods =  
+  scrypt : require '../files/scrypt.iced'
   wordarray : require '../files/wordarray.iced'
   hmac : require '../files/hmac.iced'
   aes : require '../files/aes.iced'
@@ -17,3 +18,4 @@ mods =
 window.onload = () ->
   br = new BrowserRunner { log : "log", rc : "rc" }
   await br.run mods, defer rc
+h
