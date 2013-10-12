@@ -6,11 +6,14 @@
 
 #====================================================================
 
-blkcpy = (D,S,d_offset,s_offset,len) -> D.set(S.subarray(s_offset, s_offset + len), d_offset)
+blkcpy = (D,S,d_offset,s_offset,len) -> 
+  D.set(S.subarray(0x40*s_offset, 0x40*(s_offset + len)), 0x40*d_offset)
 
-blkxor = (D,S,d_offset,s_offset,len) ->
-  for i in [d_offset...(d_offset+len)]
-    D[i] ^= S[i]
+blkxor = (D,S,s_offset,len) ->
+  s_offset <<= 6
+  len <<= 6
+  for i in [0...len]
+    D[i] ^= S[i + s_offset]
   true 
 
 # @param {Uint8Array} B
@@ -67,23 +70,23 @@ class Scrypt
     X = @X64_tmp
 
     # blkcpy(X, &B[(2 * r - 1) * 64], 64);
-    blkcpy X,B,0,((2*@r-1)*64), 64
+    blkcpy X,B,0,(2*@r-1), 1
 
     for i in [0...(2*@r)]
       # /* 3: X <-- H(X \xor B_i) */
       # blkxor(X, &B[i * 64], 64);
-      blkxor X, B, 0, 64, 64
+      blkxor X, B, i, 1
       @salsa20_8 X
 
       # /* 4: Y_i <-- X */
       # blkcpy(&Y[i * 64], X, 64);
-      blkcpy Y, X, (i*64), 0, 64
+      blkcpy Y, X, i, 0, 1
 
     # 6: B' <-- (Y_0, Y_2 ... Y_{2r-2}, Y_1, Y_3 ... Y_{2r-1}) */
     for i in [0...@r]
-      blkcpy B, Y, (i*64), (i*2*64), 64
+      blkcpy B, Y, i, (i*2), 1
     for i in [0...@r]
-      blkcpy B, Y, ((i+@r)*64), ((i*2+1)*64), 64
+      blkcpy B, Y, (i+@r), (i*2+1), 1
 
   #------------
 
@@ -107,27 +110,27 @@ class Scrypt
   # XY must be 256r bytes in length.  The value N must be a power of 2.
   smix : ({B, V, XY }) ->
     X = XY
-    lim = 128*@r
-    Y = XY.subarray(lim)
+    lim = 2*@r
+    Y = XY.subarray(0x40*lim)
 
     blkcpy X, B, 0, 0, lim
 
     for i in [0...@N]
       # /* 3: V_i <-- X */
-      blkcpy V, X, (lim*i), 0, lim
+      blkcpy V, X, (2*@r*i), 0, 2*@r
 
       # /* 4: X <-- H(X) */
       @blockmix_salsa8(X,Y)
 
     for i in [0...@N]
-      j = @integerify X.subarray(@lim - 64)
+      j = @integerify X.subarray(0x40*(lim - 1))
 
       # /* 8: X <-- H(X \xor V_j) */
-      blkxor X, V, 0, (j*lim), lim
+      blkxor X, V, j*lim, lim
       @blockmix_salsa8 X, V
 
     # /* 10: B' <-- X */
-    blkcpy B, X, lim
+    blkcpy B, X, 0, 0, lim
 
   #------------
 
