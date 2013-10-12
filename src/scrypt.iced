@@ -62,7 +62,7 @@ class Scrypt
     key = WordArray.from_buffer key
     salt = WordArray.from_buffer salt
     await pbkdf2 { key, salt, c, dkLen, @klass, progress_hook }, defer buf
-    cb buf
+    cb buf.to_buffer()
 
   #------------
 
@@ -149,7 +149,7 @@ class Scrypt
     c = 1
 
     await @pbkdf2 { progress_hook, key, salt, c, dkLen : lim*@p }, defer B
-    B = buffer_to_ui8a B.to_buffer()
+    B = buffer_to_ui8a B
 
     for i in [0...@p]
       progress_hook? { what : "scrypt", total : @p, i }
@@ -157,7 +157,7 @@ class Scrypt
 
     await @pbkdf2 { progress_hook, key, salt : (new Buffer B) , c, dkLen }, defer out
 
-    cb out.to_buffer()
+    cb out
 
 #====================================================================
 
