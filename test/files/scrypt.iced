@@ -127,29 +127,29 @@ exports.test_scrypt = (T,cb) ->
       key : new Buffer("pleaseletmein"), 
       salt : new Buffer("SodiumChloride"),
       dkLen : 64,
-      params : { N : 16384, r : 8, p : 1 },
+      params : { N : 1024, r : 8, p : 1 },
       output : strip """
-         70 23 bd cb 3a fd 73 48 46 1c 06 cd 81 fd 38 eb
-         fd a8 fb ba 90 4f 8e 3e a9 b5 43 f6 54 5d a1 f2
-         d5 43 29 55 61 3f 0f cf 62 d4 97 05 24 2a 9a f9
-         e6 1e 85 dc 0d 65 1e 40 df cf 01 7b 45 57 58 87"""
+          54 17 36 87 d2 65 e4 32 26 bd 91 4b 01 52 67 e2
+          fd d4 10 8a a0 59 37 fb 54 9e ce b0 c2 76 a2 85
+          fe 59 e2 29 3f 5a a3 fe 28 8f 0e 7e 55 27 90 da
+          a4 d8 d7 9c 09 29 46 63 15 2a cb 71 9d d2 25 b8"""
     },
     {
       key : new Buffer("password"), 
       salt : new Buffer("NaCl"),
-      params : { N:1024, r:8, p:16}, 
+      params : { N:64, r:8, p:16}, 
       dkLen : 64
       output : strip """
-         fd ba be 1c 9d 34 72 00 78 56 e7 19 0d 01 e9 fe
-         7c 6a d7 cb c8 23 78 30 e7 73 76 63 4b 37 31 62
-         2e af 30 d9 2e 22 a3 88 6f f1 09 27 9d 98 30 da
-         c7 27 af b9 4a 83 ee 6d 83 60 cb df a2 cc 06 40"""
+          7e 9c 6d 04 bd 24 20 13 da aa ce 3a d2 38 33 da
+          9f ed 1f df a6 0c 56 72 c0 5a ce 9a b2 f2 40 fe
+          a7 9a 44 7b 85 9f 74 78 d7 b4 a1 c1 59 65 cf 71
+          64 06 99 75 5e a3 75 aa 8e 32 17 d7 41 9d 12 00"""
     }
   ]
   progress_hook = (obj) ->
     if obj.what is 'scrypt'
       T.waypoint "scrypt: #{obj.i} / #{obj.total}"
-  for v,i in test_vectors[0...1]
+  for v,i in test_vectors
     v.progress_hook = progress_hook
     scrypt = new Scrypt v.params
     await scrypt.run v, defer buf
