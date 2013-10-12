@@ -1,39 +1,30 @@
 
 {HMAC_SHA256} = require './hmac'
 {pbkdf2} = require './pbkdf2'
-{Salsa20InnerCore} = require './salsa20'
+{endian_reverse,Salsa20InnerCore} = require './salsa20'
 {ui8a_to_buffer,WordArray} = require './wordarray'
-{default_delay,scrub_vec} = require './util'
+{fixup_uint32,default_delay,scrub_vec} = require './util'
 
 #====================================================================
 
 blkcpy = (D,S,d_offset,s_offset,len) -> 
-  D.set(S.subarray(0x40*s_offset, 0x40*(s_offset + len)), 0x40*d_offset)
+  n = 0x10
+  D.set(S.subarray(n*s_offset, n*(s_offset + len)), n*d_offset)
 
 #----------
 
 blkxor = (D,S,s_offset,len) ->
-  s_offset <<= 6
-  len <<= 6
+  s_offset <<= 4
+  len <<= 4
   for i in [0...len]
     D[i] ^= S[i + s_offset]
   true 
 
 #----------
 
-# @param {Uint8Array} B
-le32dec = (B) -> ((B[0] | (B[1] << 8) | (B[2] << 16))) + (B[3] * 0x1000000) 
-
-#----------
-
-# @param {Uint8Array} B the target array
-# @param {number} w the intput word 
-le32enc = (B,w) ->
-  B[0] = (w & 0xff)
-  B[1] = (w >> 8) & 0xff
-  B[2] = (w >> 16) & 0xff
-  B[3] = (w >> 24) & 0xff
-
+v_endian_reverse = (v) ->
+  for e,i in v
+    v[i] = endian_reverse e
 
 #====================================================================
 
@@ -47,17 +38,15 @@ class Scrypt
     @p or= 2
     @c or= 1 # the number of times to run PBKDF2
     @klass or= HMAC_SHA256
-    @X64_tmp = new Uint8Array(64)
+    @X16_tmp = new Int32Array 0x10
     @s20ic = new Salsa20InnerCore(8)
 
   #------------
 
-  # @param {Uint8Array} B that is 64 bytes length
+  # @param {Uint32Array} B that is 16 words long
   salsa20_8 : (B) ->
-    B32 = (le32dec(B.subarray(i*4)) for i in [0...16])
-    X = @s20ic._core B32
-    (B32[i] += x for x,i in X)
-    le32enc(B.subarray(i*4), b) for b,i in B32
+    X = @s20ic._core B
+    (B[i] += x for x,i in X)
 
   #------------
 
@@ -68,7 +57,7 @@ class Scrypt
   #------------
 
   blockmix_salsa8 : (B, Y) ->
-    X = @X64_tmp
+    X = @X16_tmp
 
     # blkcpy(X, &B[(2 * r - 1) * 64], 64);
     blkcpy X,B,0,(2*@r-1), 1
@@ -112,7 +101,7 @@ class Scrypt
   smix : ({B, V, XY, progress_hook}, cb) ->
     X = XY
     lim = 2*@r
-    Y = XY.subarray(0x40*lim)
+    Y = XY.subarray(0x10*lim)
 
     blkcpy X, B, 0, 0, lim
 
@@ -135,7 +124,7 @@ class Scrypt
       stop = Math.min(@N, i+128)
 
       while i < stop
-        j = @integerify X.subarray(0x40*(lim - 1))
+        j = fixup_uint32(X[0x10*(lim-1)]) & (@N - 1)
 
         # /* 8: X <-- H(X \xor V_j) */
         blkxor X, V, j*lim, lim
@@ -168,17 +157,21 @@ class Scrypt
     else if (@r > MAX / 128 / @p) or (@r > MAX / 256) or (@N > MAX / 128 / @r) then new Error "N is too big"
     else null
 
-    XY = new Uint8Array(256*@r)
-    V = new Uint8Array(128*@r*@N)
+    XY = new Int32Array(64*@r)
+    V = new Int32Array(32*@r*@N)
 
     lim = 128*@r
 
     await @pbkdf2 { key : key.clone(), salt, @c, dkLen : lim*@p }, defer B
-    B = B.to_ui8a()
+    B = B.words
+
+    v_endian_reverse B
 
     lph = (j) => (i) => progress_hook? {  i: (i + j*@N*2), what : "scrypt", total : @p*@N*2}
     for j in [0...@p]
       await @smix { B : B.subarray(lim*j), V, XY, progress_hook : lph(j) }, defer()
+
+    v_endian_reverse B
 
     await @pbkdf2 { key, salt : WordArray.from_ui8a(B), @c, dkLen }, defer out
     scrub_vec(B)
