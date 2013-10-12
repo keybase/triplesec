@@ -3,11 +3,14 @@
 {pbkdf2} = require './pbkdf2'
 {Salsa20InnerCore} = require './salsa20'
 {WordArray} = require './wordarray'
+util = require './util'
 
 #====================================================================
 
 blkcpy = (D,S,d_offset,s_offset,len) -> 
   D.set(S.subarray(0x40*s_offset, 0x40*(s_offset + len)), 0x40*d_offset)
+
+#----------
 
 blkxor = (D,S,s_offset,len) ->
   s_offset <<= 6
@@ -16,8 +19,12 @@ blkxor = (D,S,s_offset,len) ->
     D[i] ^= S[i + s_offset]
   true 
 
+#----------
+
 # @param {Uint8Array} B
 le32dec = (B) -> ((B[0] | (B[1] << 8) | (B[2] << 16))) + (B[3] * 0x1000000) 
+
+#----------
 
 # @param {Uint8Array} B the target array
 # @param {number} w the intput word 
@@ -27,10 +34,20 @@ le32enc = (B,w) ->
   B[2] = (w >> 16) & 0xff
   B[3] = (w >> 24) & 0xff
 
+#----------
+
 buffer_to_ui8a = (b) ->
   ret = new Uint8Array b.length
   for i in [0...b.length]
     ret[i] = b.readUInt8(i)
+  ret
+
+#----------
+
+ui8a_to_buffer = (v) ->
+  ret = new Buffer v.length
+  for i in [0...v.length]
+    ret.writeUInt8(v[i], i)
   ret
 
 #====================================================================
@@ -39,10 +56,11 @@ class Scrypt
 
   #------------
 
-  constructor : ({@N,@r,@p, @prng, @klass}) ->
+  constructor : ({@N,@r,@p,@c,@klass}) ->
     @N or= Math.pow(2,8)
     @r or= 16
     @p or= 2
+    @c or= 1 # the number of times to run PBKDF2
     @klass or= HMAC_SHA256
     @X64_tmp = new Uint8Array(64)
     @s20ic = new Salsa20InnerCore(8)
@@ -108,32 +126,57 @@ class Scrypt
   # Compute B = SMix_r(B, N).  The input B must be 128r bytes in length; the
   # temporary storage V must be 128rN bytes in length; the temporary storage
   # XY must be 256r bytes in length.  The value N must be a power of 2.
-  smix : ({B, V, XY }) ->
+  smix : ({B, V, XY, progress_hook}, cb) ->
     X = XY
     lim = 2*@r
     Y = XY.subarray(0x40*lim)
 
     blkcpy X, B, 0, 0, lim
 
-    for i in [0...@N]
-      # /* 3: V_i <-- X */
-      blkcpy V, X, (lim*i), 0, lim
+    i = 0
+    while i < @N
+      stop = Math.min(@N, i+128)
+      while i < stop
+        # /* 3: V_i <-- X */
+        blkcpy V, X, (lim*i), 0, lim
 
-      # /* 4: X <-- H(X) */
-      @blockmix_salsa8(X,Y)
+        # /* 4: X <-- H(X) */
+        @blockmix_salsa8(X,Y)
+        i++
 
-    for i in [0...@N]
-      j = @integerify X.subarray(0x40*(lim - 1))
+      progress_hook? i
+      await util.default_delay 0, 0, defer()
 
-      # /* 8: X <-- H(X \xor V_j) */
-      blkxor X, V, j*lim, lim
-      @blockmix_salsa8 X, Y
+    i = 0
+    while i < @N
+      stop = Math.min(@N, i+128)
+
+      while i < stop
+        j = @integerify X.subarray(0x40*(lim - 1))
+
+        # /* 8: X <-- H(X \xor V_j) */
+        blkxor X, V, j*lim, lim
+        @blockmix_salsa8 X, Y
+
+        i++
+
+      progress_hook? i+@N
+      await util.default_delay 0, 0, defer()
 
     # /* 10: B' <-- X */
     blkcpy B, X, 0, 0, lim
+    cb()
 
   #------------
 
+  # Run Scrypt on the given key and salt to get dKLen of data out.
+  #
+  # @param {Buffer} key the Passphrase or key to work on
+  # @param {Buffer} salt the random salt to prevent rainbow tables
+  # @param {number} dkLen the length of data required out of the key stretcher
+  # @param {callback} cb the callback to callback when done, called with a {Buffer}
+  #    containing the output key material bytes.
+  #
   run : ({key, salt, dkLen, progress_hook}, cb) ->
     MAX = 0xffffffff
     err = ret = null
@@ -146,16 +189,16 @@ class Scrypt
     V = new Uint8Array(128*@r*@N)
 
     lim = 128*@r
-    c = 1
 
-    await @pbkdf2 { progress_hook, key, salt, c, dkLen : lim*@p }, defer B
+    await @pbkdf2 { key, salt, @c, dkLen : lim*@p }, defer B
     B = buffer_to_ui8a B
 
-    for i in [0...@p]
-      progress_hook? { what : "scrypt", total : @p, i }
-      @smix { B : B.subarray(lim*i), V, XY }
+    for j in [0...@p]
+      lph = (i) => progress_hook? {  i: (i + j*@N*2), what : "scrypt", total : @p*@N*2}
+      await @smix { B : B.subarray(lim*j), V, XY, progress_hook : lph }, defer()
+    lph @p
 
-    await @pbkdf2 { progress_hook, key, salt : (new Buffer B) , c, dkLen }, defer out
+    await @pbkdf2 { key, salt : ui8a_to_buffer(B), @c, dkLen }, defer out
 
     cb out
 
@@ -163,22 +206,6 @@ class Scrypt
 
 exports.Scrypt = Scrypt
 exports.buffer_to_ui8a = buffer_to_ui8a
+exports.ui8a_to_buffer = ui8a_to_buffer
 
 #====================================================================
-
-
-progress_hook = (obj) ->
-  console.log obj
-# key = new Buffer "weriojwreoiwjreowij"
-# {rng} = require 'crypto'
-# salt = new Buffer 'weroiwjroiwjreowijrwoirjweoir'
-# scrypt = new Scrypt { N : Math.pow(2,9), p : 1, r : 16 }
-# await scrypt.run { progress_hook, key, salt, dkLen : 64 }, defer out
-# console.log out
-
-#B = new Uint8Array(new Buffer "7e879a214f3ec9867ca940e641718f26baee555b8c61c1b50df846116dcd3b1dee24f319df9b3d8514121e4b5ac5aa3276021d2909c74829edebc68db8b8c25e", "hex")
-#console.log B.length
-#scrypt.salsa20_8(B)
-#console.log (new Buffer B).toString 'hex'
-#console.log B
-

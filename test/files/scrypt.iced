@@ -1,13 +1,5 @@
 
-{buffer_to_ui8a,Scrypt} = require '../../lib/scrypt'
-
-#====================================================================
-
-ui8a_to_buffer = (v) ->
-  ret = new Buffer v.length
-  for i in [0...v.length]
-    ret.writeUInt8(v[i], i)
-  ret
+{ui8a_to_buffer,buffer_to_ui8a,Scrypt} = require '../../lib/scrypt'
 
 #====================================================================
 
@@ -90,7 +82,7 @@ exports.test_smix = (T,cb) ->
   scrypt = new Scrypt { r : 1, p : 1, N : 16 }
   XY = new Uint8Array(256*scrypt.r)
   V = new Uint8Array(128*scrypt.r*scrypt.N)
-  scrypt.smix { B : input, V, XY }
+  await scrypt.smix { B : input, V, XY }, defer()
   T.equal ui8a_to_hex(input), output, "smix worked as advertised"
   cb()
 
