@@ -17,7 +17,7 @@ blkxor = (D,S,s_offset,len) ->
   true 
 
 # @param {Uint8Array} B
-le32dec = (B) -> (B[0] | (B[1] << 8) | (B[2] << 16) | (B[3] << 24))
+le32dec = (B) -> ((B[0] | (B[1] << 8) | (B[2] << 16))) + (B[3] * 0x1000000) 
 
 # @param {Uint8Array} B the target array
 # @param {number} w the intput word 
@@ -100,7 +100,7 @@ class Scrypt
   #
   # @param {Uint8Array} B An array to ready 8 bytes out of.
   # @return {Number} a Uint32 % (N) that's the integer we need
-  integerify : (B) -> le32dec(B) & (@N-1)
+  integerify : (B) -> le32dec(B) & (@N - 1)
 
   #------------
 
@@ -117,7 +117,7 @@ class Scrypt
 
     for i in [0...@N]
       # /* 3: V_i <-- X */
-      blkcpy V, X, (2*@r*i), 0, 2*@r
+      blkcpy V, X, (lim*i), 0, lim
 
       # /* 4: X <-- H(X) */
       @blockmix_salsa8(X,Y)
@@ -127,7 +127,7 @@ class Scrypt
 
       # /* 8: X <-- H(X \xor V_j) */
       blkxor X, V, j*lim, lim
-      @blockmix_salsa8 X, V
+      @blockmix_salsa8 X, Y
 
     # /* 10: B' <-- X */
     blkcpy B, X, 0, 0, lim
