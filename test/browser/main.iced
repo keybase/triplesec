@@ -18,4 +18,3 @@ mods =
 window.onload = () ->
   br = new BrowserRunner { log : "log", rc : "rc" }
   await br.run mods, defer rc
-h
