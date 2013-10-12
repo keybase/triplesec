@@ -6,8 +6,7 @@
 
 #====================================================================
 
-blkcpy = (D,S,d_offset,s_offset,len) 
-  -> D.set(S.subarray(s_offset, s_offset + len), d_offset)
+blkcpy = (D,S,d_offset,s_offset,len) -> D.set(S.subarray(s_offset, s_offset + len), d_offset)
 
 blkxor = (D,S,d_offset,s_offset,len) ->
   for i in [d_offset...(d_offset+len)]
@@ -55,7 +54,6 @@ class Scrypt
     le32enc(B.subarray(i*4), b) for b,i in B32
 
   #------------
-
 
   pbkdf2 : ({key, salt, c, dkLen, progress_hook}, cb) ->
     key = WordArray.from_buffer key
@@ -160,16 +158,19 @@ class Scrypt
 
 #====================================================================
 
+exports.Scrypt = Scrypt
+
+#====================================================================
+
 
 progress_hook = (obj) ->
   console.log obj
-
-key = new Buffer ""
-{rng} = require 'crypto'
-salt = ''
-scrypt = new Scrypt { N : 1, p : 1, r : 16 }
-await scrypt.run { progress_hook, key, salt, dkLen : 64 }, defer out
-console.log out
+# key = new Buffer "weriojwreoiwjreowij"
+# {rng} = require 'crypto'
+# salt = new Buffer 'weroiwjroiwjreowijrwoirjweoir'
+# scrypt = new Scrypt { N : Math.pow(2,9), p : 1, r : 16 }
+# await scrypt.run { progress_hook, key, salt, dkLen : 64 }, defer out
+# console.log out
 
 #B = new Uint8Array(new Buffer "7e879a214f3ec9867ca940e641718f26baee555b8c61c1b50df846116dcd3b1dee24f319df9b3d8514121e4b5ac5aa3276021d2909c74829edebc68db8b8c25e", "hex")
 #console.log B.length
