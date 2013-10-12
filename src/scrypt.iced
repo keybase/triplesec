@@ -1,5 +1,5 @@
 
-{SHA256} = require './sha256'
+{HMAC_SHA256} = require './hmac'
 {pbkdf2} = require './pbkdf2'
 {Salsa20InnerCore} = require './salsa20'
 {WordArray} = require './wordarray'
@@ -37,10 +37,10 @@ class Scrypt
   #------------
 
   constructor : ({@N,@r,@p, @prng, @klass}) ->
-    @N or= Math.pow(2,6)
+    @N or= Math.pow(2,8)
     @r or= 16
     @p or= 2
-    @klass or= SHA256
+    @klass or= HMAC_SHA256
     @X64_tmp = new Uint8Array(64)
     @s20ic = new Salsa20InnerCore()
 

@@ -1,5 +1,5 @@
-
 {SHA512} = require './sha512'
+{SHA256} = require './sha256'
 util = require './util'
 
 #=======================================================================
@@ -138,6 +138,11 @@ bulk_sign = ({key, input, progress_hook, klass, what}, cb) ->
   await util.bulk input.sigBytes, slice_args, { what, progress_hook, cb : defer(res) }
   eng.scrub()
   cb res
+
+#=======================================================================
+
+exports.HMAC_SHA256 = class HMAC_SHA256 extends HMAC
+  constructor : (key) -> super key, SHA256
 
 #=======================================================================
 
