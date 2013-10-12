@@ -6,7 +6,7 @@ salsa20       = require './salsa20'
 ctr           = require './ctr'
 {XOR,Concat}  = require './combine'
 {SHA512}      = require './sha512'
-{pbkdf2}      = require './pbkdf2'
+{PBKDF2}      = require './pbkdf2'
 util          = require './util'
 prng          = require './prng'
 {make_esc}    = require 'iced-error'
@@ -19,6 +19,11 @@ V =
     header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
     pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
     salt_size     : 8                  # 8 bytes of salt is good enough!
+    kdf           :                    # The key derivation...
+      klass       : PBKDF2             #   algorithm klass
+      opts        :                    #   ..and options
+        c         : 1024               #   The number of iterations
+        klass     : XOR                #   The HMAC to use as a subroutine
     hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
 
 #========================================================================
@@ -31,17 +36,19 @@ class Base
   #---------------
 
   # @param {WordArray} key The private encryption key  
-  constructor : ( { key } ) ->
+  constructor : ( { key, @version } ) ->
     @key = WordArray.from_buffer key
+    @version or= V[1]
 
     # A map from Salt -> KeySets
     @derived_keys = {}
 
   #---------------
 
-  # @method pbkdf2
+  # @method kdf
   #
-  # Run PBKDF2 to yield the encryption and signing keys, given the
+  # Run the KDF function specified by our current version,
+  # to yield the encryption and signing keys, given the
   # input `key` and the randomly-generated salt.
   #
   # @param {WordArray} salt The salt to use for key generation.
@@ -49,11 +56,12 @@ class Base
   # @param {callback} cb Callback with an {Object} after completion.
   #   The object will map cipher-name to a {WordArray} that is the generated key.
   #
-  pbkdf2 : ({salt, progress_hook}, cb) ->
+  kdf : ({salt, progress_hook}, cb) ->
     # Check the cache first
     salt_hex = salt.to_hex()
 
     if not (keys = @derived_keys[salt_hex])?
+      @_kdf = new @version.kdf.klass @version.kdf.opts
 
       lens = 
         hmac    : @version.hmac_key_size
@@ -66,13 +74,11 @@ class Base
       # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
       args = {
         key : @key.clone()
-        c : @version.pbkdf2_iters
-        klass : XOR
         dkLen : tot
         progress_hook
         salt 
       }
-      await pbkdf2 args, defer raw
+      await @_kdf.run args, defer raw
       keys = {}
       i = 0
       for k,v of lens
@@ -237,16 +243,12 @@ class Base
 class Encryptor extends Base
 
   #---------------
-
-  # @property {Object} version The version to encrypt with (only V1 now works).
-  version : V[1]
-
-  #---------------
  
   # @param {Buffer} key The secret key
   # @param {Function} rng Call it with the number of Rando bytes you need. It should callback with a WordArray of random bytes
-  constructor : ( { key, rng } ) ->
-    super { key }
+  # @param {Object} version The version object to follow
+  constructor : ( { key, rng, version } ) ->
+    super { key, version }
     @rng = rng or prng.generate
     @last_salt = null
 
@@ -280,7 +282,7 @@ class Encryptor extends Base
   # @param {callback} cb Called back when the resalting completes.
   resalt : ({progress_hook}, cb) ->
     await @rng @version.salt_size, defer @salt
-    await @pbkdf2 {progress_hook, @salt}, defer @keys
+    await @kdf {progress_hook, @salt}, defer @keys
     cb()
  
   #---------------

@@ -6,7 +6,6 @@ salsa20       = require './salsa20'
 ctr           = require './ctr'
 {Concat}      = require './combine'
 {SHA512}      = require './sha512'
-{pbkdf2}      = require './pbkdf2'
 {Salsa20}     = require './salsa20'
 {Base,V}      = require './enc'
 {make_esc}    = require 'iced-error'
@@ -114,7 +113,7 @@ class Decryptor extends Base
   # @param {callback} cb Callback with a {Object} that maps
   # keytypes to {WordArrays} when done.
   generate_keys : ({progress_hook}, cb) ->
-    await @pbkdf2 { @salt, progress_hook }, defer keys
+    await @kdf { @salt, progress_hook }, defer keys
     cb keys
 
   #----------------------
