@@ -1,5 +1,6 @@
 
-{ui8a_to_buffer,buffer_to_ui8a,Scrypt} = require '../../lib/scrypt'
+{Scrypt} = require '../../lib/scrypt'
+{WordArray,ui8a_to_buffer,buffer_to_ui8a} = require '../../lib/wordarray'
 
 #====================================================================
 
@@ -91,8 +92,8 @@ exports.test_smix = (T,cb) ->
 exports.test_pbkdf2 = (T, cb) ->
   # From http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-01; Section 10
   arg = 
-    key : (new Buffer "passwd")
-    salt : (new Buffer "salt")
+    key : WordArray.from_buffer(new Buffer "passwd")
+    salt : WordArray.from_buffer(new Buffer "salt")
     c : 1
     dkLen : 64
   output = strip """
@@ -102,8 +103,8 @@ exports.test_pbkdf2 = (T, cb) ->
        7c 71 b8 45 b1 e3 0b d5 09 11 20 41 d3 a1 97 83
       """
   scrypt = new Scrypt {}
-  await scrypt.pbkdf2 arg, defer buf
-  T.equal buf.toString('hex'), output, "pbkdf2 test vector"
+  await scrypt.pbkdf2 arg, defer wa
+  T.equal wa.to_hex(), output, "pbkdf2 test vector"
   cb()
 
 #====================================================================
@@ -118,8 +119,8 @@ exports.test_scrypt = (T,cb) ->
   #
   test_vectors = [
     {
-      key : new Buffer([])
-      salt : new Buffer([])
+      key : new WordArray([]),
+      salt : new WordArray([]),
       params : { N : 16, r: 1, p : 1 }
       dkLen : 64
       output : strip """
@@ -128,8 +129,8 @@ exports.test_scrypt = (T,cb) ->
          fc d0 06 9d ed 09 48 f8 32 6a 75 3a 0f c8 1f 17
          e8 d3 e0 fb 2e 0d 36 28 cf 35 e2 0c 38 d1 89 06"""
     },{
-      key : new Buffer("pleaseletmein"), 
-      salt : new Buffer("SodiumChloride"),
+      key : WordArray.from_utf8("pleaseletmein"), 
+      salt : WordArray.from_utf8("SodiumChloride"),
       dkLen : 64,
       params : { N : 1024, r : 8, p : 1 }, # Used to be N=2^14
       output : strip """
@@ -139,8 +140,8 @@ exports.test_scrypt = (T,cb) ->
           a4 d8 d7 9c 09 29 46 63 15 2a cb 71 9d d2 25 b8"""
     },
     {
-      key : new Buffer("password"), 
-      salt : new Buffer("NaCl"),
+      key : WordArray.from_utf8("password"), 
+      salt : WordArray.from_utf8("NaCl"),
       params : { N:64, r:8, p:16},  # Used to be N=2^10
       dkLen : 64
       output : strip """
@@ -156,7 +157,7 @@ exports.test_scrypt = (T,cb) ->
   for v,i in test_vectors
     v.progress_hook = progress_hook
     scrypt = new Scrypt v.params
-    await scrypt.run v, defer buf
-    T.equal buf.toString('hex'), v.output, "test vector #{i}"
+    await scrypt.run v, defer wa 
+    T.equal wa.to_hex(), v.output, "test vector #{i}"
     T.waypoint "test vector #{i}"
   cb()

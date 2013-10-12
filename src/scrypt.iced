@@ -2,8 +2,8 @@
 {HMAC_SHA256} = require './hmac'
 {pbkdf2} = require './pbkdf2'
 {Salsa20InnerCore} = require './salsa20'
-{WordArray} = require './wordarray'
-util = require './util'
+{ui8a_to_buffer,WordArray} = require './wordarray'
+{default_delay,scrub_vec} = require './util'
 
 #====================================================================
 
@@ -34,21 +34,6 @@ le32enc = (B,w) ->
   B[2] = (w >> 16) & 0xff
   B[3] = (w >> 24) & 0xff
 
-#----------
-
-buffer_to_ui8a = (b) ->
-  ret = new Uint8Array b.length
-  for i in [0...b.length]
-    ret[i] = b.readUInt8(i)
-  ret
-
-#----------
-
-ui8a_to_buffer = (v) ->
-  ret = new Buffer v.length
-  for i in [0...v.length]
-    ret.writeUInt8(v[i], i)
-  ret
 
 #====================================================================
 
@@ -77,10 +62,8 @@ class Scrypt
   #------------
 
   pbkdf2 : ({key, salt, c, dkLen, progress_hook}, cb) ->
-    key = WordArray.from_buffer key
-    salt = WordArray.from_buffer salt
-    await pbkdf2 { key, salt, c, dkLen, @klass, progress_hook }, defer buf
-    cb buf.to_buffer()
+    await pbkdf2 { key, salt, c, dkLen, @klass, progress_hook }, defer wa
+    cb wa
 
   #------------
 
@@ -145,7 +128,7 @@ class Scrypt
         i++
 
       progress_hook? i
-      await util.default_delay 0, 0, defer()
+      await default_delay 0, 0, defer()
 
     i = 0
     while i < @N
@@ -161,7 +144,7 @@ class Scrypt
         i++
 
       progress_hook? i+@N
-      await util.default_delay 0, 0, defer()
+      await default_delay 0, 0, defer()
 
     # /* 10: B' <-- X */
     blkcpy B, X, 0, 0, lim
@@ -171,10 +154,10 @@ class Scrypt
 
   # Run Scrypt on the given key and salt to get dKLen of data out.
   #
-  # @param {Buffer} key the Passphrase or key to work on
-  # @param {Buffer} salt the random salt to prevent rainbow tables
+  # @param {WordArray} key the Passphrase or key to work on
+  # @param {WordArray} salt the random salt to prevent rainbow tables
   # @param {number} dkLen the length of data required out of the key stretcher
-  # @param {callback} cb the callback to callback when done, called with a {Buffer}
+  # @param {callback} cb the callback to callback when done, called with a {WordArray}
   #    containing the output key material bytes.
   #
   run : ({key, salt, dkLen, progress_hook}, cb) ->
@@ -190,22 +173,47 @@ class Scrypt
 
     lim = 128*@r
 
-    await @pbkdf2 { key, salt, @c, dkLen : lim*@p }, defer B
-    B = buffer_to_ui8a B
+    await @pbkdf2 { key : key.clone(), salt, @c, dkLen : lim*@p }, defer B
+    B = B.to_ui8a()
 
+    lph = (j) => (i) => progress_hook? {  i: (i + j*@N*2), what : "scrypt", total : @p*@N*2}
     for j in [0...@p]
-      lph = (i) => progress_hook? {  i: (i + j*@N*2), what : "scrypt", total : @p*@N*2}
-      await @smix { B : B.subarray(lim*j), V, XY, progress_hook : lph }, defer()
-    lph @p
+      await @smix { B : B.subarray(lim*j), V, XY, progress_hook : lph(j) }, defer()
 
-    await @pbkdf2 { key, salt : ui8a_to_buffer(B), @c, dkLen }, defer out
+    await @pbkdf2 { key, salt : WordArray.from_ui8a(B), @c, dkLen }, defer out
+    scrub_vec(B)
+    scrub_vec(XY)
+    scrub_vec(V)
+    key.scrub()
 
     cb out
 
 #====================================================================
 
+# @method scrypt
+#
+# A convenience method to make a new Scrypt object, and then run it just
+# once.
+#
+# @param {WordArray} key The secret/passphrase
+# @param {WordArray} salt Salt to add to the intput to prevent rainbow-tables
+# @param {number} r The r (memory size) parameter for scrypt [default: 8]
+# @param {number} N The N (computational factor) parameter for scrypt [default : 2^10]
+# @param {number} p The p (parallellism) factor for scrypt [default : 1]
+# @param {number} c The number of times to run PBKDF2 [default: 1]
+# @param {Class} klass The PRF to use as a subroutine in PBKDF2 [default : HMAC-SHA256]
+# @param {function} progress_hook A Standard progress hook
+# @param {number} dkLen the length of the derived key.
+# @param {calllback} cb Calls back with a {WordArray} of key-material
+#
+scrypt = ({key, salt, r, N, p, c, klass, progress_hook, dkLen}, cb) ->
+  eng = new Scrypt { r, N, p, c, klass }
+  await eng.run { key, salt, progress_hook, dkLen }, defer wa
+  cb wa
+
+#====================================================================
+
 exports.Scrypt = Scrypt
-exports.buffer_to_ui8a = buffer_to_ui8a
-exports.ui8a_to_buffer = ui8a_to_buffer
+exports.scrypt = scrypt
 
 #====================================================================

@@ -9,6 +9,22 @@ util = require './util'
 
 #=======================================================================
 
+buffer_to_ui8a = (b) ->
+  ret = new Uint8Array b.length
+  for i in [0...b.length]
+    ret[i] = b.readUInt8(i)
+  ret
+
+#----------
+
+ui8a_to_buffer = (v) ->
+  ret = new Buffer v.length
+  for i in [0...v.length]
+    ret.writeUInt8(v[i], i)
+  ret
+
+#=======================================================================
+
 exports.WordArray = class WordArray
 
   # Initializes a newly created word array.
@@ -101,7 +117,7 @@ exports.WordArray = class WordArray
 
   to_utf8 : () -> @to_buffer().toString 'utf8'
   to_hex : () -> @to_buffer().toString 'hex'
-  to_uint8_array : () -> new Uint8Array @to_buffer()
+  to_ui8a : () -> buffer_to_ui8a @to_buffer()
 
   #--------------
   
@@ -144,7 +160,8 @@ exports.WordArray = class WordArray
   @from_utf8 : (s) -> WordArray.from_buffer new Buffer(s, 'utf8')
   @from_utf8_le : (s) -> WordArray.from_buffer_le new Buffer(s, 'utf8')
   @from_hex : (s) -> WordArray.from_buffer new Buffer(s, 'hex')
-  @from_hex_le = (s) -> WordArray.from_buffer_le new Buffer(s, 'hex')
+  @from_hex_le : (s) -> WordArray.from_buffer_le new Buffer(s, 'hex')
+  @from_ui8a : (v) -> WordArray.from_buffer ui8a_to_buffer(v)
   
   #--------------
 
@@ -265,6 +282,11 @@ exports.X64WordArray = class X64WordArray
 
   clone : -> 
     new X64WordArray (w.clone() for w in @words), @sigBytes
+
+#=======================================================================
+
+exports.buffer_to_ui8a = buffer_to_ui8a
+exports.ui8a_to_buffer = ui8a_to_buffer
 
 #=======================================================================
 
