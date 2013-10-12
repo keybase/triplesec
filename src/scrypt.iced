@@ -45,6 +45,7 @@ class Scrypt
 
   # @param {Uint32Array} B that is 16 words long
   salsa20_8 : (B) ->
+    console.log B
     X = @s20ic._core B
     (B[i] += x for x,i in X)
 
@@ -208,5 +209,6 @@ scrypt = ({key, salt, r, N, p, c, klass, progress_hook, dkLen}, cb) ->
 
 exports.Scrypt = Scrypt
 exports.scrypt = scrypt
+exports.v_endian_reverse = v_endian_reverse
 
 #====================================================================

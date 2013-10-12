@@ -1,5 +1,5 @@
 
-{Scrypt} = require '../../lib/scrypt'
+{v_endian_reverse,Scrypt} = require '../../lib/scrypt'
 {WordArray,ui8a_to_buffer,buffer_to_ui8a} = require '../../lib/wordarray'
 
 #====================================================================
@@ -22,8 +22,11 @@ exports.test_salsa20 = (T,cb) ->
    b4393168 e3c9e6bc fe6bc5b7 a06d96ba
    e424cc10 2c91745c 24ad673d c7618f81"""
   scrypt = new Scrypt {}
-  scrypt.salsa20_8(input)
-  T.equal ui8a_to_hex(input), output, "salsa20 subroutine works"
+  wa = new Int32Array (WordArray.from_ui8a input).words
+  v_endian_reverse wa
+  scrypt.salsa20_8 wa
+  v_endian_reverse wa
+  T.equal (new WordArray(wa)).to_hex(), output, "salsa20 subroutine works"
   cb()
 
 #====================================================================
