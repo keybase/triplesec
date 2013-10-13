@@ -165,10 +165,22 @@ exports.test_scrypt = (T,cb) ->
           9f ed 1f df a6 0c 56 72 c0 5a ce 9a b2 f2 40 fe
           a7 9a 44 7b 85 9f 74 78 d7 b4 a1 c1 59 65 cf 71
           64 06 99 75 5e a3 75 aa 8e 32 17 d7 41 9d 12 00"""
+    },
+    {
+      key : WordArray.from_utf8("blah3blah4"),
+      salt : WordArray.from_utf8("saltandpepper"),
+      params : { N : 16384, r : 8, p : 1 },
+      dkLen : 64
+      output : strip """
+          41 16 d2 b4 fd d5 2a a5 d2 53 9b 85 6f c9 f2 4c
+          18 ca ed f1 92 ee 13 af b2 82 80 11 f4 90 f4 57
+          0c 8f e2 eb 80 04 21 c1 13 f1 51 11 ec 85 44 c3
+          83 14 0a 4a ad 85 31 33 11 63 bd ee e9 0d 56 62
+      """
     }
   ]
   progress_hook = (obj) ->
-    if obj.what is 'scrypt'
+    if obj.what is 'scrypt' and ((obj.i * 8) % obj.total) is 0
       T.waypoint "scrypt: #{obj.i} / #{obj.total}"
   for v,i in test_vectors
     v.progress_hook = progress_hook
