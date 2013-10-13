@@ -1,6 +1,7 @@
 
 mods =  
   scrypt : require '../files/scrypt.iced'
+  scrypt_xor : require '../files/scrypt_xor.iced'
   wordarray : require '../files/wordarray.iced'
   hmac : require '../files/hmac.iced'
   aes : require '../files/aes.iced'
