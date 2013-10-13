@@ -96,7 +96,7 @@ exports.test_smix = (T,cb) ->
        ac 0b 9c f1 be 2b ff ca 30 0d 01 ee 38 76 19 c4
        ae 12 fd 44 38 f2 03 a0 e4 e1 c4 7e c3 14 86 1f
        4e 90 87 cb 33 39 6a 68 73 e8 f9 d2 53 9a 4b 8e"""
-  scrypt = new Scrypt { r : 1, p : 1, N : 16 }
+  scrypt = new Scrypt { r : 1, p : 1, N : 4 }
   XY = new Int32Array(64*scrypt.r)
   V = new Int32Array(32*scrypt.r*scrypt.N)
   await scrypt.smix { B : input, V, XY }, defer()
@@ -137,7 +137,7 @@ exports.test_scrypt = (T,cb) ->
     {
       key : new WordArray([]),
       salt : new WordArray([]),
-      params : { N : 16, r: 1, p : 1 }
+      params : { N : 4, r: 1, p : 1 }
       dkLen : 64
       output : strip """
          77 d6 57 62 38 65 7b 20 3b 19 ca 42 c1 8a 04 97
@@ -148,7 +148,7 @@ exports.test_scrypt = (T,cb) ->
       key : WordArray.from_utf8("pleaseletmein"), 
       salt : WordArray.from_utf8("SodiumChloride"),
       dkLen : 64,
-      params : { N : 1024, r : 8, p : 1 }, # Used to be N=2^14
+      params : { N : 10, r : 8, p : 1 }, # Used to be N=2^14
       output : strip """
           54 17 36 87 d2 65 e4 32 26 bd 91 4b 01 52 67 e2
           fd d4 10 8a a0 59 37 fb 54 9e ce b0 c2 76 a2 85
@@ -158,7 +158,7 @@ exports.test_scrypt = (T,cb) ->
     {
       key : WordArray.from_utf8("password"), 
       salt : WordArray.from_utf8("NaCl"),
-      params : { N:64, r:8, p:16},  # Used to be N=2^10
+      params : { N:6, r:8, p:16},  # Used to be N=2^10
       dkLen : 64
       output : strip """
           7e 9c 6d 04 bd 24 20 13 da aa ce 3a d2 38 33 da
@@ -169,7 +169,7 @@ exports.test_scrypt = (T,cb) ->
     {
       key : WordArray.from_utf8("blah3blah4"),
       salt : WordArray.from_utf8("saltandpepper"),
-      params : { N : 16384, r : 8, p : 1 },
+      params : { N : 14, r : 8, p : 1 },
       dkLen : 64
       output : strip """
           41 16 d2 b4 fd d5 2a a5 d2 53 9b 85 6f c9 f2 4c

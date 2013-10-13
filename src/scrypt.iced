@@ -32,8 +32,8 @@ class Scrypt
 
   #------------
 
-  constructor : ({@N,@r,@p,@c,@klass}) ->
-    @N or= Math.pow(2,8)
+  constructor : ({N,@r,@p,@c,@klass}) ->
+    @N or= (1 << (N or 10))
     @r or= 16
     @p or= 2
     @c or= 1 # the number of times to run PBKDF2
@@ -51,8 +51,8 @@ class Scrypt
 
   #------------
 
-  pbkdf2 : ({key, salt, c, dkLen, progress_hook}, cb) ->
-    await pbkdf2 { key, salt, c, dkLen, @klass, progress_hook }, defer wa
+  pbkdf2 : ({key, salt, dkLen, progress_hook}, cb) ->
+    await pbkdf2 { key, salt, @c, dkLen, @klass, progress_hook }, defer wa
     cb wa
 
   #------------
@@ -162,7 +162,7 @@ class Scrypt
     XY = new Int32Array(64*@r)
     V = new Int32Array(32*@r*@N)
 
-    await @pbkdf2 { key : key.clone(), salt, @c, dkLen : 128*@r*@p }, defer B
+    await @pbkdf2 { key : key.clone(), salt, dkLen : 128*@r*@p }, defer B
     B = new Int32Array B.words
 
     v_endian_reverse B
@@ -173,7 +173,7 @@ class Scrypt
 
     v_endian_reverse B
 
-    await @pbkdf2 { key, salt : WordArray.from_i32a(B), @c, dkLen }, defer out
+    await @pbkdf2 { key, salt : WordArray.from_i32a(B), dkLen }, defer out
     scrub_vec(B)
     scrub_vec(XY)
     scrub_vec(V)
