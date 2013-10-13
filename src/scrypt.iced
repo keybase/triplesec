@@ -45,9 +45,9 @@ class Scrypt
 
   # @param {Uint32Array} B that is 16 words long
   salsa20_8 : (B) ->
-    console.log B
     X = @s20ic._core B
     (B[i] += x for x,i in X)
+    null
 
   #------------
 
@@ -78,6 +78,7 @@ class Scrypt
       blkcpy B, Y, i, (i*2), 1
     for i in [0...@r]
       blkcpy B, Y, (i+@r), (i*2+1), 1
+    null
 
   #------------
 
@@ -161,20 +162,18 @@ class Scrypt
     XY = new Int32Array(64*@r)
     V = new Int32Array(32*@r*@N)
 
-    lim = 128*@r
-
-    await @pbkdf2 { key : key.clone(), salt, @c, dkLen : lim*@p }, defer B
-    B = B.words
+    await @pbkdf2 { key : key.clone(), salt, @c, dkLen : 128*@r*@p }, defer B
+    B = new Int32Array B.words
 
     v_endian_reverse B
 
     lph = (j) => (i) => progress_hook? {  i: (i + j*@N*2), what : "scrypt", total : @p*@N*2}
     for j in [0...@p]
-      await @smix { B : B.subarray(lim*j), V, XY, progress_hook : lph(j) }, defer()
+      await @smix { B : B.subarray(32*@r*j), V, XY, progress_hook : lph(j) }, defer()
 
     v_endian_reverse B
 
-    await @pbkdf2 { key, salt : WordArray.from_ui8a(B), @c, dkLen }, defer out
+    await @pbkdf2 { key, salt : WordArray.from_i32a(B), @c, dkLen }, defer out
     scrub_vec(B)
     scrub_vec(XY)
     scrub_vec(V)

@@ -8,12 +8,27 @@ strip = (x) -> x.split(/\s+/).join("")
 hex_to_ui8a = (x) -> buffer_to_ui8a(new Buffer (strip(x)), 'hex')
 ui8a_to_hex = (v) -> ui8a_to_buffer(v).toString 'hex'
 
+#--------------------
+
+hex_to_i32a_le = (x) -> 
+  wa = WordArray.from_hex strip x
+  ia = new Int32Array wa.words
+  v_endian_reverse ia
+  ia
+
+#--------------------
+
+i32a_le_to_hex = (v) ->
+  v_endian_reverse v
+  (new WordArray(v)).to_hex()
+
 #====================================================================
 
 exports.test_salsa20 = (T,cb) ->
 
   # From http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-01; Section 7
-  input = hex_to_ui8a """7e879a21 4f3ec986 7ca940e6 41718f26
+  input = hex_to_i32a_le """
+   7e879a21 4f3ec986 7ca940e6 41718f26
    baee555b 8c61c1b5 0df84611 6dcd3b1d
    ee24f319 df9b3d85 14121e4b 5ac5aa32
    76021d29 09c74829 edebc68d b8b8c25e"""
@@ -22,11 +37,8 @@ exports.test_salsa20 = (T,cb) ->
    b4393168 e3c9e6bc fe6bc5b7 a06d96ba
    e424cc10 2c91745c 24ad673d c7618f81"""
   scrypt = new Scrypt {}
-  wa = new Int32Array (WordArray.from_ui8a input).words
-  v_endian_reverse wa
-  scrypt.salsa20_8 wa
-  v_endian_reverse wa
-  T.equal (new WordArray(wa)).to_hex(), output, "salsa20 subroutine works"
+  scrypt.salsa20_8 input
+  T.equal i32a_le_to_hex(input), output, "salsa20 subroutine works"
   cb()
 
 #====================================================================
@@ -34,7 +46,8 @@ exports.test_salsa20 = (T,cb) ->
 exports.test_blockmix = (T,cb) ->
 
   # From http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-01; Section 8
-  input = hex_to_ui8a """f7 ce 0b 65 3d 2d 72 a4 10 8c f5 ab e9 12 ff dd
+  input = hex_to_i32a_le """
+           f7 ce 0b 65 3d 2d 72 a4 10 8c f5 ab e9 12 ff dd
            77 76 16 db bb 27 a7 0e 82 04 f3 ae 2d 0f 6f ad
            89 f6 8f 48 11 d1 e8 7b cc 3b d7 40 0a 9f fd 29
            09 4f 01 84 63 95 74 f3 9a e5 a1 31 52 17 bc d7
@@ -55,9 +68,9 @@ exports.test_blockmix = (T,cb) ->
            5d 2a 22 58 77 d5 ed f5 84 2c b9 f1 4e ef e4 25"""
 
   scrypt = new Scrypt { r : 1, p : 1, N : 1}
-  Y = new Uint8Array(128*scrypt.r)
+  Y = new Int32Array(32*scrypt.r)
   scrypt.blockmix_salsa8 input, Y
-  T.equal ui8a_to_hex(input), output, "blockmix worked as advertised"
+  T.equal i32a_le_to_hex(input), output, "blockmix worked as advertised"
   cb()
 
 #====================================================================
@@ -65,7 +78,7 @@ exports.test_blockmix = (T,cb) ->
 exports.test_smix = (T,cb) ->
 
   # From http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-01; Section 9
-  input = hex_to_ui8a """
+  input = hex_to_i32a_le """
        f7 ce 0b 65 3d 2d 72 a4 10 8c f5 ab e9 12 ff dd
        77 76 16 db bb 27 a7 0e 82 04 f3 ae 2d 0f 6f ad
        89 f6 8f 48 11 d1 e8 7b cc 3b d7 40 0a 9f fd 29
@@ -84,10 +97,10 @@ exports.test_smix = (T,cb) ->
        ae 12 fd 44 38 f2 03 a0 e4 e1 c4 7e c3 14 86 1f
        4e 90 87 cb 33 39 6a 68 73 e8 f9 d2 53 9a 4b 8e"""
   scrypt = new Scrypt { r : 1, p : 1, N : 16 }
-  XY = new Uint8Array(256*scrypt.r)
-  V = new Uint8Array(128*scrypt.r*scrypt.N)
+  XY = new Int32Array(64*scrypt.r)
+  V = new Int32Array(32*scrypt.r*scrypt.N)
   await scrypt.smix { B : input, V, XY }, defer()
-  T.equal ui8a_to_hex(input), output, "smix worked as advertised"
+  T.equal i32a_le_to_hex(input), output, "smix worked as advertised"
   cb()
 
 #====================================================================

@@ -162,6 +162,7 @@ exports.WordArray = class WordArray
   @from_hex : (s) -> WordArray.from_buffer new Buffer(s, 'hex')
   @from_hex_le : (s) -> WordArray.from_buffer_le new Buffer(s, 'hex')
   @from_ui8a : (v) -> WordArray.from_buffer ui8a_to_buffer(v)
+  @from_i32a : (v) -> new WordArray(Array.apply([], v))
   
   #--------------
 
