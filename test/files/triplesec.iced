@@ -22,10 +22,10 @@ test_vectors = [
 run_test = (T, d, i, cb) ->
   orig = new Buffer d.data
   await encrypt d, defer err, ct
-  T.assert not err?
+  T.no_error err
   d.data = ct
   await decrypt d, defer err, pt
-  T.assert not err?
+  T.no_error err
   T.equal (pt.toString 'hex'), (orig.toString 'hex'), "test vector #{i}"
 
   ct_orig_hex = ct.toString 'hex'
@@ -35,7 +35,7 @@ run_test = (T, d, i, cb) ->
 
   T.assert (ct_orig_hex isnt ct_corrupt_hex), "failed to corrupt vector #{i}"
   await decrypt d, defer err, res
-  T.assert err?
+  T.assert err?, "should have failed"
 
   if T.is_ok()
     T.waypoint "test vector #{i}"

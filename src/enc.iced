@@ -7,6 +7,7 @@ ctr           = require './ctr'
 {XOR,Concat}  = require './combine'
 {SHA512}      = require './sha512'
 {PBKDF2}      = require './pbkdf2'
+{Scrypt}      = require './scrypt'
 util          = require './util'
 prng          = require './prng'
 {make_esc}    = require 'iced-error'
@@ -17,13 +18,25 @@ prng          = require './prng'
 V = 
   "1" : 
     header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
-    pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
     salt_size     : 8                  # 8 bytes of salt is good enough!
     kdf           :                    # The key derivation...
       klass       : PBKDF2             #   algorithm klass
       opts        :                    #   ..and options
         c         : 1024               #   The number of iterations
         klass     : XOR                #   The HMAC to use as a subroutine
+    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+  "2" : 
+    header        : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
+    salt_size     : 8                  # 8 bytes of salt is good enough!
+    pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
+    kdf           :                    # The key derivation...
+      klass       : Scrypt             #   algorithm klass
+      opts        :                    #   ..and options
+        c         : 64                 #   The number of iterations
+        klass     : XOR                #   The HMAC to use as a subroutine
+        N         : 11                 #   log_2 of the work factor
+        r         : 8                  #   The memory use factor
+        p         : 1                  #   the parallelization factor
     hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
 
 #========================================================================
@@ -340,8 +353,8 @@ class Encryptor extends Base
 # @param {callback} cb Callback with an (err,res) pair. The err is an Error object
 #   (if encountered), and res is a Buffer object (on success).
 #
-encrypt = ({ key, data, rng, progress_hook}, cb) ->
-  enc = new Encryptor { key, rng }
+encrypt = ({ key, data, rng, progress_hook, version}, cb) ->
+  enc = new Encryptor { key, rng, version }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()
   cb err, ret

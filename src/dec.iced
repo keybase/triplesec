@@ -18,12 +18,6 @@ class Decryptor extends Base
 
   #----------------------
 
-  # @property {Object} version Right now we only support version 1 of the algorithm
-  # (since there is only one version)
-  version : V[1]
-
-  #----------------------
-
   # @param {Buffer} key The input key to use for decryption. Hopefully it's the same
   # key that was used for encryption! If not, we'll get a signature failure.
   constructor : ( { key } ) ->
@@ -41,8 +35,10 @@ class Decryptor extends Base
   read_header : (cb) ->
     err = if not (wa = @ct.unshift 2)?
       new Error "Ciphertext underrun in header"
-    else if not (wa.equal new WordArray @version.header)
-      new Error "Bad header"
+    else if not (@version = V[wa.words[1]])?
+      new Error "bad header; couldn't find a good version (got #{wa.words[1]})"
+    else if (wa.words[0] isnt @version.header[0]) 
+      new Error "Bad header: unrecognized magic value"
     else null
     cb err
 
