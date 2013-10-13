@@ -30,7 +30,8 @@ run_test = (T, d, i, cb) ->
 
   ct_orig_hex = ct.toString 'hex'
   p = ct.length - 10
-  ct.writeUInt8(ct.readUInt8(p) + 1, p);
+  # Flip a bit in this byte
+  ct.writeUInt8((ct.readUInt8(p) ^ 0x8), p);
   ct_corrupt_hex = ct.toString 'hex'
 
   T.assert (ct_orig_hex isnt ct_corrupt_hex), "failed to corrupt vector #{i}"
