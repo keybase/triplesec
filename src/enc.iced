@@ -27,7 +27,7 @@ V =
     hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
   "2" : 
     header        : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
-    salt_size     : 8                  # 8 bytes of salt is good enough!
+    salt_size     : 16                 # 16 bytes of salt for various uses
     pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
     kdf           :                    # The key derivation...
       klass       : Scrypt             #   algorithm klass
@@ -69,7 +69,7 @@ class Base
   # @param {callback} cb Callback with an {Object} after completion.
   #   The object will map cipher-name to a {WordArray} that is the generated key.
   #
-  kdf : ({salt, progress_hook}, cb) ->
+  kdf : ({salt, extra_keymaterial, progress_hook}, cb) ->
     # Check the cache first
     salt_hex = salt.to_hex()
 
@@ -81,7 +81,8 @@ class Base
         aes     : AES.keySize
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
-      tot = 0
+
+      tot = extra_keymaterial or 0
       (tot += v for k,v of lens)
 
       # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
@@ -99,6 +100,7 @@ class Base
         end = i + len
         keys[k] = new WordArray raw.words[i...end]
         i = end
+      keys.extra = raw.words[end...]
       @derived_keys[salt_hex] = keys
 
     cb keys
@@ -293,9 +295,9 @@ class Encryptor extends Base
   #
   # @param {Function} progress_hook A standard progress hook.
   # @param {callback} cb Called back when the resalting completes.
-  resalt : ({progress_hook}, cb) ->
+  resalt : ({extra_keymaterial, progress_hook}, cb) ->
     await @rng @version.salt_size, defer @salt
-    await @kdf {progress_hook, @salt}, defer @keys
+    await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
     cb()
  
   #---------------
@@ -312,16 +314,18 @@ class Encryptor extends Base
   #
   # @param {Buffer} data the data to encrypt 
   # @param {Function} progress_hook Call this to update the U/I about progress
+  # @param {number} extra_keymaterial The number of extra bytes to generate 
+  #    along with the crypto keys (default : 0)
   # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
   #
-  run : ( { data, progress_hook }, cb ) ->
+  run : ( { data, extra_keymaterial, progress_hook }, cb ) ->
 
     # esc = "Error Short-Circuiter".  In the case of an error,
     # we'll forget about the rest of the function and just call back
     # the outer-level cb with the error.  If no error, then proceed as normal.
     esc = make_esc cb, "Encryptor::run"
 
-    await @resalt { progress_hook }, defer() unless @salt?
+    await @resalt { extra_keymaterial, progress_hook }, defer() unless @salt?
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
     await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
