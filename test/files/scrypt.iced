@@ -131,7 +131,9 @@ exports.test_scrypt = (T,cb) ->
   #
   # BUT, note we made a change and lowered the constants here, lest we
   # take forever to run the regression tests.  The new data was collected
-  # with the Reference C Implementation, Version 1.1.6
+  # with the Reference C Implementation, Version 1.1.6.
+  #
+  # We've inlcuded a reference checkin in this repository.
   #
   test_vectors = [
     {
@@ -176,6 +178,18 @@ exports.test_scrypt = (T,cb) ->
           18 ca ed f1 92 ee 13 af b2 82 80 11 f4 90 f4 57
           0c 8f e2 eb 80 04 21 c1 13 f1 51 11 ec 85 44 c3
           83 14 0a 4a ad 85 31 33 11 63 bd ee e9 0d 56 62
+      """
+    },
+    {
+      key : WordArray.from_utf8('password'),
+      salt : WordArray.from_utf8('NaCl'),
+      params : { N : 6, r : 8, p : 16, c : 256 },
+      dkLen : 64,
+      output : strip """
+          e0 f4 b0 56 83 1b 35 bf a2 fd 58 e8 e7 4e 45 95
+          cd 6b 3c 9d 88 30 73 96 45 bf ff 78 31 ed 37 fb
+          da 2f 15 cd f4 4a c2 a9 0c f5 29 5d 3c 39 55 60
+          2d 1c 0b ea 76 58 ee 65 c5 2a e6 1c fc 65 fe 21
       """
     }
   ]
