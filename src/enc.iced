@@ -49,9 +49,11 @@ class Base
   #---------------
 
   # @param {WordArray} key The private encryption key  
-  constructor : ( { key, @version } ) ->
+  constructor : ( { key, version } ) ->
+    @version = V[if version? then version else 1]
+    throw new Error "unknown version: #{version}" unless @version?
+
     @key = WordArray.from_buffer key
-    @version or= V[1]
 
     # A map from Salt -> KeySets
     @derived_keys = {}
@@ -103,6 +105,9 @@ class Base
       keys.extra = raw.words[end...]
       @derived_keys[salt_hex] = keys
 
+    console.log "KDF input: #{salt.to_hex()}"
+    console.log @key.to_hex()
+    console.log "KDF output: #{raw.to_hex()}"
     cb keys
  
   #---------------

@@ -93,7 +93,7 @@ class Decryptor extends Base
   # an `Error` if there was a problem.
   #
   read_salt : (cb) ->
-    err = if not (@salt = @ct.unshift 2)?
+    err = if not (@salt = @ct.unshift (@version.salt_size/4))?
       new Error "Ciphertext underrrun in read_salt"
     else
       null
