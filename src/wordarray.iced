@@ -120,6 +120,16 @@ exports.WordArray = class WordArray
   to_ui8a : () -> buffer_to_ui8a @to_buffer()
 
   #--------------
+
+  # Be somewhat flexible. Try either a Buffer or maybe it's already
+  # a word array
+  @alloc : (b) ->
+    if Buffer.isBuffer(b) then WordArray.from_buffer b
+    else if (typeof(b) is 'obj') and (b instanceof WordArray) then b
+    else if typeof(b) is 'string' then WordArray.from_hex b
+    else null
+
+  #--------------
   
   @from_buffer : (b) ->
     words = []

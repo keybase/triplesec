@@ -109,9 +109,19 @@ class Base
  
   #---------------
 
+  # Set or change the key on this encryptor, causing a scrubbing of the
+  # old state if it was previously set.
+  #
+  # @param {Buffer} key the Passphrase/key as a standard buffer object.
+  #
   set_key : (key) ->
-    @scrub()
-    @key = if key then WordArray.from_buffer(key) else null
+    if key?
+      wakey = WordArray.from_buffer(key) 
+      if not @key or not @key.equal wakey
+        @scrub()
+        @key = wakey
+    else
+      @scrub()
     
   #---------------
 
@@ -308,7 +318,7 @@ class Encryptor extends Base
   #     and can be passed in.  If not provided, then we 
   # @param {callback} cb Called back when the resalting completes.
   resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
-    if salt? then @salt = WordArray.from_buffer salt
+    if salt? then @salt = WordArray.alloc salt
     else await @rng @version.salt_size, defer @salt
     await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
     cb()
