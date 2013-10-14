@@ -34,7 +34,7 @@ V =
       opts        :                    #   ..and options
         c         : 64                 #   The number of iterations
         klass     : XOR                #   The HMAC to use as a subroutine
-        N         : 11                 #   log_2 of the work factor
+        N         : 12                 #   log_2 of the work factor
         r         : 8                  #   The memory use factor
         p         : 1                  #   the parallelization factor
     hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
@@ -105,9 +105,6 @@ class Base
       keys.extra = raw.words[end...]
       @derived_keys[salt_hex] = keys
 
-    console.log "KDF input: #{salt.to_hex()}"
-    console.log @key.to_hex()
-    console.log "KDF output: #{raw.to_hex()}"
     cb keys
  
   #---------------

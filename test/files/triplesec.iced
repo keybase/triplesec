@@ -1,4 +1,4 @@
-{Encryptor,encrypt} = require '../../lib/enc'
+{V,Encryptor,encrypt} = require '../../lib/enc'
 {decrypt} = require '../../lib/dec'
 spec = require '../data/triplesec_spec'
 {WordArray} = require '../../lib/wordarray'
@@ -19,8 +19,9 @@ test_vectors = [
 
 #-------------------------------------------------
 
-run_test = (T, d, i, cb) ->
+run_test = (T, d, i, v, cb) ->
   orig = new Buffer d.data
+  d.version = v
   await encrypt d, defer err, ct
   T.no_error err
   d.data = ct
@@ -39,21 +40,23 @@ run_test = (T, d, i, cb) ->
   T.assert err?, "should have failed"
 
   if T.is_ok()
-    T.waypoint "test vector #{i}"
+    T.waypoint "test vector #{i} (version #{v})"
   cb()
 
 #-------------------------------------------------
 
 
 exports.run_test_vectors = (T,cb) ->
-  for v,i in test_vectors
-    await run_test T, v, i, defer()
+  for d,i in test_vectors
+    for version, vobj of V
+      await run_test T, d, i, version, defer()
   cb()
 
 #-------------------------------------------------
 
-exports.check_randomness = (T, cb) ->
+check_randomness = (T, version, cb) ->
   tv = test_vectors[0]
+  tv.version = version
   enc = new Encryptor tv
   found = {}
   for i in [0...100]
@@ -65,6 +68,12 @@ exports.check_randomness = (T, cb) ->
     else
       found[ct] = true
   cb()
+
+#-------------------------------------------------
+
+for version, vobj of V 
+  exports["check_randomness_v#{version}"] = (T, cb) ->
+    check_randomness T, version, cb
   
 #-------------------------------------------------
 
@@ -95,6 +104,7 @@ check_spec = (T,v,i,cb) ->
   d = 
     key : new Buffer v.key, 'hex'
     data : new Buffer v.pt, 'hex'
+    version : v.version
   d.rng = (n,cb) -> rng.gen(n,cb)
   await encrypt d, defer err, ct
   T.assert not err?
