@@ -53,7 +53,7 @@ class Base
     @version = V[if version? then version else 1]
     throw new Error "unknown version: #{version}" unless @version?
 
-    @key = WordArray.from_buffer key
+    @set_key key
 
     # A map from Salt -> KeySets
     @derived_keys = {}
@@ -107,6 +107,12 @@ class Base
 
     cb keys
  
+  #---------------
+
+  set_key : (key) ->
+    @scrub()
+    @jkey = if key then WordArray.from_buffer(key) else null
+
   #---------------
 
   # @private
@@ -201,6 +207,8 @@ class Base
     for salt,key_ring of @derived_keys
       for key in key_ring
         key.scrub()
+    @derived_keys = {}
+    @key = null
 
 #========================================================================
 
