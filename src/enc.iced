@@ -308,7 +308,7 @@ class Encryptor extends Base
   #     and can be passed in.  If not provided, then we 
   # @param {callback} cb Called back when the resalting completes.
   resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
-    if salt? then @salt = salt
+    if salt? then @salt = WordArray.from_buffer salt
     else await @rng @version.salt_size, defer @salt
     await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
     cb()
