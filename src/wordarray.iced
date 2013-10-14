@@ -125,7 +125,7 @@ exports.WordArray = class WordArray
   # a word array
   @alloc : (b) ->
     if Buffer.isBuffer(b) then WordArray.from_buffer b
-    else if (typeof(b) is 'obj') and (b instanceof WordArray) then b
+    else if (typeof(b) is 'object') and (b instanceof WordArray) then b
     else if typeof(b) is 'string' then WordArray.from_hex b
     else null
 
