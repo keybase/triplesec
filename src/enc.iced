@@ -102,11 +102,11 @@ class Base
         end = i + len
         keys[k] = new WordArray raw.words[i...end]
         i = end
-      keys.extra = raw.words[end...]
+      keys.extra = (new WordArray raw.words[end...]).to_buffer()
       @derived_keys[salt_hex] = keys
 
     cb keys
- 
+    
   #---------------
 
   # Set or change the key on this encryptor, causing a scrubbing of the
@@ -321,7 +321,7 @@ class Encryptor extends Base
     if salt? then @salt = WordArray.alloc salt
     else await @rng @version.salt_size, defer @salt
     await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
-    cb()
+    cb @keys
  
   #---------------
 
