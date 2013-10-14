@@ -10,6 +10,7 @@
 blkcpy = (D,S,d_offset,s_offset,len) -> 
   n = 0x10
   D.set(S.subarray(n*s_offset, n*(s_offset + len)), n*d_offset)
+  true
 
 #----------
 
@@ -25,6 +26,7 @@ blkxor = (D,S,s_offset,len) ->
 v_endian_reverse = (v) ->
   for e,i in v
     v[i] = endian_reverse e
+  true
 
 #====================================================================
 
@@ -47,7 +49,7 @@ class Scrypt
   salsa20_8 : (B) ->
     X = @s20ic._core B
     (B[i] += x for x,i in X)
-    null
+    true
 
   #------------
 
@@ -78,21 +80,7 @@ class Scrypt
       blkcpy B, Y, i, (i*2), 1
     for i in [0...@r]
       blkcpy B, Y, (i+@r), (i*2+1), 1
-    null
-
-  #------------
-
-  # Return the result of parsing B as a 64-bit little-endian integer
-  # modulo @N (since we can't fit it into a 32-bit integer).
-  #
-  # Let's say we can read B as 2 subsequent uint32s --- x, y
-  # Then the desired result is (x + y*2^32)%N.  But of course
-  # 2^32%N is 0, so we can just throw that half out. So x%N is good
-  # enough.
-  #
-  # @param {Uint8Array} B An array to ready 8 bytes out of.
-  # @return {Number} a Uint32 % (N) that's the integer we need
-  integerify : (B) -> le32dec(B) & (@N - 1)
+    true
 
   #------------
 
@@ -126,6 +114,7 @@ class Scrypt
       stop = Math.min(@N, i+128)
 
       while i < stop
+        # This isntead of an explicit "integerify"
         j = fixup_uint32(X[0x10*(lim-1)]) & (@N - 1)
 
         # /* 8: X <-- H(X \xor V_j) */
