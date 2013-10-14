@@ -111,8 +111,8 @@ class Base
 
   set_key : (key) ->
     @scrub()
-    @jkey = if key then WordArray.from_buffer(key) else null
-
+    @key = if key then WordArray.from_buffer(key) else null
+    
   #---------------
 
   # @private
@@ -203,10 +203,11 @@ class Base
   # Scrub all internal state that may be sensitive.  Use it after you're done
   # with the Encryptor.
   scrub : () ->
-    @key.scrub()
-    for salt,key_ring of @derived_keys
-      for key in key_ring
-        key.scrub()
+    @key.scrub() if @key?
+    if @derived_keys?
+      for salt,key_ring of @derived_keys
+        for key in key_ring
+          key.scrub()
     @derived_keys = {}
     @key = null
 
