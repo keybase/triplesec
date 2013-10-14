@@ -56,6 +56,7 @@ class PBKDF2
         i++
       progress_hook i
       await util.default_delay 0, 0, defer()
+      null
     progress_hook i
     cb ret
 

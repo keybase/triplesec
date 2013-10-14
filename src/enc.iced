@@ -267,7 +267,6 @@ class Encryptor extends Base
   constructor : ( { key, rng, version } ) ->
     super { key, version }
     @rng = rng or prng.generate
-    @last_salt = null
 
   #---------------
 
@@ -296,9 +295,12 @@ class Encryptor extends Base
   # same salt.
   #
   # @param {Function} progress_hook A standard progress hook.
+  # @param {Buffer} salt The optional salt to provide, if it's deterministic
+  #     and can be passed in.  If not provided, then we 
   # @param {callback} cb Called back when the resalting completes.
-  resalt : ({extra_keymaterial, progress_hook}, cb) ->
-    await @rng @version.salt_size, defer @salt
+  resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
+    if salt? then @salt = salt
+    else await @rng @version.salt_size, defer @salt
     await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
     cb()
  
@@ -315,19 +317,22 @@ class Encryptor extends Base
   #  1. MAC with (HMAC-SHA512 || HMAC-SHA3)
   #
   # @param {Buffer} data the data to encrypt 
+  # @param {Buffer} salt The optional salt to provide, if it's deterministic
+  #     and can be passed in.  If not provided, then we 
   # @param {Function} progress_hook Call this to update the U/I about progress
   # @param {number} extra_keymaterial The number of extra bytes to generate 
   #    along with the crypto keys (default : 0)
   # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
   #
-  run : ( { data, extra_keymaterial, progress_hook }, cb ) ->
+  run : ( { data, salt, extra_keymaterial, progress_hook }, cb ) ->
 
     # esc = "Error Short-Circuiter".  In the case of an error,
     # we'll forget about the rest of the function and just call back
     # the outer-level cb with the error.  If no error, then proceed as normal.
     esc = make_esc cb, "Encryptor::run"
 
-    await @resalt { extra_keymaterial, progress_hook }, defer() unless @salt?
+    if salt? or not @salt?
+      await @resalt { salt, extra_keymaterial, progress_hook }, defer() 
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
     await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
