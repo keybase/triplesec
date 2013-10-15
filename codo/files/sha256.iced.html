@@ -15,7 +15,7 @@
     &raquo;
     <a href='../class_index.html' title='Index'>Index</a>
     &raquo;
-    <span class='title'>enc.iced</span>
+    <span class='title'>sha256.iced</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -106,7 +106,7 @@
     <div id='content'>
       <h1>
         File:
-        enc.iced
+        sha256.iced
       </h1>
       <table class='box'>
         <tr>
@@ -118,65 +118,22 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#encrypt-file'>
-        ? (void) <strong>encrypt</strong>({key, data, rng, progress_hook, version}, cb)
+      <a href='#transform-file'>
+        ? (void) <strong>transform</strong>(x)
       </a>
     </span>
     <span class='desc'>
-      A convenience wrapper for: 1.
+      
     </span>
   </li>
 </ul>
       <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='encrypt-file'>
-      ? (void) <strong>encrypt</strong>({key, data, rng, progress_hook, version}, cb)
+    <p class='signature' id='transform-file'>
+      ? (void) <strong>transform</strong>(x)
     </p>
-    <div class='docstring'>
-  <p>A convenience wrapper for:</p><ol>
-<li>Creating a new Encryptor instance with the given key</li>
-<li>Calling <code>run</code> just once.</li>
-<li>Scrubbing and deleting all state.</li>
-</ol>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>key</span>
-      <span class='type'>
-        (<tt>Buffer</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The secret key.  This data is scrubbed after use, so copy it if you want to keep track of it.</span>
-    </li>
-    <li>
-      <span class='name'>data</span>
-      <span class='type'>
-        (<tt>Buffer</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The data to encrypt.  Again, this data is scrubber after use, so copy it if you need it later.</span>
-    </li>
-    <li>
-      <span class='name'>rng</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>A function that takes as input n and outputs n truly random bytes.  You must give a real RNG here and not something fake. You can try require(&#39;./prng&#39;).generate_words for starters.</span>
-    </li>
-    <li>
-      <span class='name'>cb</span>
-      <span class='type'>
-        (<tt>callback</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Callback with an (err,res) pair. The err is an Error object (if encountered), and res is a Buffer object (on success).</span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
 </div>

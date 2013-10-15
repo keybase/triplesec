@@ -119,7 +119,7 @@
   <li>
     <span class='signature'>
       <a href='#pbkdf2-file'>
-        ? (void) <strong>pbkdf2</strong>({key, salt, c, dkLen, progress_hook, klass}, cb)
+        ? (void) <strong>pbkdf2</strong>({key, salt, klass, c, dkLen, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -131,7 +131,7 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='pbkdf2-file'>
-      ? (void) <strong>pbkdf2</strong>({key, salt, c, dkLen, progress_hook, klass}, cb)
+      ? (void) <strong>pbkdf2</strong>({key, salt, klass, c, dkLen, progress_hook}, cb)
     </p>
     <div class='docstring'>
   <p>A convenience method to make a new PBKDF2 object, and then run it just
@@ -159,10 +159,10 @@ once.</p>
     <li>
       <span class='name'>c</span>
       <span class='type'>
-        (<tt>Number</tt>)
+        (<tt>number</tt>)
       </span>
       &mdash;
-      <span class='desc'>The number of iterations to run before output</span>
+      <span class='desc'>The number of iterations to run for</span>
     </li>
     <li>
       <span class='name'>dkLen</span>
@@ -195,7 +195,7 @@ once.</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 18:42:51 GMT-0400 (EDT)
+  Tue Oct 15 2013 09:45:08 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

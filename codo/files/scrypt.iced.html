@@ -15,7 +15,7 @@
     &raquo;
     <a href='../class_index.html' title='Index'>Index</a>
     &raquo;
-    <span class='title'>enc.iced</span>
+    <span class='title'>scrypt.iced</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -106,7 +106,7 @@
     <div id='content'>
       <h1>
         File:
-        enc.iced
+        scrypt.iced
       </h1>
       <table class='box'>
         <tr>
@@ -118,28 +118,75 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#encrypt-file'>
-        ? (void) <strong>encrypt</strong>({key, data, rng, progress_hook, version}, cb)
+      <a href='#blkcpy-file'>
+        ? (void) <strong>blkcpy</strong>(D, S, d_offset, s_offset, len)
       </a>
     </span>
     <span class='desc'>
-      A convenience wrapper for: 1.
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#blkxor-file'>
+        ? (void) <strong>blkxor</strong>(D, S, s_offset, len)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#v_endian_reverse-file'>
+        ? (void) <strong>v_endian_reverse</strong>(v)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#scrypt-file'>
+        ? (void) <strong>scrypt</strong>({key, salt, r, N, p, c, klass, progress_hook, dkLen}, cb)
+      </a>
+    </span>
+    <span class='desc'>
+      A convenience method to make a new Scrypt object, and then run it just once.
     </span>
   </li>
 </ul>
       <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='encrypt-file'>
-      ? (void) <strong>encrypt</strong>({key, data, rng, progress_hook, version}, cb)
+    <p class='signature' id='blkcpy-file'>
+      ? (void) <strong>blkcpy</strong>(D, S, d_offset, s_offset, len)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='blkxor-file'>
+      ? (void) <strong>blkxor</strong>(D, S, s_offset, len)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='v_endian_reverse-file'>
+      ? (void) <strong>v_endian_reverse</strong>(v)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='scrypt-file'>
+      ? (void) <strong>scrypt</strong>({key, salt, r, N, p, c, klass, progress_hook, dkLen}, cb)
     </p>
     <div class='docstring'>
-  <p>A convenience wrapper for:</p><ol>
-<li>Creating a new Encryptor instance with the given key</li>
-<li>Calling <code>run</code> just once.</li>
-<li>Scrubbing and deleting all state.</li>
-</ol>
-
+  <p>A convenience method to make a new Scrypt object, and then run it just
+once.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -147,34 +194,82 @@
     <li>
       <span class='name'>key</span>
       <span class='type'>
-        (<tt>Buffer</tt>)
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
       </span>
       &mdash;
-      <span class='desc'>The secret key.  This data is scrubbed after use, so copy it if you want to keep track of it.</span>
+      <span class='desc'>The secret/passphrase</span>
     </li>
     <li>
-      <span class='name'>data</span>
+      <span class='name'>salt</span>
       <span class='type'>
-        (<tt>Buffer</tt>)
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
       </span>
       &mdash;
-      <span class='desc'>The data to encrypt.  Again, this data is scrubber after use, so copy it if you need it later.</span>
+      <span class='desc'>Salt to add to the intput to prevent rainbow-tables</span>
     </li>
     <li>
-      <span class='name'>rng</span>
+      <span class='name'>r</span>
       <span class='type'>
-        (<tt>Function</tt>)
+        (<tt>number</tt>)
       </span>
       &mdash;
-      <span class='desc'>A function that takes as input n and outputs n truly random bytes.  You must give a real RNG here and not something fake. You can try require(&#39;./prng&#39;).generate_words for starters.</span>
+      <span class='desc'>The r (memory size) parameter for scrypt [default: 8]</span>
+    </li>
+    <li>
+      <span class='name'>N</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The N (computational factor) parameter for scrypt [default : 2^10]</span>
+    </li>
+    <li>
+      <span class='name'>p</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The p (parallellism) factor for scrypt [default : 1]</span>
+    </li>
+    <li>
+      <span class='name'>c</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The number of times to run PBKDF2 [default: 1]</span>
+    </li>
+    <li>
+      <span class='name'>klass</span>
+      <span class='type'>
+        (<tt>Class</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The PRF to use as a subroutine in PBKDF2 [default : HMAC-SHA256]</span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (<tt>function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>A Standard progress hook</span>
+    </li>
+    <li>
+      <span class='name'>dkLen</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>the length of the derived key.</span>
     </li>
     <li>
       <span class='name'>cb</span>
       <span class='type'>
-        (<tt>callback</tt>)
+        (<tt>calllback</tt>)
       </span>
       &mdash;
-      <span class='desc'>Callback with an (err,res) pair. The err is an Error object (if encountered), and res is a Buffer object (on success).</span>
+      <span class='desc'>Calls back with a <a href='../classes/WordArray.html'>WordArray</a> of key-material</span>
     </li>
   </ul>
 </div>

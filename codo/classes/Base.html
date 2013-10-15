@@ -132,7 +132,7 @@ and encryption/decryption.</p>
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>({key})
+        - (void) <strong>constructor</strong>({key, version})
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -142,12 +142,22 @@ and encryption/decryption.</p>
   </li>
   <li>
     <span class='signature'>
-      <a href='#pbkdf2-instance'>
-        - (void) <strong>pbkdf2</strong>({salt, progress_hook}, cb)
+      <a href='#kdf-instance'>
+        - (void) <strong>kdf</strong>({salt, extra_keymaterial, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
-      Run PBKDF2 to yield the encryption and signing keys, given the input <code>key</code> and the randomly-generated salt.
+      Run the KDF function specified by our current version, to yield the encryption and signing keys, given the input <code>key</code> and the randomly-generated salt.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#set_key-instance'>
+        - (void) <strong>set_key</strong>(key)
+      </a>
+    </span>
+    <span class='desc'>
+      Set or change the key on this encryptor, causing a scrubbing of the old state if it was previously set.
     </span>
   </li>
   <li>
@@ -205,7 +215,7 @@ and encryption/decryption.</p>
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>({key})
+      - (void) <strong>constructor</strong>({key, version})
     </p>
     <div class='tags'>
   <h3>Parameters:</h3>
@@ -225,11 +235,12 @@ and encryption/decryption.</p>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='pbkdf2-instance'>
-      - (void) <strong>pbkdf2</strong>({salt, progress_hook}, cb)
+    <p class='signature' id='kdf-instance'>
+      - (void) <strong>kdf</strong>({salt, extra_keymaterial, progress_hook}, cb)
     </p>
     <div class='docstring'>
-  <p>Run PBKDF2 to yield the encryption and signing keys, given the
+  <p>Run the KDF function specified by our current version,
+to yield the encryption and signing keys, given the
 input <code>key</code> and the randomly-generated salt.</p>
 </div>
 <div class='tags'>
@@ -258,6 +269,28 @@ input <code>key</code> and the randomly-generated salt.</p>
       </span>
       &mdash;
       <span class='desc'>Callback with an {Object} after completion. The object will map cipher-name to a <a href='../classes/WordArray.html'>WordArray</a> that is the generated key.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='set_key-instance'>
+      - (void) <strong>set_key</strong>(key)
+    </p>
+    <div class='docstring'>
+  <p>Set or change the key on this encryptor, causing a scrubbing of the
+old state if it was previously set.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>the Passphrase/key as a standard buffer object.</span>
     </li>
   </ul>
 </div>
@@ -473,7 +506,7 @@ with the Encryptor.</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 18:42:51 GMT-0400 (EDT)
+  Tue Oct 15 2013 09:45:08 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

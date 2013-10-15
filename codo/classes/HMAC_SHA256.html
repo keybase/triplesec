@@ -15,7 +15,7 @@
     &raquo;
     <a href='../class_index.html' title='Index'>Index</a>
     &raquo;
-    <span class='title'>enc.iced</span>
+    <span class='title'>HMAC_SHA256</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -105,78 +105,57 @@
 </div>
     <div id='content'>
       <h1>
-        File:
-        enc.iced
+        Class:
+        HMAC_SHA256
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td></td>
+          <td>src&#47;hmac.iced</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../classes/HMAC.html'>HMAC</a>
+          </td>
         </tr>
       </table>
-      <h2>Method Summary</h2>
+      <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#encrypt-file'>
-        ? (void) <strong>encrypt</strong>({key, data, rng, progress_hook, version}, cb)
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(key)
       </a>
     </span>
+    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      A convenience wrapper for: 1.
+      
     </span>
   </li>
 </ul>
-      <h2>Method Details</h2>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href='../classes/HMAC.html'>HMAC</a>
+      </h3>
+      <p class='inherited'>
+                <a href='../classes/HMAC.html#constructor-instance'>#constructor</a>,
+                <a href='../classes/HMAC.html#get_output_size-instance'>#get_output_size</a>,
+                <a href='../classes/HMAC.html#reset-instance'>#reset</a>,
+                <a href='../classes/HMAC.html#update-instance'>#update</a>,
+                <a href='../classes/HMAC.html#finalize-instance'>#finalize</a>,
+        <a href='../classes/HMAC.html#scrub-instance'>#scrub</a>
+      </p>
+      <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='encrypt-file'>
-      ? (void) <strong>encrypt</strong>({key, data, rng, progress_hook, version}, cb)
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(key)
     </p>
-    <div class='docstring'>
-  <p>A convenience wrapper for:</p><ol>
-<li>Creating a new Encryptor instance with the given key</li>
-<li>Calling <code>run</code> just once.</li>
-<li>Scrubbing and deleting all state.</li>
-</ol>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>key</span>
-      <span class='type'>
-        (<tt>Buffer</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The secret key.  This data is scrubbed after use, so copy it if you want to keep track of it.</span>
-    </li>
-    <li>
-      <span class='name'>data</span>
-      <span class='type'>
-        (<tt>Buffer</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The data to encrypt.  Again, this data is scrubber after use, so copy it if you need it later.</span>
-    </li>
-    <li>
-      <span class='name'>rng</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>A function that takes as input n and outputs n truly random bytes.  You must give a real RNG here and not something fake. You can try require(&#39;./prng&#39;).generate_words for starters.</span>
-    </li>
-    <li>
-      <span class='name'>cb</span>
-      <span class='type'>
-        (<tt>callback</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Callback with an (err,res) pair. The err is an Error object (if encountered), and res is a Buffer object (on success).</span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
 </div>

@@ -164,6 +164,17 @@ collision-resistance.</p>
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(key, klasses = [SHA512, SHA3])
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      Construct a new Concat-combiner
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#get_output_size-instance'>
         - (Number) <strong>get_output_size</strong>()
       </a>
@@ -290,6 +301,38 @@ which is HMAC(SHA512) || HMAC(SHA3).</p>
 </div>
   </div>
 </div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(key, klasses = [SHA512, SHA3])
+    </p>
+    <div class='docstring'>
+  <p>Construct a new Concat-combiner</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (<tt><a href='../classes/WordArray.html'>WordArray</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The key to use, split up over the klasses</span>
+    </li>
+    <li>
+      <span class='name'>klasses</span>
+      <span class='type'>
+        (<tt>Vector&lt;Class&gt;</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The classes to combine.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
@@ -317,7 +360,7 @@ using the default Class parameters (SHA512 + SHA3).</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 18:42:51 GMT-0400 (EDT)
+  Tue Oct 15 2013 09:45:08 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0
