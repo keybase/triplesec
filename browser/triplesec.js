@@ -776,12 +776,15 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
     __extends(Decryptor, _super);
 
     function Decryptor(_arg) {
-      var key;
-      key = _arg.key;
+      var enc, key;
+      key = _arg.key, enc = _arg.enc;
       Decryptor.__super__.constructor.call(this, {
         key: key
       });
-      this._i = 0;
+      if (enc != null) {
+        this.key = enc.key;
+        this.derived_keys = enc.derived_keys;
+      }
     }
 
     Decryptor.prototype.read_header = function(cb) {
@@ -816,7 +819,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                   return computed = arguments[1];
                 };
               })(),
-              lineno: 60
+              lineno: 63
             }));
             __iced_deferrals._fulfill();
           })(function() {
@@ -861,7 +864,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
               return keys = arguments[0];
             };
           })(),
-          lineno: 111
+          lineno: 114
         }));
         __iced_deferrals._fulfill();
       })(function() {
@@ -884,7 +887,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
           funcname: "Decryptor.run"
         });
         _this.read_header(esc(__iced_deferrals.defer({
-          lineno: 138
+          lineno: 141
         })));
         __iced_deferrals._fulfill();
       })(function() {
@@ -895,7 +898,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
             funcname: "Decryptor.run"
           });
           _this.read_salt(esc(__iced_deferrals.defer({
-            lineno: 139
+            lineno: 142
           })));
           __iced_deferrals._fulfill();
         })(function() {
@@ -913,7 +916,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                   return __slot_1.keys = arguments[0];
                 };
               })(_this),
-              lineno: 140
+              lineno: 143
             }));
             __iced_deferrals._fulfill();
           })(function() {
@@ -924,7 +927,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                 funcname: "Decryptor.run"
               });
               _this.verify_sig(_this.keys.hmac, esc(__iced_deferrals.defer({
-                lineno: 141
+                lineno: 144
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -940,7 +943,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                       return iv = arguments[0];
                     };
                   })(),
-                  lineno: 142
+                  lineno: 145
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -961,7 +964,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                         return ct2 = arguments[0];
                       };
                     })(),
-                    lineno: 143
+                    lineno: 146
                   })));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -977,7 +980,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                           return iv = arguments[0];
                         };
                       })(),
-                      lineno: 144
+                      lineno: 147
                     })));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -998,7 +1001,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                             return ct1 = arguments[0];
                           };
                         })(),
-                        lineno: 145
+                        lineno: 148
                       })));
                       __iced_deferrals._fulfill();
                     })(function() {
@@ -1014,7 +1017,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                               return iv = arguments[0];
                             };
                           })(),
-                          lineno: 146
+                          lineno: 149
                         })));
                         __iced_deferrals._fulfill();
                       })(function() {
@@ -1036,7 +1039,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
                                 return pt = arguments[0];
                               };
                             })(),
-                            lineno: 147
+                            lineno: 150
                           })));
                           __iced_deferrals._fulfill();
                         })(function() {
@@ -1082,7 +1085,7 @@ return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requi
             return pt = arguments[1];
           };
         })(),
-        lineno: 165
+        lineno: 168
       }));
       __iced_deferrals._fulfill();
     })(function() {
