@@ -315,7 +315,7 @@ var plaintext = buff.toString();</pre>
               <i>Applied Cryptography</i> (Section 15.8 in the Second Edition), it is
               close.  TripleSec never uses the output of one block cipher as input into the next,
               which theoretically might allow a crack of one cipher to be used to crack
-              another. Rather, by merit of CTR mode, the three ciphers run on statistcally 
+              another. Rather, by merit of CTR mode, the three ciphers run on statistically 
               independent IVs, so a crack of one will not spread up or down the chain.
               The TripleSec technique takes one futher step not suggested by Schneier,
               which is to protect the inner IVs with the outer encryption algorithms, and only
