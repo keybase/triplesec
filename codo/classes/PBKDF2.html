@@ -125,7 +125,7 @@
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>({key, salt, c, klass})
+        - (void) <strong>constructor</strong>({klass, c})
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -135,8 +135,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#gen-instance'>
-        - (void) <strong>gen</strong>({dkLen, progress_hook}, cb)
+      <a href='#run-instance'>
+        - (void) <strong>run</strong>({key, salt, dkLen, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -148,7 +148,7 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>({key, salt, c, klass})
+      - (void) <strong>constructor</strong>({klass, c})
     </p>
     <div class='tags'>
   <h3>Parameters:</h3>
@@ -198,8 +198,8 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='gen-instance'>
-      - (void) <strong>gen</strong>({dkLen, progress_hook}, cb)
+    <p class='signature' id='run-instance'>
+      - (void) <strong>run</strong>({key, salt, dkLen, progress_hook}, cb)
     </p>
     <div class='docstring'>
   <p>Generate dkLen worth of key material.</p>
@@ -238,7 +238,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 18:42:51 GMT-0400 (EDT)
+  Tue Oct 22 2013 09:02:50 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

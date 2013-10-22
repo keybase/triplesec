@@ -3,6 +3,7 @@ more_entropy = require 'more-entropy'
 {ADRBG} = require './drbg'
 {WordArray} = require './wordarray'
 {XOR} = require './combine'
+util = require './util'
 
 #===============================================
 
@@ -21,7 +22,8 @@ if window?.crypto?.getRandomValues?
   native_rng = browser_rng
 else
   try
-    {rng} = require('crypto')
+    # trick Browserify --- we don't want crypto on the browser!
+    {rng} = require('cry' + 'pto')
     native_rng = rng if rng?
   catch e
     # pass
@@ -69,7 +71,10 @@ class PRNG
     bufs.push new Buffer words
     bufs.push native_rng nbytes
     bufs.push @now_to_buffer()
-    wa = WordArray.from_buffer Buffer.concat bufs
+    cat = Buffer.concat bufs
+    wa = WordArray.from_buffer cat
+    util.scrub_buffer cat
+    (util.scrub_buffer b for b in bufs)
     cb wa
 
   # @method generate
@@ -103,6 +108,7 @@ generate = (n, cb) ->
 
 exports.PRNG = PRNG
 exports.generate = generate
+exports.native_rng = native_rng
 
 #===============================================
 

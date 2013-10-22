@@ -6,7 +6,8 @@ salsa20       = require './salsa20'
 ctr           = require './ctr'
 {XOR,Concat}  = require './combine'
 {SHA512}      = require './sha512'
-{pbkdf2}      = require './pbkdf2'
+{PBKDF2}      = require './pbkdf2'
+{Scrypt}      = require './scrypt'
 util          = require './util'
 prng          = require './prng'
 {make_esc}    = require 'iced-error'
@@ -17,9 +18,26 @@ prng          = require './prng'
 V = 
   "1" : 
     header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
-    pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
     salt_size     : 8                  # 8 bytes of salt is good enough!
-    hmac_key_size : 512/8              # The size of the key to use for HMAC (our choice)
+    kdf           :                    # The key derivation...
+      klass       : PBKDF2             #   algorithm klass
+      opts        :                    #   ..and options
+        c         : 1024               #   The number of iterations
+        klass     : XOR                #   The HMAC to use as a subroutine
+    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+  "2" : 
+    header        : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
+    salt_size     : 16                 # 16 bytes of salt for various uses
+    pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
+    kdf           :                    # The key derivation...
+      klass       : Scrypt             #   algorithm klass
+      opts        :                    #   ..and options
+        c         : 64                 #   The number of iterations
+        klass     : XOR                #   The HMAC to use as a subroutine
+        N         : 12                 #   log_2 of the work factor
+        r         : 8                  #   The memory use factor
+        p         : 1                  #   the parallelization factor
+    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
 
 #========================================================================
 
@@ -31,17 +49,21 @@ class Base
   #---------------
 
   # @param {WordArray} key The private encryption key  
-  constructor : ( { key } ) ->
-    @key = WordArray.from_buffer key
+  constructor : ( { key, version } ) ->
+    @version = V[if version? then version else 1]
+    throw new Error "unknown version: #{version}" unless @version?
+
+    @set_key key
 
     # A map from Salt -> KeySets
     @derived_keys = {}
 
   #---------------
 
-  # @method pbkdf2
+  # @method kdf
   #
-  # Run PBKDF2 to yield the encryption and signing keys, given the
+  # Run the KDF function specified by our current version,
+  # to yield the encryption and signing keys, given the
   # input `key` and the randomly-generated salt.
   #
   # @param {WordArray} salt The salt to use for key generation.
@@ -49,30 +71,30 @@ class Base
   # @param {callback} cb Callback with an {Object} after completion.
   #   The object will map cipher-name to a {WordArray} that is the generated key.
   #
-  pbkdf2 : ({salt, progress_hook}, cb) ->
+  kdf : ({salt, extra_keymaterial, progress_hook}, cb) ->
     # Check the cache first
     salt_hex = salt.to_hex()
 
     if not (keys = @derived_keys[salt_hex])?
+      @_kdf = new @version.kdf.klass @version.kdf.opts
 
       lens = 
         hmac    : @version.hmac_key_size
         aes     : AES.keySize
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
-      tot = 0
+
+      tot = extra_keymaterial or 0
       (tot += v for k,v of lens)
 
       # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
       args = {
         key : @key.clone()
-        c : @version.pbkdf2_iters
-        klass : XOR
         dkLen : tot
         progress_hook
         salt 
       }
-      await pbkdf2 args, defer raw
+      await @_kdf.run args, defer raw
       keys = {}
       i = 0
       for k,v of lens
@@ -80,10 +102,27 @@ class Base
         end = i + len
         keys[k] = new WordArray raw.words[i...end]
         i = end
+      keys.extra = (new WordArray raw.words[end...]).to_buffer()
       @derived_keys[salt_hex] = keys
 
     cb keys
- 
+    
+  #---------------
+
+  # Set or change the key on this encryptor, causing a scrubbing of the
+  # old state if it was previously set.
+  #
+  # @param {Buffer} key the Passphrase/key as a standard buffer object.
+  #
+  set_key : (key) ->
+    if key?
+      wakey = WordArray.from_buffer(key) 
+      if not @key or not @key.equal wakey
+        @scrub()
+        @key = wakey
+    else
+      @scrub()
+    
   #---------------
 
   # @private
@@ -174,10 +213,13 @@ class Base
   # Scrub all internal state that may be sensitive.  Use it after you're done
   # with the Encryptor.
   scrub : () ->
-    @key.scrub()
-    for salt,key_ring of @derived_keys
-      for key in key_ring
-        key.scrub()
+    @key.scrub() if @key?
+    if @derived_keys?
+      for salt,key_ring of @derived_keys
+        for key in key_ring
+          key.scrub()
+    @derived_keys = {}
+    @key = null
 
 #========================================================================
 
@@ -237,18 +279,13 @@ class Base
 class Encryptor extends Base
 
   #---------------
-
-  # @property {Object} version The version to encrypt with (only V1 now works).
-  version : V[1]
-
-  #---------------
  
   # @param {Buffer} key The secret key
   # @param {Function} rng Call it with the number of Rando bytes you need. It should callback with a WordArray of random bytes
-  constructor : ( { key, rng } ) ->
-    super { key }
+  # @param {Object} version The version object to follow
+  constructor : ( { key, rng, version } ) ->
+    super { key, version }
     @rng = rng or prng.generate
-    @last_salt = null
 
   #---------------
 
@@ -277,11 +314,14 @@ class Encryptor extends Base
   # same salt.
   #
   # @param {Function} progress_hook A standard progress hook.
+  # @param {Buffer} salt The optional salt to provide, if it's deterministic
+  #     and can be passed in.  If not provided, then we 
   # @param {callback} cb Called back when the resalting completes.
-  resalt : ({progress_hook}, cb) ->
-    await @rng @version.salt_size, defer @salt
-    await @pbkdf2 {progress_hook, @salt}, defer @keys
-    cb()
+  resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
+    if salt? then @salt = WordArray.alloc salt
+    else await @rng @version.salt_size, defer @salt
+    await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
+    cb @keys
  
   #---------------
 
@@ -296,17 +336,22 @@ class Encryptor extends Base
   #  1. MAC with (HMAC-SHA512 || HMAC-SHA3)
   #
   # @param {Buffer} data the data to encrypt 
+  # @param {Buffer} salt The optional salt to provide, if it's deterministic
+  #     and can be passed in.  If not provided, then we 
   # @param {Function} progress_hook Call this to update the U/I about progress
+  # @param {number} extra_keymaterial The number of extra bytes to generate 
+  #    along with the crypto keys (default : 0)
   # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
   #
-  run : ( { data, progress_hook }, cb ) ->
+  run : ( { data, salt, extra_keymaterial, progress_hook }, cb ) ->
 
     # esc = "Error Short-Circuiter".  In the case of an error,
     # we'll forget about the rest of the function and just call back
     # the outer-level cb with the error.  If no error, then proceed as normal.
     esc = make_esc cb, "Encryptor::run"
 
-    await @resalt { progress_hook }, defer() unless @salt?
+    if salt? or not @salt?
+      await @resalt { salt, extra_keymaterial, progress_hook }, defer() 
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
     await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
@@ -338,8 +383,8 @@ class Encryptor extends Base
 # @param {callback} cb Callback with an (err,res) pair. The err is an Error object
 #   (if encountered), and res is a Buffer object (on success).
 #
-encrypt = ({ key, data, rng, progress_hook}, cb) ->
-  enc = new Encryptor { key, rng }
+encrypt = ({ key, data, rng, progress_hook, version}, cb) ->
+  enc = new Encryptor { key, rng, version }
   await enc.run { data, progress_hook }, defer err, ret
   enc.scrub()
   cb err, ret

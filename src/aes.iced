@@ -65,6 +65,7 @@ class Global
       else
         x = x2 ^ d[d[d[x8 ^ x2]]]
         xi ^= d[d[xi]]
+    true
 
 #=======================================================================
 
@@ -154,6 +155,7 @@ class AES extends BlockCipher
             G.INV_SUB_MIX[1][G.SBOX[(t >>> 16) & 0xff]] ^
             G.INV_SUB_MIX[2][G.SBOX[(t >>> 8) & 0xff]] ^ 
             G.INV_SUB_MIX[3][G.SBOX[t & 0xff]])
+    true
 
   #-------------------------
  

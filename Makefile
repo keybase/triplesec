@@ -33,13 +33,22 @@ $(BUILD_STAMP): \
 	lib/drbg.js \
 	lib/lock.js \
 	lib/sha3.js \
-	lib/combine.js
+	lib/combine.js \
+	lib/sha256.js \
+	lib/sha224.js \
+	lib/sha1.js \
+	lib/scrypt.js
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)
 	$(BROWSERIFY) -s triplesec $< > $@
 
-build: $(BUILD_STAMP) $(BROWSER)
+build: $(BUILD_STAMP) $(BROWSER) site
+
+site: site/js/site.js
+
+site/js/site.js: site/iced/site.iced
+	$(ICED) -I window --print $< > $@
 
 test-server: $(TEST_STAMP) $(BUILD_STAMP)
 	$(ICED) test/run.iced
@@ -57,7 +66,7 @@ test/json/HMAC_DRBG_reseed.json: test/rsp/HMAC_DRBG_reseed.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 
-test/json/SHA3_short.json: test/rsp/SHA3_short.rsp
+test/json/sha%.json: test/rsp/sha%.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 	
@@ -65,31 +74,48 @@ test/json/SHA3_long.json: test/rsp/SHA3_long.rsp
 	@mkdir -p test/json/
 	$(RSP2JSON) $< > $@
 
+test/json/SHA1ShortMsg.json: test/rsp/SHA1ShortMsg.rsp
+	@mkdir -p test/json/
+	$(RSP2JSON) $< > $@
+	
+test/json/SHA1LongMsg.json: test/rsp/SHA1LongMsg.rsp
+	@mkdir -p test/json/
+	$(RSP2JSON) $< > $@
+
 spec/triplesec.json: ref/gen_triplesec_spec.iced
 	$(ICED) $< $ > $@
 spec/pbkdf2_sha512_sha3.json: ref/gen_pbkdf2_sha512_sha3_spec.iced
+	$(ICED) $< $ > $@
+spec/scrypt_xor.json: ref/gen_scrypt_xor_spec.iced
 	$(ICED) $< $ > $@
 
 test/data/triplesec_spec.js: spec/triplesec.json 
 	$(ICED) test/gen/spec2js.iced "../../spec/triplesec.json" > $@
 test/data/pbkdf2_sha512_sha3_spec.js: spec/pbkdf2_sha512_sha3.json 
 	$(ICED) test/gen/spec2js.iced "../../spec/pbkdf2_sha512_sha3.json" > $@
+test/data/scrypt_xor_spec.js: spec/scrypt_xor.json 
+	$(ICED) test/gen/spec2js.iced "../../spec/scrypt_xor.json" > $@
 
-$(TEST_STAMP): test/data/sha512_short.js \
-		test/data/sha512_long.js \
-		test/data/twofish_ecb_tbl.js \
+$(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 		test/data/salsa20_key128.js \
 		test/data/salsa20_key256.js \
 		test/data/pbkdf2.js \
 		test/data/drbg_hmac_no_reseed.js \
 		test/json/HMAC_DRBG_reseed.json \
 		test/data/drbg_hmac_reseed.js \
-		test/json/SHA3_short.json \
 		test/data/sha3_short.js \
-		test/json/SHA3_long.json \
 		test/data/sha3_long.js \
+		test/data/sha512_long.js \
+		test/data/sha512_short.js \
+		test/data/sha1_short.js \
+		test/data/sha1_long.js \
+		test/data/sha256_short.js \
+		test/data/sha256_long.js \
+		test/data/sha224_long.js \
+		test/data/sha224_short.js \
 		test/data/triplesec_spec.js \
 		test/data/pbkdf2_sha512_sha3_spec.js \
+		test/data/scrypt_xor_spec.js \
 		test/browser/test.js 
 	date > $@
 
@@ -97,6 +123,10 @@ release: browser/triplesec.js
 	V=`jsonpipe < package.json | grep version | awk '{ print $$2 }' | sed -e s/\"//g` ; \
 	cp $< rel/triplesec-$$V.js ; \
 	$(UGLIFYJS) -c < rel/triplesec-$$V.js > rel/triplesec-$$V-min.js 
+
+test/data/sha%.js: test/json/sha%.json
+	@mkdir -p test/data
+	$(ICED) test/gen/gen_sha.iced "../../$<" > $@
 
 test/data/%.js: test/gen/gen_%.iced
 	@mkdir -p test/data
@@ -116,3 +146,4 @@ setup:
 	npm install -d
 
 .PHONY: clean setup test test-browser-buffer doc spec
+

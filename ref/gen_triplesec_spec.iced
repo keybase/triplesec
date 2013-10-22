@@ -28,14 +28,14 @@ class GenerateSpec
     @memo_rng = new MemoRng
     @rng = (n,cb) => cb @memo_rng.gen n
 
-  gen_vector : (len, cb) ->
+  gen_vector : (len, version, cb) ->
     key = rng len.key
     data = rng len.msg
     pt = new Buffer data # make a copy!
-    await enc.encrypt { key, data, @rng }, defer err, ct
-    console.error "+ done with #{JSON.stringify len}".green
+    await enc.encrypt { key, data, @rng, version }, defer err, ct
+    console.error "+ done with version #{version} #{JSON.stringify len}".green
     r = @memo_rng.empty()
-    ret = { key, pt, ct, r }
+    ret = { key, pt, ct, r, version }
     (ret[k] = v.toString('hex') for k,v of ret)
     cb ret
 
@@ -47,8 +47,9 @@ class GenerateSpec
                { key : 100, msg : 10000 },
                { key : 250, msg : 50000 } ]
     for p in params
-      await @gen_vector p, defer v
-      @vectors.push v
+      for vno, vobj of enc.V
+        await @gen_vector p, vno, defer v
+        @vectors.push v
     cb()
 
   output : () ->

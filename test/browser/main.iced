@@ -1,6 +1,7 @@
 
 mods =  
-  sha512 : require '../files/sha512.iced'
+  scrypt : require '../files/scrypt.iced'
+  scrypt_xor : require '../files/scrypt_xor.iced'
   wordarray : require '../files/wordarray.iced'
   hmac : require '../files/hmac.iced'
   aes : require '../files/aes.iced'
@@ -10,7 +11,7 @@ mods =
   pbkdf2 : require '../files/pbkdf2.iced'
   triplesec : require '../files/triplesec.iced'
   drbg : require '../files/drbg.iced'
-  sha3 : require '../files/sha3.iced'
+  sha : require '../files/sha.iced'
   combine : require '../files/combine.iced'
 
 {BrowserRunner} = require('iced-test')

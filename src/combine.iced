@@ -10,10 +10,7 @@ class CombineBase
 
   # Construct a new HMAC-combiner
   #
-  # @param {WordArray} key The key to use in both classes
-  # @param {Vector<Class>} klasses The classes to combine.
-  constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
-    @hashers = (new HMAC(key, klass) for klass in klasses)
+  constructor : () ->
     @hasherBlockSize = @hashers[0].hasherBlockSize
     @hasherBlockSizeBytes = @hasherBlockSize * 4
     @reset()
@@ -53,6 +50,19 @@ class CombineBase
 # The concatenation HMAC combiner. Good when you are shooting for
 # collision-resistance.
 class Concat extends CombineBase
+
+  # Construct a new Concat-combiner
+  #
+  # @param {WordArray} key The key to use, split up over the klasses
+  # @param {Vector<Class>} klasses The classes to combine.
+  constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
+    subkeys = key.split(klasses.length)
+    @hashers = for klass,i in klasses 
+      subkey = subkeys[i]
+      hm = new HMAC(subkey, klass)
+      subkey.scrub()
+      hm
+    super()
 
   # The default output size if you use the default arguments,
   # which is HMAC(SHA512) || HMAC(SHA3).
@@ -96,6 +106,12 @@ class Concat extends CombineBase
 
 # The XOR HMAC combiner.  Good when you are shooting for PRF-qualities.
 class XOR extends CombineBase
+
+  # @param {WordArray} key The key to use, repeated for each klass
+  # @param {Vector<Class>} klasses The classes to combine.
+  constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
+    @hashers = (new HMAC(key, klass) for klass in klasses)
+    super()
 
   # When resetting and reinitializing an XOR-HMAC-combiner, take the
   # extra precaution of putting a 0,1,2,3.... into the inner HMACs, so 

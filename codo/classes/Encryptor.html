@@ -162,7 +162,7 @@ eng.run { data }, (err, res) -&gt;
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>({key, rng})
+        - (void) <strong>constructor</strong>({key, rng, version})
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -173,7 +173,7 @@ eng.run { data }, (err, res) -&gt;
   <li>
     <span class='signature'>
       <a href='#resalt-instance'>
-        - (void) <strong>resalt</strong>({progress_hook}, cb)
+        - (void) <strong>resalt</strong>({salt, extra_keymaterial, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -183,7 +183,7 @@ eng.run { data }, (err, res) -&gt;
   <li>
     <span class='signature'>
       <a href='#run-instance'>
-        - (void) <strong>run</strong>({data, progress_hook}, cb)
+        - (void) <strong>run</strong>({data, salt, extra_keymaterial, progress_hook}, cb)
       </a>
     </span>
     <span class='desc'>
@@ -200,7 +200,8 @@ eng.run { data }, (err, res) -&gt;
       </h3>
       <p class='inherited'>
                 <a href='../classes/Base.html#constructor-instance'>#constructor</a>,
-                <a href='../classes/Base.html#pbkdf2-instance'>#pbkdf2</a>,
+                <a href='../classes/Base.html#kdf-instance'>#kdf</a>,
+                <a href='../classes/Base.html#set_key-instance'>#set_key</a>,
                 <a href='../classes/Base.html#sign-instance'>#sign</a>,
                 <a href='../classes/Base.html#run_salsa20-instance'>#run_salsa20</a>,
                 <a href='../classes/Base.html#run_twofish-instance'>#run_twofish</a>,
@@ -211,7 +212,7 @@ eng.run { data }, (err, res) -&gt;
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>({key, rng})
+      - (void) <strong>constructor</strong>({key, rng, version})
     </p>
     <div class='tags'>
   <h3>Parameters:</h3>
@@ -232,6 +233,14 @@ eng.run { data }, (err, res) -&gt;
       &mdash;
       <span class='desc'>Call it with the number of Rando bytes you need. It should callback with a WordArray of random bytes</span>
     </li>
+    <li>
+      <span class='name'>version</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The version object to follow</span>
+    </li>
   </ul>
 </div>
   </div>
@@ -240,12 +249,13 @@ eng.run { data }, (err, res) -&gt;
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='resalt-instance'>
-      - (void) <strong>resalt</strong>({progress_hook}, cb)
+      - (void) <strong>resalt</strong>({salt, extra_keymaterial, progress_hook}, cb)
     </p>
     <div class='docstring'>
   <p>Regenerate the salt. Reinitialize the keys. You have to do this
 once, but if you don&#39;t do it again, you&#39;ll just wind up using the
-same salt.</p>
+same salt.</p><pre><code>and can be passed in.  If not provided, then we </code></pre>
+
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -257,6 +267,14 @@ same salt.</p>
       </span>
       &mdash;
       <span class='desc'>A standard progress hook.</span>
+    </li>
+    <li>
+      <span class='name'>salt</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The optional salt to provide, if it&#39;s deterministic</span>
     </li>
     <li>
       <span class='name'>cb</span>
@@ -271,7 +289,7 @@ same salt.</p>
   </div>
   <div class='method_details'>
     <p class='signature' id='run-instance'>
-      - (void) <strong>run</strong>({data, progress_hook}, cb)
+      - (void) <strong>run</strong>({data, salt, extra_keymaterial, progress_hook}, cb)
     </p>
     <div class='docstring'>
   <p>The main point of entry into the TripleSec Encryption system.  The 
@@ -279,7 +297,8 @@ steps of the algorithm are:</p><ol>
 <li>Encrypt PT with Salsa20</li>
 <li>Encrypt the result of 1 with 2Fish-256-CTR</li>
 <li>Encrypt the result of 2 with AES-256-CTR</li>
-<li>MAC with (HMAC-SHA512 || HMAC-SHA3)</li>
+<li><p>MAC with (HMAC-SHA512 || HMAC-SHA3)</p><p>and can be passed in.  If not provided, then we 
+along with the crypto keys (default : 0)</p></li>
 </ol>
 
 </div>
@@ -295,12 +314,28 @@ steps of the algorithm are:</p><ol>
       <span class='desc'>the data to encrypt </span>
     </li>
     <li>
+      <span class='name'>salt</span>
+      <span class='type'>
+        (<tt>Buffer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The optional salt to provide, if it&#39;s deterministic</span>
+    </li>
+    <li>
       <span class='name'>progress_hook</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
       &mdash;
       <span class='desc'>Call this to update the U/I about progress</span>
+    </li>
+    <li>
+      <span class='name'>extra_keymaterial</span>
+      <span class='type'>
+        (<tt>number</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The number of extra bytes to generate </span>
     </li>
     <li>
       <span class='name'>cb</span>
@@ -317,7 +352,7 @@ steps of the algorithm are:</p><ol>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 18:42:51 GMT-0400 (EDT)
+  Tue Oct 22 2013 09:02:50 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

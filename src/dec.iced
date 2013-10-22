@@ -6,7 +6,6 @@ salsa20       = require './salsa20'
 ctr           = require './ctr'
 {Concat}      = require './combine'
 {SHA512}      = require './sha512'
-{pbkdf2}      = require './pbkdf2'
 {Salsa20}     = require './salsa20'
 {Base,V}      = require './enc'
 {make_esc}    = require 'iced-error'
@@ -19,17 +18,14 @@ class Decryptor extends Base
 
   #----------------------
 
-  # @property {Object} version Right now we only support version 1 of the algorithm
-  # (since there is only one version)
-  version : V[1]
-
-  #----------------------
-
   # @param {Buffer} key The input key to use for decryption. Hopefully it's the same
-  # key that was used for encryption! If not, we'll get a signature failure.
-  constructor : ( { key } ) ->
+  #       key that was used for encryption! If not, we'll get a signature failure.
+  # @param {Encryptor} enc An encryptor to clone internal data from
+  constructor : ( { key, enc } ) ->
     super { key }
-    @_i = 0
+    if enc?
+      @key = enc.key
+      @derived_keys = enc.derived_keys
 
   #----------------------
 
@@ -42,8 +38,10 @@ class Decryptor extends Base
   read_header : (cb) ->
     err = if not (wa = @ct.unshift 2)?
       new Error "Ciphertext underrun in header"
-    else if not (wa.equal new WordArray @version.header)
-      new Error "Bad header"
+    else if not (@version = V[wa.words[1]])?
+      new Error "bad header; couldn't find a good version (got #{wa.words[1]})"
+    else if (wa.words[0] isnt @version.header[0]) 
+      new Error "Bad header: unrecognized magic value"
     else null
     cb err
 
@@ -98,7 +96,7 @@ class Decryptor extends Base
   # an `Error` if there was a problem.
   #
   read_salt : (cb) ->
-    err = if not (@salt = @ct.unshift 2)?
+    err = if not (@salt = @ct.unshift (@version.salt_size/4))?
       new Error "Ciphertext underrrun in read_salt"
     else
       null
@@ -114,7 +112,7 @@ class Decryptor extends Base
   # @param {callback} cb Callback with a {Object} that maps
   # keytypes to {WordArrays} when done.
   generate_keys : ({progress_hook}, cb) ->
-    await @pbkdf2 { @salt, progress_hook }, defer keys
+    await @kdf { @salt, progress_hook }, defer keys
     cb keys
 
   #----------------------

@@ -118,6 +118,16 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#alloc-class'>
+        + (void) <strong>alloc</strong>(b)
+      </a>
+    </span>
+    <span class='desc'>
+      Be somewhat flexible.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#from_buffer-class'>
         + (void) <strong>from_buffer</strong>(b)
       </a>
@@ -170,6 +180,26 @@
     <span class='signature'>
       <a href='#from_hex_le-class'>
         + (void) <strong>from_hex_le</strong>(s)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_ui8a-class'>
+        + (void) <strong>from_ui8a</strong>(v)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_i32a-class'>
+        + (void) <strong>from_i32a</strong>(v)
       </a>
     </span>
     <span class='desc'>
@@ -232,6 +262,16 @@
   </li>
   <li>
     <span class='signature'>
+      <a href='#split-instance'>
+        - (void) <strong>split</strong>(n)
+      </a>
+    </span>
+    <span class='desc'>
+      Split the word array into n slices Don&#39;t be too smart about slicing in between words, just puke if we can&#39;t make it work.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#to_utf8-instance'>
         - (void) <strong>to_utf8</strong>()
       </a>
@@ -252,8 +292,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#to_uint8_array-instance'>
-        - (void) <strong>to_uint8_array</strong>()
+      <a href='#to_ui8a-instance'>
+        - (void) <strong>to_ui8a</strong>()
       </a>
     </span>
     <span class='desc'>
@@ -334,6 +374,17 @@
       <h2>Class Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
+    <p class='signature' id='alloc-class'>
+      + (void) <strong>alloc</strong>(b)
+    </p>
+    <div class='docstring'>
+  <p>Be somewhat flexible. Try either a Buffer or maybe it&#39;s already
+a word array</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='from_buffer-class'>
       + (void) <strong>from_buffer</strong>(b)
     </p>
@@ -371,6 +422,20 @@
   <div class='method_details'>
     <p class='signature' id='from_hex_le-class'>
       + (void) <strong>from_hex_le</strong>(s)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_ui8a-class'>
+      + (void) <strong>from_ui8a</strong>(v)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_i32a-class'>
+      + (void) <strong>from_i32a</strong>(v)
     </p>
     <div class='tags'>
 </div>
@@ -477,6 +542,17 @@ wordArray = new WordArray [0x00010203, 0x04050607], 6</code></pre>
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='split-instance'>
+      - (void) <strong>split</strong>(n)
+    </p>
+    <div class='docstring'>
+  <p>Split the word array into n slices
+Don&#39;t be too smart about slicing in between words, just puke if we can&#39;t make it work.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='to_utf8-instance'>
       - (void) <strong>to_utf8</strong>()
     </p>
@@ -491,8 +567,8 @@ wordArray = new WordArray [0x00010203, 0x04050607], 6</code></pre>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='to_uint8_array-instance'>
-      - (void) <strong>to_uint8_array</strong>()
+    <p class='signature' id='to_ui8a-instance'>
+      - (void) <strong>to_ui8a</strong>()
     </p>
     <div class='tags'>
 </div>
@@ -558,7 +634,7 @@ forging attack....</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Sep 16 2013 18:42:51 GMT-0400 (EDT)
+  Tue Oct 22 2013 09:02:50 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0
