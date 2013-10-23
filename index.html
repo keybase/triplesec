@@ -138,7 +138,7 @@
 
     data:          new triplesec.Buffer('Pssst. I believe I love you.'),
     key:           new triplesec.Buffer('top-secret-pw'),
-    progress_hook: function (step, iterations, i) { /* ... */ }
+    progress_hook: function (obj) { /* ... */ }
 
 }, function(err, buff) {
   
@@ -155,7 +155,7 @@
 
     data:          new triplesec.Buffer 'Pssst. I believe I love you.'
     key:           new triplesec.Buffer 'top-secret-pw'
-    progress_hook: (step, iterations, i) -> # ...
+    progress_hook: ({what, i, total}) -> # ...
 
 , (err, buff) ->
 
@@ -192,7 +192,7 @@
 
     data:          new triplesec.Buffer(ciphertext, "hex"),
     key:           new triplesec.Buffer('top-secret-pw'),    
-    progress_hook: function (step, iterations, i) { /* ... */ }
+    progress_hook: function (obj) { /* ... */ }
 
 }, function (err, buff) {
 
@@ -211,7 +211,7 @@ var plaintext = buff.toString();</pre>
 
     data:          new triplesec.Buffer ciphertext, 'hex'
     key:           new triplesec.Buffer 'top-secret-pw'
-    progress_hook: (step, iterations, i) -> # ...
+    progress_hook: ({what, i, total}) -> # ...
 
 , (err, buff) ->
 
