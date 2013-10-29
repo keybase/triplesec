@@ -11,10 +11,11 @@ ctr           = require './ctr'
 util          = require './util'
 prng          = require './prng'
 {make_esc}    = require 'iced-error'
+{HMAC_SHA256} = require './hmac'
 
 #========================================================================
 
-# @property {Object} V A lookup table of all supported versions. Only v1 yet.
+# @property {Object} V A lookup table of all supported versions.
 V = 
   "1" : 
     header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
@@ -28,13 +29,24 @@ V =
   "2" : 
     header        : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
     salt_size     : 16                 # 16 bytes of salt for various uses
-    pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
     kdf           :                    # The key derivation...
       klass       : Scrypt             #   algorithm klass
       opts        :                    #   ..and options
         c         : 64                 #   The number of iterations
         klass     : XOR                #   The HMAC to use as a subroutine
         N         : 12                 #   log_2 of the work factor
+        r         : 8                  #   The memory use factor
+        p         : 1                  #   the parallelization factor
+    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+  "3" : 
+    header        : [ 0x1c94d7de, 3 ]  # The magic #, and also the version #
+    salt_size     : 16                 # 16 bytes of salt for various uses
+    kdf           :                    # The key derivation...
+      klass       : Scrypt             #   algorithm klass
+      opts        :                    #   ..and options
+        c         : 1                  #   The number of iterations
+        klass     : HMAC_SHA256        #   The HMAC to use as a subroutine
+        N         : 13                 #   log_2 of the work factor
         r         : 8                  #   The memory use factor
         p         : 1                  #   the parallelization factor
     hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
