@@ -244,7 +244,7 @@ var plaintext = buff.toString();</pre>
                   <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>.
                   The "PRF" passed to PBKDF2 is the XOR
                   of <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a>-<a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> and HMAC-<a href="http://en.wikipedia.org/wiki/SHA-3">SHA3</a>. We use the XOR composition here 
-                  to preserve and boost the pseudorandom property of the 
+                  to boost the pseudorandom property of the 
                   underlying two HMACs, therefore adding resilience to a break
                   of either SHA-512 or SHA3 (which are fundamentally different algorithms).
                   The output of this step is five seperate keys, 
