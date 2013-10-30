@@ -8,6 +8,8 @@
 #====================================================================
 
 blkcpy = (D,S,d_offset,s_offset,len) -> 
+
+  # This seemed like a good idea, but it was horrendously slow.
   #D.set(S.subarray((s_offset << 4), ((s_offset + len)) << 4), (d_offset << 4))
 
   j = d_offset << 4
