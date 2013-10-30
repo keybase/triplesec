@@ -8,8 +8,17 @@
 #====================================================================
 
 blkcpy = (D,S,d_offset,s_offset,len) -> 
-  n = 0x10
-  D.set(S.subarray(n*s_offset, n*(s_offset + len)), n*d_offset)
+  #D.set(S.subarray((s_offset << 4), ((s_offset + len)) << 4), (d_offset << 4))
+
+  j = d_offset << 4
+  i = s_offset << 4
+  end = (i + (len << 4))
+  while i < end
+    D[j++] = S[i++]
+    D[j++] = S[i++]
+    D[j++] = S[i++]
+    D[j++] = S[i++]
+
   true
 
 #----------
@@ -97,7 +106,7 @@ class Scrypt
 
     i = 0
     while i < @N
-      stop = Math.min(@N, i+128)
+      stop = Math.min(@N, i+2048)
       while i < stop
         # /* 3: V_i <-- X */
         blkcpy V, X, (lim*i), 0, lim
@@ -111,7 +120,7 @@ class Scrypt
 
     i = 0
     while i < @N
-      stop = Math.min(@N, i+128)
+      stop = Math.min(@N, i+256)
 
       while i < stop
         # This isntead of an explicit "integerify"
