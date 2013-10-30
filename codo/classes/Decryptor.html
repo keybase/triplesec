@@ -132,7 +132,7 @@ system.</p>
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>({key})
+        - (void) <strong>constructor</strong>({key, enc})
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -172,10 +172,11 @@ system.</p>
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>({key})
+      - (void) <strong>constructor</strong>({key, enc})
     </p>
     <div class='docstring'>
-  <p>key that was used for encryption! If not, we&#39;ll get a signature failure.</p>
+  <pre><code>  key that was used for encryption! If not, we&#39;ll get a signature failure.</code></pre>
+
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -187,6 +188,14 @@ system.</p>
       </span>
       &mdash;
       <span class='desc'>The input key to use for decryption. Hopefully it&#39;s the same</span>
+    </li>
+    <li>
+      <span class='name'>enc</span>
+      <span class='type'>
+        (<tt><a href='../classes/Encryptor.html'>Encryptor</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>An encryptor to clone internal data from</span>
     </li>
   </ul>
 </div>
@@ -234,7 +243,7 @@ is a <code>Buffer</code> object containing the plaintext.  On error,
     </div>
     <div id='footer'>
   Generated on
-  Tue Oct 15 2013 09:45:08 GMT-0400 (EDT)
+  Tue Oct 22 2013 09:02:50 GMT-0400 (EDT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.9.0

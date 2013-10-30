@@ -19,10 +19,13 @@ class Decryptor extends Base
   #----------------------
 
   # @param {Buffer} key The input key to use for decryption. Hopefully it's the same
-  # key that was used for encryption! If not, we'll get a signature failure.
-  constructor : ( { key } ) ->
+  #       key that was used for encryption! If not, we'll get a signature failure.
+  # @param {Encryptor} enc An encryptor to clone internal data from
+  constructor : ( { key, enc } ) ->
     super { key }
-    @_i = 0
+    if enc?
+      @key = enc.key
+      @derived_keys = enc.derived_keys
 
   #----------------------
 

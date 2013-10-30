@@ -138,7 +138,7 @@
 
     data:          new triplesec.Buffer('Pssst. I believe I love you.'),
     key:           new triplesec.Buffer('top-secret-pw'),
-    progress_hook: function (step, iterations, i) { /* ... */ }
+    progress_hook: function (obj) { /* ... */ }
 
 }, function(err, buff) {
   
@@ -155,7 +155,7 @@
 
     data:          new triplesec.Buffer 'Pssst. I believe I love you.'
     key:           new triplesec.Buffer 'top-secret-pw'
-    progress_hook: (step, iterations, i) -> # ...
+    progress_hook: ({what, i, total}) -> # ...
 
 , (err, buff) ->
 
@@ -192,7 +192,7 @@
 
     data:          new triplesec.Buffer(ciphertext, "hex"),
     key:           new triplesec.Buffer('top-secret-pw'),    
-    progress_hook: function (step, iterations, i) { /* ... */ }
+    progress_hook: function (obj) { /* ... */ }
 
 }, function (err, buff) {
 
@@ -211,7 +211,7 @@ var plaintext = buff.toString();</pre>
 
     data:          new triplesec.Buffer ciphertext, 'hex'
     key:           new triplesec.Buffer 'top-secret-pw'
-    progress_hook: (step, iterations, i) -> # ...
+    progress_hook: ({what, i, total}) -> # ...
 
 , (err, buff) ->
 
@@ -244,7 +244,7 @@ var plaintext = buff.toString();</pre>
                   <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>.
                   The "PRF" passed to PBKDF2 is the XOR
                   of <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a>-<a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> and HMAC-<a href="http://en.wikipedia.org/wiki/SHA-3">SHA3</a>. We use the XOR composition here 
-                  to preserve and boost the pseudorandom property of the 
+                  to boost the pseudorandom property of the 
                   underlying two HMACs, therefore adding resilience to a break
                   of either SHA-512 or SHA3 (which are fundamentally different algorithms).
                   The output of this step is five seperate keys, 
@@ -315,7 +315,7 @@ var plaintext = buff.toString();</pre>
               <i>Applied Cryptography</i> (Section 15.8 in the Second Edition), it is
               close.  TripleSec never uses the output of one block cipher as input into the next,
               which theoretically might allow a crack of one cipher to be used to crack
-              another. Rather, by merit of CTR mode, the three ciphers run on statistcally 
+              another. Rather, by merit of CTR mode, the three ciphers run on statistically 
               independent IVs, so a crack of one will not spread up or down the chain.
               The TripleSec technique takes one futher step not suggested by Schneier,
               which is to protect the inner IVs with the outer encryption algorithms, and only
