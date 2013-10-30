@@ -7,11 +7,22 @@
 
 #====================================================================
 
+class Timer
+  constructor : ->
+    @tot = 0
+  start : () ->
+    @_t = Date.now()
+  stop : () ->
+    @tot += (Date.now() - @_t)
+
+timer = new Timer()
+#====================================================================
+
 blkcpy = (D,S,d_offset,s_offset,len) -> 
 
   # This seemed like a good idea, but it was horrendously slow.
   #D.set(S.subarray((s_offset << 4), ((s_offset + len)) << 4), (d_offset << 4))
-
+  
   j = d_offset << 4
   i = s_offset << 4
   end = (i + (len << 4))
@@ -34,6 +45,7 @@ blkcpy = (D,S,d_offset,s_offset,len) ->
     D[j+15] = S[i+15]
     i += 16
     j += 16
+
   true
 
 #----------

@@ -1,0 +1,18 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Triple-Sec In-Browser Testing Page</title>
+ </head>
+ <body>
+   <div id="log"></div>
+   <hr/>
+  <script src="bench.js"></script>
+  <script>
+     bench.main(function(x) { 
+     	window.document.getElementById("log").innerHTML += "<p>" + x + "</p>"; 
+     });
+  </script>
+ </body>
+</html>
+
+

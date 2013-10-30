@@ -59,6 +59,9 @@ test-browser-buffer: $(TEST_STAMP) $(BUILD_STAMP)
 test/browser/test.js: test/browser/main.iced $(BUILD_STAMP)
 	$(BROWSERIFY) -t icsify $< > $@
 
+test/browser/bench.js: test/browser/bench.iced $(BUILD_STAMP)
+	$(BROWSERIFY) -t icsify -s bench $< > $@
+
 test-browser: $(TEST_STAMP) $(BUILD_STAMP)
 	@echo "Please visit in your favorite browser --> file://$(WD)/test/browser/index.html"
 
