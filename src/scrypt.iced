@@ -26,10 +26,11 @@ blkcpy = (D,S,d_offset,s_offset,len) ->
 #----------
 
 blkxor = (D,S,s_offset,len) ->
-  s_offset <<= 4
   len <<= 4
-  for i in [0...len]
-    D[i] ^= S[i + s_offset]
+  i = 0
+  j = (s_offset << 4)
+  while i < len
+    D[i++] ^= S[j++]
   true 
 
 #----------
@@ -46,7 +47,7 @@ class Scrypt
   #------------
 
   constructor : ({N,@r,@p,@c,@klass}) ->
-    @N or= (1 << (N or 10))
+    @N or= (1 << (N or 14))
     @r or= 16
     @p or= 2
     @c or= 1 # the number of times to run PBKDF2
