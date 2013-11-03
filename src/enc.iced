@@ -96,6 +96,10 @@ class Base
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
 
+      # The order to read the keys out of the Scrypt output, and don't 
+      # depend on the properties of the hash to guarantee the order.
+      order = [ 'hmac', 'aes', 'twofish', 'salsa20' ]
+
       tot = extra_keymaterial or 0
       (tot += v for k,v of lens)
 
@@ -109,7 +113,8 @@ class Base
       await @_kdf.run args, defer raw
       keys = {}
       i = 0
-      for k,v of lens
+      for k in order
+        v = lens[k]
         len = v/4
         end = i + len
         keys[k] = new WordArray raw.words[i...end]
