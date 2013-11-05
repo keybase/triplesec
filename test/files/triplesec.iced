@@ -5,6 +5,22 @@ spec = require '../data/triplesec_spec'
 
 #-------------------------------------------------
 
+exports.check_scrub_protection = (T,cb) ->
+  key = new Buffer "this key is good"
+  data = new Buffer "this is the data"
+  e = new Encryptor { key, version : 3}
+  await e.run {data}, defer err, ctext
+  T.no_error err
+  e.set_key new Buffer [0,0,0,0,0,0,0]
+  await e.run {data}, defer err, ctext
+  T.assert err?, "failed due to scrub protection"
+  e.set_key()
+  await e.run {data}, defer err, ctext
+  T.assert err?, "failed due to scrub protection"
+  cb()
+
+#-------------------------------------------------
+
 test_vectors = [
   { 
     key : new Buffer 'this be the password'

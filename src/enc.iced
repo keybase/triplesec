@@ -84,6 +84,9 @@ class Base
   #   The object will map cipher-name to a {WordArray} that is the generated key.
   #
   kdf : ({salt, extra_keymaterial, progress_hook}, cb) ->
+
+    await @_check_scrubbed @key, "in KDF", cb, defer()
+
     # Check the cache first
     salt_hex = salt.to_hex()
 
@@ -122,7 +125,7 @@ class Base
       keys.extra = (new WordArray raw.words[end...]).to_buffer()
       @derived_keys[salt_hex] = keys
 
-    cb keys
+    cb null, keys
     
   #---------------
 
@@ -153,7 +156,7 @@ class Base
   # @param {callback} okcb The callback to fire if we're OK to proceed.
   # 
   _check_scrubbed : (key, where, ecb, okcb) ->
-    if not key.is_scrubbed() then okcb()
+    if key? and not key.is_scrubbed() then okcb()
     else ecb (new Error "#{where}: Failed due to scrubbed key!"), null
 
   #---------------
@@ -202,7 +205,7 @@ class Base
   #   be a {WordArray} of the concatenation of the IV and 
   #   the ciphertext.
   run_twofish : ({input, key, iv, progress_hook}, cb) ->
-    await @_check_scrubbed key, "Twofish", cb, defer()
+    await @_check_scrubbed key, "TwoFish", cb, defer()
     block_cipher = new TwoFish key
     await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "twofish" }, defer ct
     block_cipher.scrub()
@@ -236,6 +239,8 @@ class Base
         for key in key_ring
           key.scrub()
     @derived_keys = {}
+    @salt.scrub() if @salt?
+    @salt = null
     @key = null
 
 #========================================================================
@@ -337,8 +342,8 @@ class Encryptor extends Base
   resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
     if salt? then @salt = WordArray.alloc salt
     else await @rng @version.salt_size, defer @salt
-    await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
-    cb @keys
+    await @kdf {extra_keymaterial, progress_hook, @salt}, defer err, @keys
+    cb err, @keys
  
   #---------------
 
@@ -368,7 +373,7 @@ class Encryptor extends Base
     esc = make_esc cb, "Encryptor::run"
 
     if salt? or not @salt?
-      await @resalt { salt, extra_keymaterial, progress_hook }, defer() 
+      await @resalt { salt, extra_keymaterial, progress_hook }, esc defer() 
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
     await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
