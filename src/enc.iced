@@ -87,7 +87,10 @@ class Base
     # Check the cache first
     salt_hex = salt.to_hex()
 
-    await @_check_scrubbed @key, "KDF", cb, defer()
+    # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
+    key = @key.clone()
+
+    await @_check_scrubbed key, "KDF", cb, defer()
 
     if not (keys = @derived_keys[salt_hex])?
       @_kdf = new @version.kdf.klass @version.kdf.opts
@@ -102,16 +105,10 @@ class Base
       # depend on the properties of the hash to guarantee the order.
       order = [ 'hmac', 'aes', 'twofish', 'salsa20' ]
 
-      tot = extra_keymaterial or 0
-      (tot += v for k,v of lens)
+      dkLen = extra_keymaterial or 0
+      (dkLen += v for k,v of lens)
 
-      # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
-      args = {
-        key : @key.clone()
-        dkLen : tot
-        progress_hook
-        salt 
-      }
+      args = {dkLen, key, progress_hook, salt }
       await @_kdf.run args, defer raw
       keys = {}
       i = 0
@@ -337,10 +334,16 @@ class Encryptor extends Base
   #     and can be passed in.  If not provided, then we 
   # @param {callback} cb Called back when the resalting completes.
   resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
-    if salt? then @salt = WordArray.alloc salt
-    else await @rng @version.salt_size, defer @salt
-    await @kdf {extra_keymaterial, progress_hook, @salt}, defer err, @keys
-    cb null, @keys
+    err = null
+    if not salt? 
+      await @rng @version.salt_size, defer @salt
+    else if salt.length isnt @version.salt_size
+      err = new Error "Need a salt of exactly #{@version.salt_size} bytes (got #{salt.length})"
+    else
+      @salt = WordArray.alloc salt
+    unless err?
+      await @kdf {extra_keymaterial, progress_hook, @salt}, defer err, @keys
+    cb err, @keys
  
   #---------------
 
