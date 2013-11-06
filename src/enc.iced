@@ -87,6 +87,8 @@ class Base
     # Check the cache first
     salt_hex = salt.to_hex()
 
+    await @_check_scrubbed @key, "KDF", cb, defer()
+
     if not (keys = @derived_keys[salt_hex])?
       @_kdf = new @version.kdf.klass @version.kdf.opts
 
@@ -122,7 +124,7 @@ class Base
       keys.extra = (new WordArray raw.words[end...]).to_buffer()
       @derived_keys[salt_hex] = keys
 
-    cb keys
+    cb null, keys
     
   #---------------
 
@@ -337,8 +339,8 @@ class Encryptor extends Base
   resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
     if salt? then @salt = WordArray.alloc salt
     else await @rng @version.salt_size, defer @salt
-    await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
-    cb @keys
+    await @kdf {extra_keymaterial, progress_hook, @salt}, defer err, @keys
+    cb null, @keys
  
   #---------------
 
@@ -368,7 +370,7 @@ class Encryptor extends Base
     esc = make_esc cb, "Encryptor::run"
 
     if salt? or not @salt?
-      await @resalt { salt, extra_keymaterial, progress_hook }, defer() 
+      await @resalt { salt, extra_keymaterial, progress_hook }, esc defer() 
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
     await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
