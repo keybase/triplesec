@@ -8,7 +8,7 @@ alpha = (n) -> (A for i in [0...n]).join("")
 key = argv.k or alpha 4
 nonce = argv.n or alpha 3
 
-eng = new Salsa20 (WordArray.from_hex key), (WordArray.from_hex nonce)
+eng = new Salsa20 (WordArray.from_hex_le key), (WordArray.from_hex_le nonce)
 pad = eng.getBytes 64
 console.log pad.toString 'hex'
 
