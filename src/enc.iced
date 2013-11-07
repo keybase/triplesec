@@ -194,9 +194,14 @@ class Base
     await @_check_scrubbed key, "Salsa20", cb, defer()
     riv = null
 
+    # In the newer versions of TripleSec, we fix the fact that our
+    # inputs to Xsalsa20 were reversed endianwise.  It wasn't a security
+    # bug, it was just wrong.  This fixes it going forward.  We might
+    # want a slightly cleaner fix by the way...
     siv = if @version.fix_xsalsa20_rev 
       key.endian_reverse()
       riv = iv.clone().endian_reverse()
+      riv
     else iv
 
     await salsa20.bulk_encrypt { input, key, iv : siv, progress_hook}, defer ct
@@ -206,7 +211,7 @@ class Base
 
     # Scrub the reversed IV since we'll never use it again. 
     riv.scrub() if riv?
-    
+
     cb null, ct
 
   #---------------
