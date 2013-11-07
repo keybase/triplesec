@@ -87,12 +87,12 @@ glbl = new Global()
 #  
 exports.SHA3 = class SHA3 extends Hasher
 
-  @outputLength : 512 # in bits!
-  outputLength : SHA3.outputLength
-  @blockSize : (1600 - 2 * SHA3.outputLength)/32
-  blockSize : SHA3.blockSize
-  @output_size : SHA3.outputLength / 8
-  output_size : SHA3.output_size
+  @outputLength : 512                            # in bits!
+  outputLength : SHA3.outputLength               # in bits
+  @blockSize : (1600 - 2 * SHA3.outputLength)/32 # in # of 32-bit words
+  blockSize : SHA3.blockSize                     # in # of 32-bit words
+  @output_size : SHA3.outputLength / 8           # in bytes
+  output_size : SHA3.output_size                 # in bytes
 
   _doReset : () ->
     @_state = (new X64Word(0,0) for i in [0...25])
