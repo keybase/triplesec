@@ -1,6 +1,9 @@
 {V,Encryptor,encrypt} = require '../../lib/enc'
 {decrypt} = require '../../lib/dec'
-spec = require '../data/triplesec_spec'
+spec = 
+  v1 : require '../data/triplesec_spec_v1'
+  v2 : require '../data/triplesec_spec_v2'
+  v3 : require '../data/triplesec_spec_v3'
 {WordArray} = require '../../lib/wordarray'
 
 #-------------------------------------------------
@@ -111,16 +114,19 @@ class ReplayRng
 #-------------------------------------------------
 
 exports.check_spec = (T,cb) ->
-  for v,i in spec.data
-    await check_spec T, v, i, defer()
+  for version, vobj of V
+    data = spec["v#{version}"].data
+    for v,i in data
+      await check_spec T, version, v, i, defer()
+    T.waypoint "checked spec version #{version}"
   cb()
 
-check_spec = (T,v,i,cb) ->
+check_spec = (T,version,v,i,cb) ->
   rng = new ReplayRng (new Buffer v.r, 'hex'), T
   d = 
     key : new Buffer v.key, 'hex'
     data : new Buffer v.pt, 'hex'
-    version : v.version
+    version : version
   d.rng = (n,cb) -> rng.gen(n,cb)
   await encrypt d, defer err, ct
   T.assert not err?
@@ -130,9 +136,7 @@ check_spec = (T,v,i,cb) ->
   T.assert not err?
   T.equal (pt.toString 'hex'), v.pt, "decryption worked"
   if T.is_ok()
-    T.waypoint "check test vector #{i}"
+    T.waypoint "check spec test vector #{version}.#{i}"
   cb()
 
-
 #-------------------------------------------------
-

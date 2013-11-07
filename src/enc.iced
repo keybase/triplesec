@@ -18,38 +18,41 @@ prng          = require './prng'
 # @property {Object} V A lookup table of all supported versions.
 V = 
   "1" : 
-    header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
-    salt_size     : 8                  # 8 bytes of salt is good enough!
-    kdf           :                    # The key derivation...
-      klass       : PBKDF2             #   algorithm klass
-      opts        :                    #   ..and options
-        c         : 1024               #   The number of iterations
-        klass     : XOR                #   The HMAC to use as a subroutine
-    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+    header           : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
+    salt_size        : 8                  # 8 bytes of salt is good enough!
+    fix_xsalsa20_rev : false              # XSalsa20 Endian Reverse
+    kdf              :                    # The key derivation...
+      klass          : PBKDF2             #   algorithm klass
+      opts           :                    #   ..and options
+        c            : 1024               #   The number of iterations
+        klass        : XOR                #   The HMAC to use as a subroutine
+    hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
   "2" : 
-    header        : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
-    salt_size     : 16                 # 16 bytes of salt for various uses
-    kdf           :                    # The key derivation...
-      klass       : Scrypt             #   algorithm klass
-      opts        :                    #   ..and options
-        c         : 64                 #   The number of iterations
-        klass     : XOR                #   The HMAC to use as a subroutine
-        N         : 12                 #   log_2 of the work factor
-        r         : 8                  #   The memory use factor
-        p         : 1                  #   the parallelization factor
-    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+    header           : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
+    salt_size        : 16                 # 16 bytes of salt for various uses
+    fix_xsalsa20_rev : false              # XSalsa20 Endian Reverse
+    kdf              :                    # The key derivation...
+      klass          : Scrypt             #   algorithm klass
+      opts           :                    #   ..and options
+        c            : 64                 #   The number of iterations
+        klass        : XOR                #   The HMAC to use as a subroutine
+        N            : 12                 #   log_2 of the work factor
+        r            : 8                  #   The memory use factor
+        p            : 1                  #   the parallelization factor
+    hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
   "3" : 
-    header        : [ 0x1c94d7de, 3 ]  # The magic #, and also the version #
-    salt_size     : 16                 # 16 bytes of salt for various uses
-    kdf           :                    # The key derivation...
-      klass       : Scrypt             #   algorithm klass
-      opts        :                    #   ..and options
-        c         : 1                  #   The number of iterations
-        klass     : HMAC_SHA256        #   The HMAC to use as a subroutine
-        N         : 15                 #   log_2 of the work factor
-        r         : 8                  #   The memory use factor
-        p         : 1                  #   the parallelization factor
-    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+    header           : [ 0x1c94d7de, 3 ]  # The magic #, and also the version #
+    salt_size        : 16                 # 16 bytes of salt for various uses
+    fix_xsalsa20_rev : true               # XSalsa20 Endian Reverse
+    kdf              :                    # The key derivation...
+      klass          : Scrypt             #   algorithm klass
+      opts           :                    #   ..and options
+        c            : 1                  #   The number of iterations
+        klass        : HMAC_SHA256        #   The HMAC to use as a subroutine
+        N            : 15                 #   log_2 of the work factor
+        r            : 8                  #   The memory use factor
+        p            : 1                  #   the parallelization factor
+    hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
 
 #========================================================================
 
@@ -189,8 +192,21 @@ class Base
   #   the ciphertext, depending on the `output_iv` option.
   run_salsa20 : ({ input, key, iv, output_iv, progress_hook }, cb) ->
     await @_check_scrubbed key, "Salsa20", cb, defer()
-    await salsa20.bulk_encrypt { input, key, iv, progress_hook}, defer ct
+    riv = null
+
+    siv = if @version.fix_xsalsa20_rev 
+      key.endian_reverse()
+      riv = iv.clone().endian_reverse()
+    else iv
+
+    await salsa20.bulk_encrypt { input, key, iv : siv, progress_hook}, defer ct
+
+    # Despite the reversals, always output the original IV.
     ct = iv.clone().concat(ct) if output_iv
+
+    # Scrub the reversed IV since we'll never use it again. 
+    riv.scrub() if riv?
+    
     cb null, ct
 
   #---------------
