@@ -2,11 +2,11 @@
 {Decryptor} = require '../lib/dec'
 
 key = new Buffer "this be the password"
-data = new Buffer ("this be the secret message" for i in [0..500]).join " -> "
+data = new Buffer ("this be the secret message" for i in [0..5]).join " -> "
 
-enc = new Encryptor { key }
+enc = new Encryptor { key, version : 3 }
 dec = new Decryptor { key }
-for i in [0...100]
-  await enc.run { data : new Buffer data }, defer err, ct
-  await dec.run { data : ct }, defer err, pt
-  console.log pt.toString()
+await enc.run { data : new Buffer data }, defer err, ct
+console.log key.toString('hex')
+console.log ct.toString('hex')
+process.exit(0)
