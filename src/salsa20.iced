@@ -82,8 +82,13 @@ class Salsa20Core extends Salsa20InnerCore
   
   #--------------
 
-  constructor : (@key, @nonce) ->
+  constructor : (key, nonce) ->
     super 20
+
+    # Everything in Salsa is done little endian, so we need to reverse our
+    # nonces and keys at the outset.
+    @key = key.clone().endian_reverse()
+    @nonce = nonce.clone().endian_reverse()
 
     throw new Error "Bad key/nonce lengths" unless (
              ((@key.sigBytes is 16) and (@nonce.sigBytes is 8)) or

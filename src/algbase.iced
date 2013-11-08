@@ -196,6 +196,7 @@ class StreamCipher
   # @return {Number} the number of blocks encrypted
   encryptBlock : (word_array, dst_offset = 0) ->
     pad = @get_pad()
+    #console.log "pad -> #{pad.to_hex()}"
     n_words = Math.min(word_array.words.length - dst_offset, @bsiw)
     word_array.xor pad, { dst_offset, n_words }
     pad.scrub()

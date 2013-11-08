@@ -80,7 +80,7 @@ check_randomness = (T, version, cb) ->
   found = {}
   for i in [0...100]
     await enc.run {data : tv.data}, defer err, ct
-    T.assert not err?
+    T.no_error err
     ct = ct.toString 'hex'
     if found[ct]
       T.error "found a repeated cipher text -> #{ct}"

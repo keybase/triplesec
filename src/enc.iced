@@ -20,7 +20,7 @@ V =
   "1" : 
     header           : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
     salt_size        : 8                  # 8 bytes of salt is good enough!
-    fix_xsalsa20_rev : false              # XSalsa20 Endian Reverse
+    xsalsa20_rev     : true               # XSalsa20 Endian Reverse
     kdf              :                    # The key derivation...
       klass          : PBKDF2             #   algorithm klass
       opts           :                    #   ..and options
@@ -30,7 +30,7 @@ V =
   "2" : 
     header           : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
     salt_size        : 16                 # 16 bytes of salt for various uses
-    fix_xsalsa20_rev : false              # XSalsa20 Endian Reverse
+    xsalsa20_rev     : true               # XSalsa20 Endian Reverse
     kdf              :                    # The key derivation...
       klass          : Scrypt             #   algorithm klass
       opts           :                    #   ..and options
@@ -43,7 +43,7 @@ V =
   "3" : 
     header           : [ 0x1c94d7de, 3 ]  # The magic #, and also the version #
     salt_size        : 16                 # 16 bytes of salt for various uses
-    fix_xsalsa20_rev : true               # XSalsa20 Endian Reverse
+    xsalsa20_rev     : false              # XSalsa20 Endian Reverse
     kdf              :                    # The key derivation...
       klass          : Scrypt             #   algorithm klass
       opts           :                    #   ..and options
@@ -193,18 +193,15 @@ class Base
   run_salsa20 : ({ input, key, iv, output_iv, progress_hook }, cb) ->
     await @_check_scrubbed key, "Salsa20", cb, defer()
 
-    args = { input, progress_hook }
+    args = { input, progress_hook, key, iv }
 
     # In the newer versions of TripleSec, we fix the fact that our
     # inputs to Xsalsa20 were reversed endianwise.  It wasn't a security
     # bug, it was just wrong.  This fixes it going forward.  We might
     # want a slightly cleaner fix by the way...
-    if @version.fix_xsalsa20_rev 
+    if @version.xsalsa20_rev 
       args.key = key.clone().endian_reverse()
       args.iv = iv.clone().endian_reverse()
-    else
-      args.key = key
-      args.iv = iv
 
     await salsa20.bulk_encrypt args, defer ct
 
@@ -212,7 +209,7 @@ class Base
     ct = iv.clone().concat(ct) if output_iv
 
     # Scrub the reversed IV & key since we'll never use it again. 
-    if @version.fix_xsalsa20_rev
+    if @version.xsalsa20_rev
       args.key.scrub()
       args.iv.scrub()
 

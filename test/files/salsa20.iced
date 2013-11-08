@@ -6,8 +6,8 @@ data =
 {WordArray} = require '../../lib/wordarray'
 
 test_case = (T, i, test) ->
-  key = WordArray.from_hex_le test.key
-  iv = WordArray.from_hex_le test.IV
+  key = WordArray.from_hex test.key
+  iv = WordArray.from_hex test.IV
   stream = new Salsa20 key, iv
   i = 0
   for part in test.stream
@@ -41,8 +41,8 @@ exports.nonce192 = (T, cb) ->
                     0x7c, 0x2c, 0x19, 0x5a, 0x7f, 0x8c, 0xae, 0x9c, 0x4b, 0x40,
                     0x50, 0xd0, 0x8c, 0xe6, 0xd3, 0xa1, 0x51, 0xec, 0x26, 0x5f,
                     0x3a, 0x58, 0xe4, 0x76, 0x48 ]
-  nonce = WordArray.from_utf8_le v.nonce
-  key = WordArray.from_utf8_le v.key
+  nonce = WordArray.from_utf8 v.nonce
+  key = WordArray.from_utf8 v.key
   ctext = new Buffer(v.ciphertext).toString('hex')
   stream = new Salsa20 key, nonce
   bytes = stream.getBytes(v.ciphertext.length).toString('hex')
@@ -51,8 +51,8 @@ exports.nonce192 = (T, cb) ->
 
 exports.test_slicing = (T,cb) ->
   v = data.key256[data.key256.length - 1]
-  key = WordArray.from_hex_le v.key
-  iv = WordArray.from_hex_le v.IV
+  key = WordArray.from_hex v.key
+  iv = WordArray.from_hex v.IV
   n = 64
   stream = new Salsa20 key, iv
   reference = (stream.getBytes().toString('hex') for i in [0...n]).join('')
