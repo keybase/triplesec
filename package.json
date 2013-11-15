@@ -31,7 +31,8 @@
   },
   "dependencies" : {
     "more-entropy" : "*",
-    "iced-error" : "*"
+    "iced-error" : "*",
+    "progress" : "*"
   },
   "author" : "keybase",
   "licenses": [{
