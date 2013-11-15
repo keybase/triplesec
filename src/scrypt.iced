@@ -45,11 +45,12 @@ class Scrypt
 
   #------------
 
-  constructor : ({N,@r,@p,@c,@klass}) ->
+  constructor : ({N,@r,@p,c,c0,c1,@klass}) ->
     @N or= (1 << (N or 10))
     @r or= 16
     @p or= 2
-    @c or= 1 # the number of times to run PBKDF2
+    @c0 = c0 or c or 1  
+    @c1 = c1 or c or 1
     @klass or= HMAC_SHA256
     @X16_tmp = new Int32Array 0x10
     @s20ic = new Salsa20InnerCore(8)
@@ -64,8 +65,8 @@ class Scrypt
 
   #------------
 
-  pbkdf2 : ({key, salt, dkLen, progress_hook}, cb) ->
-    await pbkdf2 { key, salt, @c, dkLen, @klass, progress_hook }, defer wa
+  pbkdf2 : ({key, salt, dkLen, progress_hook, c}, cb) ->
+    await pbkdf2 { key, salt, c, dkLen, @klass, progress_hook }, defer wa
     cb wa
 
   #------------
@@ -162,7 +163,11 @@ class Scrypt
     XY = new Int32Array(64*@r)
     V = new Int32Array(32*@r*@N)
 
-    await @pbkdf2 { key : key.clone(), salt, dkLen : 128*@r*@p }, defer B
+    lph = (o) -> 
+      o.what += " (pass 1)"
+      progress_hook? o
+
+    await @pbkdf2 { key : key.clone(), salt, dkLen : 128*@r*@p, c : @c0, progress_hook : lph }, defer B
     B = new Int32Array B.words
 
     v_endian_reverse B
@@ -173,7 +178,11 @@ class Scrypt
 
     v_endian_reverse B
 
-    await @pbkdf2 { key, salt : WordArray.from_i32a(B), dkLen }, defer out
+    lph = (o) -> 
+      o.what += " (pass 2)"
+      progress_hook? o
+
+    await @pbkdf2 { key, salt : WordArray.from_i32a(B), dkLen , c : @c1, progress_hook : lph }, defer out
     scrub_vec(B)
     scrub_vec(XY)
     scrub_vec(V)
@@ -194,13 +203,15 @@ class Scrypt
 # @param {number} N The N (computational factor) parameter for scrypt [default : 2^10]
 # @param {number} p The p (parallellism) factor for scrypt [default : 1]
 # @param {number} c The number of times to run PBKDF2 [default: 1]
+# @param {number} c0 The number of times to run PBKDF2 in the 0th pass [ default: 1]
+# @param {number} c1 The number of times to run PBKDF2 in the 1st pass [ default: 1]
 # @param {Class} klass The PRF to use as a subroutine in PBKDF2 [default : HMAC-SHA256]
 # @param {function} progress_hook A Standard progress hook
 # @param {number} dkLen the length of the derived key.
 # @param {calllback} cb Calls back with a {WordArray} of key-material
 #
-scrypt = ({key, salt, r, N, p, c, klass, progress_hook, dkLen}, cb) ->
-  eng = new Scrypt { r, N, p, c, klass }
+scrypt = ({key, salt, r, N, p, c0, c1, c, klass, progress_hook, dkLen}, cb) ->
+  eng = new Scrypt { r, N, p, c, c0, c1, klass }
   await eng.run { key, salt, progress_hook, dkLen }, defer wa
   cb wa
 
