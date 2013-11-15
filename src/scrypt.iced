@@ -214,8 +214,8 @@ class Scrypt
 # @param {calllback} cb Calls back with a {WordArray} of key-material
 #
 scrypt = ({key, salt, r, N, p, c0, c1, c, klass, progress_hook, dkLen, no_scrub}, cb) ->
-  eng = new Scrypt { r, N, p, c, c0, c1, klass }
-  await eng.run { key, salt, progress_hook, dkLen, no_scrub }, defer wa
+  eng = new Scrypt { r, N, p, c, c0, c1, klass, no_scrub }
+  await eng.run { key, salt, progress_hook, dkLen }, defer wa
   cb wa
 
 #====================================================================
