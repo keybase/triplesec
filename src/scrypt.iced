@@ -215,7 +215,7 @@ class Scrypt
 #
 scrypt = ({key, salt, r, N, p, c0, c1, c, klass, progress_hook, dkLen, no_scrub}, cb) ->
   eng = new Scrypt { r, N, p, c, c0, c1, klass }
-  await eng.run { key, salt, progress_hook, dkLen }, defer wa
+  await eng.run { key, salt, progress_hook, dkLen, no_scrub }, defer wa
   cb wa
 
 #====================================================================
