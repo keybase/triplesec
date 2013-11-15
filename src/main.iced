@@ -13,3 +13,4 @@ exports.hash =
   SHA256  : require('./sha256').SHA256
   SHA512  : require('./sha512').SHA512
   SHA3    : require('./sha3').SHA3
+exports.scrypt  = require('./scrypt').scrypt
