@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you have the `clock_gettime' function. */
-#define HAVE_CLOCK_GETTIME 1
+/* #undef HAVE_CLOCK_GETTIME */
 
 /* Define to 1 if you have the declaration of `be64enc', and to 0 if you
    don't. */
@@ -15,7 +15,7 @@
 #define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `rt' library (-lrt). */
-#define HAVE_LIBRT 1
+/* #undef HAVE_LIBRT */
 
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
@@ -36,19 +36,19 @@
 #define HAVE_STRING_H 1
 
 /* Define to 1 if the system has the type `struct sysinfo'. */
-#define HAVE_STRUCT_SYSINFO 1
+/* #undef HAVE_STRUCT_SYSINFO */
 
 /* Define to 1 if `mem_unit' is member of `struct sysinfo'. */
-#define HAVE_STRUCT_SYSINFO_MEM_UNIT 1
+/* #undef HAVE_STRUCT_SYSINFO_MEM_UNIT */
 
 /* Define to 1 if `totalram' is member of `struct sysinfo'. */
-#define HAVE_STRUCT_SYSINFO_TOTALRAM 1
+/* #undef HAVE_STRUCT_SYSINFO_TOTALRAM */
 
 /* Define to 1 if the OS has a hw.usermem sysctl */
-/* #undef HAVE_SYSCTL_HW_USERMEM */
+#define HAVE_SYSCTL_HW_USERMEM 1
 
 /* Define to 1 if you have the `sysinfo' function. */
-#define HAVE_SYSINFO 1
+/* #undef HAVE_SYSINFO */
 
 /* Define to 1 if you have the <sys/endian.h> header file. */
 /* #undef HAVE_SYS_ENDIAN_H */
@@ -60,7 +60,7 @@
 #define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/sysinfo.h> header file. */
-#define HAVE_SYS_SYSINFO_H 1
+/* #undef HAVE_SYS_SYSINFO_H */
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #define HAVE_SYS_TYPES_H 1
