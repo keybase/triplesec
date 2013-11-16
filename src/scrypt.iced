@@ -45,7 +45,7 @@ class Scrypt
 
   #------------
 
-  constructor : ({N,@r,@p,c,c0,c1,@klass,@no_scrub}) ->
+  constructor : ({N,@r,@p,c,c0,c1,@klass}) ->
     @N or= (1 << (N or 10))
     @r or= 16
     @p or= 2
@@ -183,9 +183,8 @@ class Scrypt
       progress_hook? o
 
     await @pbkdf2 { key, salt : WordArray.from_i32a(B), dkLen , c : @c1, progress_hook : lph }, defer out
-    unless @no_scrub
-      scrub_vec(XY)
-      scrub_vec(V)
+    scrub_vec(XY)
+    scrub_vec(V)
     scrub_vec(B)
     key.scrub()
 
@@ -209,12 +208,10 @@ class Scrypt
 # @param {Class} klass The PRF to use as a subroutine in PBKDF2 [default : HMAC-SHA256]
 # @param {function} progress_hook A Standard progress hook
 # @param {number} dkLen the length of the derived key.
-# @param {bool} no_scrub We don't want no scrubs! Don't scrub the buffers, which
-#      sometimes crash Chrome [default: false]
 # @param {calllback} cb Calls back with a {WordArray} of key-material
 #
-scrypt = ({key, salt, r, N, p, c0, c1, c, klass, progress_hook, dkLen, no_scrub}, cb) ->
-  eng = new Scrypt { r, N, p, c, c0, c1, klass, no_scrub }
+scrypt = ({key, salt, r, N, p, c0, c1, c, klass, progress_hook, dkLen}, cb) ->
+  eng = new Scrypt { r, N, p, c, c0, c1, klass }
   await eng.run { key, salt, progress_hook, dkLen }, defer wa
   cb wa
 
