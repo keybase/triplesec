@@ -18,3 +18,7 @@ build-stamp
 test-stamp
 test/data
 test/json
+
+contrib/scrypt-1.1.6/.deps
+contrib/scrypt-1.1.6/*.o
+contrib/scrypt-1.1.6/scrypt
