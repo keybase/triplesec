@@ -225,7 +225,7 @@ scryptenc_setup(uint8_t header[96], uint8_t dk[64],
 		return (rc);
 
 	/* Generate the derived keys. */
-	if (crypto_scrypt(passwd, passwdlen, salt, 32, N, r, p, dk, 64, 1))
+	if (crypto_scrypt(passwd, passwdlen, salt, 32, N, r, p, dk, 64, 1, 1))
 		return (3);
 
 	/* Construct the file header. */
@@ -291,7 +291,7 @@ scryptdec_setup(const uint8_t header[96], uint8_t dk[64],
 
 	/* Compute the derived keys. */
 	N = (uint64_t)(1) << logN;
-	if (crypto_scrypt(passwd, passwdlen, salt, 32, N, r, p, dk, 64,1))
+	if (crypto_scrypt(passwd, passwdlen, salt, 32, N, r, p, dk, 64, 1, 1))
 		return (3);
 
 	/* Check header signature (i.e., verify password). */

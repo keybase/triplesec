@@ -362,7 +362,7 @@ Copyright (C) 2008 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/max/src/scrypt-1.1.6'
+ac_pwd='/home/max/src/triplesec/contrib/scrypt-1.1.6'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -575,12 +575,12 @@ S["am__isrc"]=""
 S["CYGPATH_W"]="echo"
 S["PACKAGE"]="scrypt"
 S["VERSION"]="1.1.6"
-S["ACLOCAL"]="${SHELL} /home/max/src/scrypt-1.1.6/config.aux/missing --run aclocal-1.10"
-S["AUTOCONF"]="${SHELL} /home/max/src/scrypt-1.1.6/config.aux/missing --run autoconf"
-S["AUTOMAKE"]="${SHELL} /home/max/src/scrypt-1.1.6/config.aux/missing --run automake-1.10"
-S["AUTOHEADER"]="${SHELL} /home/max/src/scrypt-1.1.6/config.aux/missing --run autoheader"
-S["MAKEINFO"]="${SHELL} /home/max/src/scrypt-1.1.6/config.aux/missing --run makeinfo"
-S["install_sh"]="$(SHELL) /home/max/src/scrypt-1.1.6/config.aux/install-sh"
+S["ACLOCAL"]="${SHELL} /home/max/src/triplesec/contrib/scrypt-1.1.6/config.aux/missing --run aclocal-1.10"
+S["AUTOCONF"]="${SHELL} /home/max/src/triplesec/contrib/scrypt-1.1.6/config.aux/missing --run autoconf"
+S["AUTOMAKE"]="${SHELL} /home/max/src/triplesec/contrib/scrypt-1.1.6/config.aux/missing --run automake-1.10"
+S["AUTOHEADER"]="${SHELL} /home/max/src/triplesec/contrib/scrypt-1.1.6/config.aux/missing --run autoheader"
+S["MAKEINFO"]="${SHELL} /home/max/src/triplesec/contrib/scrypt-1.1.6/config.aux/missing --run makeinfo"
+S["install_sh"]="$(SHELL) /home/max/src/triplesec/contrib/scrypt-1.1.6/config.aux/install-sh"
 S["STRIP"]=""
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["MKDIR_P"]="/bin/mkdir -p"
@@ -588,7 +588,7 @@ S["mkdir_p"]="/bin/mkdir -p"
 S["AWK"]="mawk"
 S["SET_MAKE"]=""
 S["am__leading_dot"]="."
-S["AMTAR"]="${SHELL} /home/max/src/scrypt-1.1.6/config.aux/missing --run tar"
+S["AMTAR"]="${SHELL} /home/max/src/triplesec/contrib/scrypt-1.1.6/config.aux/missing --run tar"
 S["am__tar"]="${AMTAR} chof - \"$$tardir\""
 S["am__untar"]="${AMTAR} xf -"
 S["MAINTAINER_MODE_TRUE"]="#"
