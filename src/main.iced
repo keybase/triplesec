@@ -14,3 +14,5 @@ exports.hash =
   SHA512  : require('./sha512').SHA512
   SHA3    : require('./sha3').SHA3
 exports.scrypt  = require('./scrypt').scrypt
+exports.pbkdf2 = require('./pbkdf2').pbkdf2
+exports.HMAC_SHA256 = require('./hmac').HMAC_SHA256
