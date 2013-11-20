@@ -8,28 +8,63 @@
 #====================================================================
 
 blkcpy = (D,S,d_offset,s_offset,len) -> 
+  "use asm";
 
   # This seemed like a good idea, but it was horrendously slow.
   #D.set(S.subarray((s_offset << 4), ((s_offset + len)) << 4), (d_offset << 4))
 
-  j = d_offset << 4
-  i = s_offset << 4
-  end = (i + (len << 4))
+  j = (d_offset << 4) | 0
+  i = (s_offset << 4) | 0
+  end = (i + (len << 4)) | 0
   while i < end
-    D[j++] = S[i++]
-    D[j++] = S[i++]
-    D[j++] = S[i++]
-    D[j++] = S[i++]
+    D[j] = S[i]
+    D[j+1] = S[i+1]
+    D[j+2] = S[i+2]
+    D[j+3] = S[i+3]
+    D[j+4] = S[i+4]
+    D[j+5] = S[i+5]
+    D[j+6] = S[i+6]
+    D[j+7] = S[i+7]
+    D[j+8] = S[i+8]
+    D[j+9] = S[i+9]
+    D[j+10] = S[i+10]
+    D[j+11] = S[i+11]
+    D[j+12] = S[i+12]
+    D[j+13] = S[i+13]
+    D[j+14] = S[i+14]
+    D[j+15] = S[i+15]
+    i += 16
+    j += 16
 
   true
 
 #----------
 
 blkxor = (D,S,s_offset,len) ->
-  s_offset <<= 4
-  len <<= 4
-  for i in [0...len]
-    D[i] ^= S[i + s_offset]
+  "use asm";
+  
+  len = (len << 4) | 0
+  i = 0
+  j = (s_offset << 4) | 0
+  while i < len
+    D[i] ^= S[j]
+    D[i+1] ^= S[j+1]
+    D[i+2] ^= S[j+2]
+    D[i+3] ^= S[j+3]
+    D[i+4] ^= S[j+4]
+    D[i+5] ^= S[j+5]
+    D[i+6] ^= S[j+6]
+    D[i+7] ^= S[j+7]
+    D[i+8] ^= S[j+8]
+    D[i+9] ^= S[j+9]
+    D[i+10] ^= S[j+10]
+    D[i+11] ^= S[j+11]
+    D[i+12] ^= S[j+12]
+    D[i+13] ^= S[j+13]
+    D[i+14] ^= S[j+14]
+    D[i+15] ^= S[j+15]
+    i += 16
+    j += 16
   true 
 
 #----------
