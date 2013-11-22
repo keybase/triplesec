@@ -23,7 +23,7 @@
     "iced-coffee-script" : "*",
     "colors" : "*",
     "deep-equal" : "*",
-    "cryptojs-2fish" : "*",
+    "cryptojs-1sp" : "*",
     "optimist" : "*",
     "rsp2json" : "*",
     "codo" : "*",

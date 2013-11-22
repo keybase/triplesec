@@ -1,5 +1,5 @@
 
-{CryptoJS} = require 'cryptojs-2fish'
+{CryptoJS} = require 'cryptojs-1sp'
 
 opts = 
   hasher : CryptoJS.algo.SHA512
