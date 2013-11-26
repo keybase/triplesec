@@ -45,6 +45,9 @@
   $(function() {
     var input_change, progress, progress_hook, reset_progress, textarea_auto,
       _this = this;
+    if (window.location.href.indexOf('now_in_python.html') === -1) {
+      window.location = './triplesec_now_in_python.html';
+    }
     textarea_auto = function(ta) {
       ta.style.overflow = 'hidden';
       ta.style.height = 0;
@@ -111,7 +114,8 @@
           data: data,
           key: key,
           rng: triplesec.rng,
-          progress_hook: progress_hook
+          progress_hook: progress_hook,
+          version: 3
         }, __iced_deferrals.defer({
           assign_fn: (function() {
             return function() {
@@ -119,7 +123,7 @@
               return out = arguments[1];
             };
           })(),
-          lineno: 47
+          lineno: 51
         }));
         __iced_deferrals._fulfill();
       })(function() {
@@ -129,7 +133,7 @@
             filename: "site/iced/site.iced"
           });
           setTimeout(__iced_deferrals.defer({
-            lineno: 48
+            lineno: 52
           }), 5);
           __iced_deferrals._fulfill();
         })(function() {
@@ -168,7 +172,7 @@
               return out = arguments[1];
             };
           })(),
-          lineno: 66
+          lineno: 70
         }));
         __iced_deferrals._fulfill();
       })(function() {
@@ -178,7 +182,7 @@
             filename: "site/iced/site.iced"
           });
           setTimeout(__iced_deferrals.defer({
-            lineno: 67
+            lineno: 71
           }), 5);
           __iced_deferrals._fulfill();
         })(function() {

@@ -7,7 +7,7 @@
     <link   type   ="text/css" rel="stylesheet" href="site/css/bootstrap.min.css">
     <link   type   ="text/css" rel="stylesheet" href="site/css/site.css">
     <link   type   ="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700">
-    <script type   ="text/javascript"            src="rel/triplesec-1.0.0-min.js"></script>
+    <script type   ="text/javascript"            src="rel/triplesec-1.0.4-min.js"></script>
     <script type   ="text/javascript"            src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type   ="text/javascript"            src="site/js/bootstrap.min.js"></script>
     <script type   ="text/javascript"            src="site/js/site.js"></script>
@@ -26,21 +26,22 @@
 
           <div class="brand">
             TripleSec
+            <img class="code-logo" src="site/img/python-logo.png">
+            <img class="code-logo" src="site/img/node-logo.png">
+            <img class="code-logo" src="site/img/js-logo.png">
           </div>
 
           <div class="row">
             
             <div class="col-sm-8 intro">
-              <p>
-                Nowadays, responsible programmers should consider encrypting sensitive user
-                data on the browser before it arrives at their servers. They furthermore ought to
-                consider the possibility of weaknesses
-                in popular cryptography (e.g., AES and SHA1) 
-                or cryptographic resources (e.g. system entropy sources).
+              <p class="lead">
+                <b>Big News Nov. 26, 2013 - TripleSec for Python!</b>
+                <br />
+                Versions 2.6, 2.7, and 3.3+ supported.
               </p>
               <p>
-                <b>TripleSec</b> is a simple, open-source triple-paranoid symmetric encryption library for the 
-                 browser and Node.js.  It encrypts data with
+                <b>TripleSec</b> is a simple to use, open-source triple-paranoid symmetric encryption library for Python,
+                 Node.js, and even the browser.  It encrypts data with
                 <a href="http://en.wikipedia.org/wiki/Salsa20" class="salsa20">Salsa 20</a>, 
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>, 
@@ -48,11 +49,10 @@
               </p>
               <p>
                 Of course, encryption is only part of the story. TripleSec also: derives keys with
-                <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a> to defend
+                <a href="http://en.wikipedia.org/wiki/Scrypt">scrypt</a> to defend
                 against password-cracking and rainbow tables; authenticates 
                 with <a href="http://en.wikipedia.org/wiki/HMAC">HMAC</a> to protect against 
-                (adaptive) chosen-ciphertext attacks; and supplements the native entropy sources
-                (<code>window.crypto.getRandomValues</code> in the browser and <code>crypto.rng</code> in Node.js)
+                adaptive chosen-ciphertext attacks; and supplements the native entropy sources
                 for fear they are weak.
               </p>
             </div>
@@ -63,7 +63,7 @@
 
           <div class="demo">
 
-            <h3>Demo</h3>
+            <h3>In-Browser Magical Demo</h3>
 
             <div class="well">
 
@@ -104,18 +104,35 @@
           <div class="installation subsection">
             <h3>Installation</h3>
             <p>
-              For the browser, <a href="rel/triplesec-1.0.0-min.js">download triplesec.js (version 1.0.0)</a>.
+              TripleSec practically installs itself.
             </p>
-            <p>
-              In node, <code>npm install triplesec</code>.
-            </p>
+            <div class="row install-row">
+
+              <div class="install-col col-xs-4">
+                <img src="site/img/node-logo.png">
+                <p><code>npm install triplesec</code></p>
+                <p><a href="https://github.com/keybase/triplesec">source on github</a></p>
+              </div>
+              <div class="install-col col-xs-4">
+                <img src="site/img/python-logo.png">
+                <p><code>pip install TripleSec</code></p>
+                <p><a href="https://github.com/keybase/python-triplesec">source and usage notes on github</a></p>
+              </div>
+              <div class="install-col col-xs-4">
+                <img src="site/img/js-logo.png">
+                <p>
+                  <code><a href="rel/triplesec-1.0.4-min.js">triplesec.js (version 1.0.4)</a></code>
+                </p>
+              </div>
+
+            </div>
           </div>
 
           <div class="how-to-use subsection">
             <h3>How to Use It</h3>
             <p>
-            Encryption is performed by the <code>encrypt</code> function. It periodically yields
-            control to not lock up your CPU.  When done, it
+            Encryption is performed by the <code>encrypt</code> function. In JavaScript, it periodically yields
+            control to not lock up your CPU, and finally it
             calls back with <code>(err, buffer)</code>.
             </p>
 
@@ -127,12 +144,13 @@
 
 
             <ul class="code-nav nav nav-pills pull-right">
-              <li class="pull-right active"><a href="#encrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
-              <li class="pull-right"><a href="#encrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#encrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
+              <li class="pull-right active"><a href="#encrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#encrypt-python"     data-toggle="tab">Python</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="encrypt-javascript">
+              <div class="tab-pane active" id="encrypt-javascript">
 
                 <pre>triplesec.encrypt ({
 
@@ -149,7 +167,7 @@
 });</pre>
               </div><!-- /.tab-pane -->
 
-              <div class="tab-pane active" id="encrypt-coffeescript">
+              <div class="tab-pane" id="encrypt-coffeescript">
 
                 <pre>triplesec.encrypt
 
@@ -161,6 +179,12 @@
 
     ciphertext = buff.toString 'hex' unless err</pre>
               </div><!-- /.tab-pane -->
+              <div class="tab-pane" id="encrypt-python">
+
+                <pre>>>> import triplesec
+>>> enc = triplesec.encrypt(b"IT'S A YELLOW SUBMARINE", b'* password *')
+# optionally convert to hex string here...</pre>
+              </div><!-- /.tab-pane -->              
             </div><!-- /.tab-content -->
 
           <!--
@@ -180,12 +204,13 @@
             -->
 
             <ul class="code-nav nav nav-pills pull-right">
-              <li class="pull-right active"><a href="#decrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
-              <li class="pull-right"><a href="#decrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#decrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
+              <li class="pull-right active"><a href="#decrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#decrypt-python" data-toggle="tab">Python</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="decrypt-javascript">
+              <div class="tab-pane active" id="decrypt-javascript">
 
 
           <pre>triplesec.decrypt ({
@@ -204,7 +229,7 @@
 
 var plaintext = buff.toString();</pre>
               </div><!-- /.tab-pane -->
-              <div class="tab-pane active" id="decrypt-coffeescript">
+              <div class="tab-pane" id="decrypt-coffeescript">
 
 
           <pre>triplesec.decrypt
@@ -216,7 +241,13 @@ var plaintext = buff.toString();</pre>
 , (err, buff) ->
 
     console.log buff.toString() unless err</pre>
-              </div><!-- /.tab-pane -->              
+              </div><!-- /.tab-pane -->    
+              <div class="tab-pane" id="decrypt-python">
+
+
+          <pre>>>> import triplesec
+>>> print(triplesec.decrypt(x, b'* password *').decode())</pre>
+              </div><!-- /.tab-pane -->                        
             </div><!-- /.tab-content -->
 
           </div><!-- /.how-to-use -->
