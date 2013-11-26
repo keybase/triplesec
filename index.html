@@ -52,7 +52,7 @@
                 <a href="http://en.wikipedia.org/wiki/Scrypt">scrypt</a> to defend
                 against password-cracking and rainbow tables; authenticates 
                 with <a href="http://en.wikipedia.org/wiki/HMAC">HMAC</a> to protect against 
-                adaptive chosen-ciphertext attacks; and supplements the native entropy sources
+                adaptive chosen-ciphertext attacks; and in the JavaScript version supplements the native entropy sources
                 for fear they are weak.
               </p>
             </div>
@@ -104,7 +104,7 @@
           <div class="installation subsection">
             <h3>Installation</h3>
             <p>
-              TripleSec practically installs itself.
+              Let TripleSec into your life, today.
             </p>
             <div class="row install-row">
 
@@ -181,9 +181,14 @@
               </div><!-- /.tab-pane -->
               <div class="tab-pane" id="encrypt-python">
 
-                <pre>>>> import triplesec
->>> enc = triplesec.encrypt(b"IT'S A YELLOW SUBMARINE", b'* password *')
-# optionally convert to hex string here...</pre>
+                <pre>import triplesec
+import binascii
+
+enc = triplesec.encrypt(b"Pssst. I believe I love you.", b'top-secret-pw')
+
+# optional hex conversion
+
+ciphertext = binascii.hexlify(enc)</pre>
               </div><!-- /.tab-pane -->              
             </div><!-- /.tab-content -->
 
@@ -245,12 +250,26 @@ var plaintext = buff.toString();</pre>
               <div class="tab-pane" id="decrypt-python">
 
 
-          <pre>>>> import triplesec
->>> print(triplesec.decrypt(x, b'* password *').decode())</pre>
+                <pre># next line necessary if coming from hex
+
+enc = binascii.unhexlify(ciphertext)
+
+plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
               </div><!-- /.tab-pane -->                        
             </div><!-- /.tab-content -->
 
           </div><!-- /.how-to-use -->
+
+          <div class="command-line subsection">
+            <h3>Command Line</h3>
+            <p>
+              If you <code>pip install TripleSec</code> to get the python
+              version of TripleSec, you'll be pleasantly surprised to discover
+              the <code>triplesec</code> command line program. For usage info,
+              run it without any arguments. Or read the <a href="https://github.com/keybase/python-triplesec">python-triplesec</a>
+              page on github.
+            </p>
+          </div>
 
           <div class="anatomy subsection">
             <h3>Anatomy of Output</h3>
