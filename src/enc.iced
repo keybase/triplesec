@@ -56,6 +56,10 @@ V =
 
 #========================================================================
 
+exports.CURRENT_VERSION = CURRENT_VERSION = 3
+
+#========================================================================
+
 # A base class for the {Encryptor} and {Decryptor} classes.
 # Handles a lot of the particulars of signing, key generation,
 # and encryption/decryption.
@@ -65,7 +69,7 @@ class Base
 
   # @param {WordArray} key The private encryption key  
   constructor : ( { key, version } ) ->
-    @version = V[if version? then version else 1]
+    @version = V[if version? then version else CURRENT_VERSION]
     throw new Error "unknown version: #{version}" unless @version?
 
     @set_key key
