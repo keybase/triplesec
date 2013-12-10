@@ -377,10 +377,10 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
 
             <p>
               Similarly, TripleSec protects against a break in HMAC-SHA-512 by always
-              combining it with an HMAC based on <a href="http://keccak.noekeon.org/">Keccak hash algorithm</a> (soon to become the <a href="http://en.wikipedia.org/wiki/SHA-3">SHA-3</a> standard).  Note that TripleSec combines these HMACs in two different ways.
-              For PBKDF2 in Stage 1, TripleSec XORs the result of the two HMACs for pseudorandomness. For "signing" in Stage 4, TripleSec concatenates the
+              combining it with an HMAC based on <a href="http://keccak.noekeon.org/">Keccak hash algorithm</a> (soon to become the <a href="http://en.wikipedia.org/wiki/SHA-3">SHA-3</a> standard). 
+              TripleSec concatenates the
               two results to preserve collision-resistance.  Unlike the suspect
-              compositions in TLS and SSH, these simple compositions don't require
+              compositions in TLS and SSH, this simple composition doesn't require
               either SHA-512 or SHA-3 to be strongly collision-resistant; rather,
               just weakly collision-resistant in line with the
               <a href="http://cseweb.ucsd.edu/~mihir/papers/kmd5.pdf">original construction</a>.  See <a href="http://tuprints.ulb.tu-darmstadt.de/2094/1/thesis.lehmann.pdf">Anja Lehmann's</a> dissertation
@@ -397,7 +397,7 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
                 User data uploaded to a remote cloud-hosted server is nearly impossible to delete,
                 so any encryption scheme has to be future-proof.  The amount of time
                 spent encrypting reasonably-sized plaintexts pales in comparison to 
-                (1) PBKDF2, which is intentionally slow; and (2) how long it will sit on the server.
+                (1) <em>scrypt</em>, which is intentionally slow; and (2) how long it will sit on the server.
                 Why not go the extra mile?
               </p>
               <h5>What's triplesec.Buffer?</h5>
@@ -423,14 +423,14 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
               </p>
               <h5>How are passphrases salted?</h5>
               <p class="answer">
-                PBKDF2 takes as input a salt in addition to a secret passphrase,
+                <em>scrypt</em> takes as input a salt in addition to a secret passphrase,
                 to prevent an adversary from cracking many TripleSec-encrypted ciphtertexts
                 in parallel.  TripleSec salts passphrases with a 
                 random 8-byte sequence that's included with the ciphertext.  By 
                 default, TripleSec's <code>triplesec.Encryptor</code> object
                 uses the same salt until you call <code>triplesec.Encryptor.resalt</code>.
                 The advantage of salt reuse is that it's faster, since it avoids the intentionally
-                slow PBKDF2 step. On the other hand, an adversary can tell
+                slow <em>scrypt</em> step. On the other hand, an adversary can tell
                 if two different ciphertexts were encrypted in the same session if
                 the salt is not reset.
               </p>
@@ -462,8 +462,8 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
               <p class="answer">
                 <i>n</i> + 200.  The additive term is broken down as:
                 <ul>
-                  <li>8 bytes for the header (which is <code>[0x1c94d7de, 0x1]</code>).</li>
-                  <li>8 bytes for PBKDF2 salt</i>
+                  <li>8 bytes for the header (which is <code>[0x1c94d7de, 0x3]</code>).</li>
+                  <li>16 bytes for <em>scrypt</em> salt</i>
                   <li>64 bytes for the HMAC-SHA512 signature</i>
                   <li>64 bytes for the HMAC-SHA3 signature</i>
                   <li>16 bytes for AES-256 IV</i>
