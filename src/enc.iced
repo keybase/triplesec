@@ -49,7 +49,7 @@ V =
       opts           :                    #   ..and options
         c            : 1                  #   The number of iterations
         klass        : HMAC_SHA256        #   The HMAC to use as a subroutine
-        N            : 16                 #   log_2 of the work factor
+        N            : 15                 #   log_2 of the work factor
         r            : 8                  #   The memory use factor
         p            : 1                  #   the parallelization factor
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.

@@ -292,7 +292,7 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
                   for each cipher (see Step 3), and two final keys for
                   signing the ciphertext (see Step 4).  This "key stretching" is done via
                   standard <a href="http://www.tarsnap.com/scrypt.html">scrypt</a>,
-                  with parameters <em>N</em>=2<sup>16</sup>,
+                  with parameters <em>N</em>=2<sup>15</sup>,
                   <em>r</em>=8, <em>p</em>=1, and output length of 96 bytes.
                   The output of this step is five seperate keys, 
                   used below.
@@ -347,7 +347,7 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
                   <b>HMAC (or "sign") the ciphertext.</b> Finally, TripleSec "signs" the ciphertext
                   to ensure that no adversary tampers with it. The data to be signed
                   is everything generated to date: a small header that encapsulates the version
-                  of the algorithm (now at <code>1</code>); the salt used in key derivation; and
+                  of the algorithm (now at <code>3</code>); the salt used in key derivation; and
                   the output of the AES stage of the cascading encryption above.  TripleSec "macs" with a <b>concatenation</b> of two HMACs: 
                   HMAC-SHA-512, and HMAC-SHA3, each run with a seperate key.
                   The final output is a concatenation of:
@@ -426,7 +426,7 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
                 <em>scrypt</em> takes as input a salt in addition to a secret passphrase,
                 to prevent an adversary from cracking many TripleSec-encrypted ciphtertexts
                 in parallel.  TripleSec salts passphrases with a 
-                random 8-byte sequence that's included with the ciphertext.  By 
+                random 16-byte sequence that's included with the ciphertext.  By 
                 default, TripleSec's <code>triplesec.Encryptor</code> object
                 uses the same salt until you call <code>triplesec.Encryptor.resalt</code>.
                 The advantage of salt reuse is that it's faster, since it avoids the intentionally
@@ -460,7 +460,7 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
               </p>
               <h5>If the input message size is <i>n</i>, how big is the ciphertext?</h5>
               <p class="answer">
-                <i>n</i> + 200.  The additive term is broken down as:
+                <i>n</i> + 208.  The additive term is broken down as:
                 <ul>
                   <li>8 bytes for the header (which is <code>[0x1c94d7de, 0x3]</code>).</li>
                   <li>16 bytes for <em>scrypt</em> salt</i>
@@ -567,9 +567,8 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
               Our email addresses are right here. Please enter the password <code>peppermint patty</code> in the demo box,
               and this as the ciphertext:
             </p>
-            <pre>1c94d7de000000018bcc834fefa40a8a8bb16adb750ebc68a443e2144b79a270d546a5040da5b68d73bc36feb2e36f015ba5c165e71947153e9ad41be84bf049433582e2e2da250d81e35dd65988a01eae8a15bf0d693a0c332835134d6d2e7474e4fd0d424e544e3329901c040490deca520077d19da5bd8842ba2a35ffc2fa9ec7cbac16a09011a22dc588cc5ba473c464fcdbdc21894360a5943ac7131bfcfafedbf6306575aaee684bd1356a78323e84f782b3272e1789c4f1b9d00029ebd7dd81099d72d9ab9efb2f60deb790c51df5cea7049a59e26210830f8cf5d37b17f156e9f6d4c87c9c5b81b30f59a55d0e201ef202cc4d5bfba948d94a2c626e864337c1fe9980e41646751d853c83923269f2579f376cfd30</pre>
+            <pre>1c94d7de000000032b8a8920e478a898dd73e11e498a53b69e5c70cc673ee0eb5fd5cf8949e8dc22dac7fb2ef4c459e7851a2984bf5d8fb48210c26f79c5becbbb53335c18a6d19a2aa964252c71b25bf06b1f83078e5d83aaeac53679148036f9d6a23637439f3a8e3586714b053e302d102611d246c9ddd2fb7a0778398a7cd32515c81589e9accebeff9094bb20c3a1dfd4c24c064a2a7429e658e28b67fa98011b88124e87646002f8ab8639581f20445a6b2dcf0f375469d4f3a02b758130312f738562985ee232bcb6c57fc27ae81b2fd027edb26fb62204b80791cbced0716e72a577e7552a508cf28f40a88149979beb43ebf1a949473c89682237a0958ab626d6fe5d8dea1457dcccb6b054ba0a3799d32085d05fe966c8abcde64914</pre>
 
-            <p>Or see the discussion on <a href="https://news.ycombinator.com/item?id=6401057">Hacker News</a>.</p>
           </div>
 
         </div><!-- /.outer-grid's 2nd column -->
