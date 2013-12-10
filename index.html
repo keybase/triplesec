@@ -49,7 +49,7 @@
               </p>
               <p>
                 Of course, encryption is only part of the story. TripleSec also: derives keys with
-                <a href="http://en.wikipedia.org/wiki/Scrypt">scrypt</a> to defend
+                <a href="http://www.tarsnap.com/scrypt.html">scrypt</a> to defend
                 against password-cracking and rainbow tables; authenticates 
                 with <a href="http://en.wikipedia.org/wiki/HMAC">HMAC</a> to protect against 
                 adaptive chosen-ciphertext attacks; and in the JavaScript version supplements the native entropy sources
@@ -291,12 +291,9 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
                   random salt value, generate four separate secret keys, one
                   for each cipher (see Step 3), and two final keys for
                   signing the ciphertext (see Step 4).  This "key stretching" is done via
-                  <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>.
-                  The "PRF" passed to PBKDF2 is the XOR
-                  of <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a>-<a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> and HMAC-<a href="http://en.wikipedia.org/wiki/SHA-3">SHA3</a>. We use the XOR composition here 
-                  to boost the pseudorandom property of the 
-                  underlying two HMACs, therefore adding resilience to a break
-                  of either SHA-512 or SHA3 (which are fundamentally different algorithms).
+                  standard <a href="http://www.tarsnap.com/scrypt.html">scrypt</a>,
+                  with parameters <em>N</em>=2<sup>16</sup>,
+                  <em>r</em>=8, <em>p</em>=1, and output length of 96 bytes.
                   The output of this step is five seperate keys, 
                   used below.
                 </li>
