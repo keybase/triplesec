@@ -1,6 +1,6 @@
 {
   "name" : "triplesec",
-  "version" : "1.0.4",
+  "version" : "1.3.0",
   "description" : "A CommonJS-compliant system for secure encryption of smallish secrets",
   "homepage" : "https://github.com/keybase/triplesec",
   "repository" : { 
@@ -16,22 +16,23 @@
   },
   "main" : "lib/main",
   "devDependencies" : {
-    "browserify" : "*",
-    "icsify" : "*",
-    "iced-utils" : "*",
-    "iced-test" : "*",
-    "iced-coffee-script" : "*",
-    "colors" : "*",
-    "deep-equal" : "*",
-    "cryptojs-2fish" : "*",
-    "optimist" : "*",
-    "rsp2json" : "*",
-    "codo" : "*",
-    "uglify-js" : "*"
+    "browserify" : "~3.0.0",
+    "icsify" : "~0.0.5",
+    "iced-utils" : "~0.1.1",
+    "iced-test" : "~0.0.8",
+    "iced-coffee-script" : "~1.6.3",
+    "colors" : "~0.6.2",
+    "deep-equal" : "~0.1.0",
+    "cryptojs-1sp" : "~3.1.2",
+    "optimist" : "~0.6.0",
+    "rsp2json" : "~0.0.1",
+    "codo" : "~2.0.2",
+    "uglify-js" : "~2.4.7"
   },
   "dependencies" : {
-    "more-entropy" : "*",
-    "iced-error" : "*"
+    "more-entropy" : "~0.0.2",
+    "iced-error" : "~0.0.6",
+    "progress" : "~1.1.2"
   },
   "author" : "keybase",
   "licenses": [{

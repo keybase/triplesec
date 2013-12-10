@@ -14,14 +14,22 @@ exports.fixup_uint32 = (x) ->
 #----------------------------------------------
 
 exports.scrub_buffer = (b) ->
-  for i in [0...b.length]
+  n_full_words = (b.length >> 2)
+  i = 0
+  while i < n_full_words
+    b.writeUInt32LE 0, i
+    i += 4
+  while i < b.length
     b.writeUInt8 0, i
+    i++
+  false
 
 #----------------------------------------------
 
 exports.scrub_vec = (v) ->
   for i in [0...v.length]
     v[i] = 0
+  false
 
 #----------------------------------------------
 

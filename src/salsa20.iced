@@ -6,7 +6,7 @@
 #
 #   
 
-{WordArray} = require './wordarray'
+{endian_reverse,WordArray} = require './wordarray'
 {Counter} = require './ctr'
 {fixup_uint32} = require './util'
 {StreamCipher} = require './algbase'
@@ -18,8 +18,6 @@ asum = (out, v) ->
   (out[i] += e for e,i in v)
   false
 
-endian_reverse = (x) ->
-  ((x >> 24) & 0xff) | (((x >> 16) & 0xff) << 8) | (((x >> 8) & 0xff) << 16) | ((x & 0xff) << 24)
 
 #====================================================================
 
@@ -85,12 +83,18 @@ class Salsa20Core extends Salsa20InnerCore
   
   #--------------
 
-  constructor : (@key, @nonce) ->
+  constructor : (key, nonce) ->
     super 20
+
+    # Everything in Salsa is done little endian, so we need to reverse our
+    # nonces and keys at the outset.
+    @key = key.clone().endian_reverse()
+    @nonce = nonce.clone().endian_reverse()
+
     throw new Error "Bad key/nonce lengths" unless (
              ((@key.sigBytes is 16) and (@nonce.sigBytes is 8)) or
              ((@key.sigBytes is 32) and (@nonce.sigBytes in [8,24])))
-    @nonce_setup() if @nonce.sigBytes is 24
+    @xsalsa_setup() if @nonce.sigBytes is 24
     @input = @key_iv_setup @nonce, @key
     @_reset()
 
@@ -103,11 +107,10 @@ class Salsa20Core extends Salsa20InnerCore
 
   #--------------
 
-  nonce_setup : () ->
+  xsalsa_setup : () ->
     n0 = new WordArray @nonce.words[0...4]
-    n1 = new WordArray @nonce.words[4...]
+    @nonce = n1 = new WordArray @nonce.words[4...]
     @key = @hsalsa20 n0, @key
-    @nonce = n1
 
   #--------------
 

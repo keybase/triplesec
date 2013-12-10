@@ -7,7 +7,7 @@
     <link   type   ="text/css" rel="stylesheet" href="site/css/bootstrap.min.css">
     <link   type   ="text/css" rel="stylesheet" href="site/css/site.css">
     <link   type   ="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700">
-    <script type   ="text/javascript"            src="rel/triplesec-1.0.0-min.js"></script>
+    <script type   ="text/javascript"            src="rel/triplesec-1.3.0-min.js"></script>
     <script type   ="text/javascript"            src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type   ="text/javascript"            src="site/js/bootstrap.min.js"></script>
     <script type   ="text/javascript"            src="site/js/site.js"></script>
@@ -26,21 +26,22 @@
 
           <div class="brand">
             TripleSec
+            <img class="code-logo" src="site/img/python-logo.png">
+            <img class="code-logo" src="site/img/node-logo.png">
+            <img class="code-logo" src="site/img/js-logo.png">
           </div>
 
           <div class="row">
             
             <div class="col-sm-8 intro">
-              <p>
-                Nowadays, responsible programmers should consider encrypting sensitive user
-                data on the browser before it arrives at their servers. They furthermore ought to
-                consider the possibility of weaknesses
-                in popular cryptography (e.g., AES and SHA1) 
-                or cryptographic resources (e.g. system entropy sources).
+              <p class="lead">
+                <b>Big News Dec. 10, 2013 - TripleSec for Python!</b>
+                <br />
+                Versions 2.6, 2.7, and 3.3+ supported.
               </p>
               <p>
-                <b>TripleSec</b> is a simple, open-source triple-paranoid symmetric encryption library for the 
-                 browser and Node.js.  It encrypts data with
+                <b>TripleSec</b> is a simple to use, open-source triple-paranoid symmetric encryption library for Python,
+                 Node.js, and even the browser.  It encrypts data with
                 <a href="http://en.wikipedia.org/wiki/Salsa20" class="salsa20">Salsa 20</a>, 
                 <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="aes">AES</a>, 
                 and <a href="http://en.wikipedia.org/wiki/Twofish" class="twofish">Twofish</a>, 
@@ -48,11 +49,10 @@
               </p>
               <p>
                 Of course, encryption is only part of the story. TripleSec also: derives keys with
-                <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a> to defend
+                <a href="http://www.tarsnap.com/scrypt.html">scrypt</a> to defend
                 against password-cracking and rainbow tables; authenticates 
                 with <a href="http://en.wikipedia.org/wiki/HMAC">HMAC</a> to protect against 
-                (adaptive) chosen-ciphertext attacks; and supplements the native entropy sources
-                (<code>window.crypto.getRandomValues</code> in the browser and <code>crypto.rng</code> in Node.js)
+                adaptive chosen-ciphertext attacks; and in the JavaScript version supplements the native entropy sources
                 for fear they are weak.
               </p>
             </div>
@@ -63,7 +63,7 @@
 
           <div class="demo">
 
-            <h3>Demo</h3>
+            <h3>In-Browser Magical Demo</h3>
 
             <div class="well">
 
@@ -104,18 +104,35 @@
           <div class="installation subsection">
             <h3>Installation</h3>
             <p>
-              For the browser, <a href="rel/triplesec-1.0.0-min.js">download triplesec.js (version 1.0.0)</a>.
+              Let TripleSec into your life, today.
             </p>
-            <p>
-              In node, <code>npm install triplesec</code>.
-            </p>
+            <div class="row install-row">
+
+              <div class="install-col col-xs-4">
+                <img src="site/img/node-logo.png">
+                <p><code>npm install triplesec</code></p>
+                <p><a href="https://github.com/keybase/triplesec">source on github</a></p>
+              </div>
+              <div class="install-col col-xs-4">
+                <img src="site/img/python-logo.png">
+                <p><code>pip install TripleSec</code></p>
+                <p><a href="https://github.com/keybase/python-triplesec">source and usage notes on github</a></p>
+              </div>
+              <div class="install-col col-xs-4">
+                <img src="site/img/js-logo.png">
+                <p>
+                  <code><a href="rel/triplesec-1.3.0-min.js">triplesec.js (version 1.3.0)</a></code>
+                </p>
+              </div>
+
+            </div>
           </div>
 
           <div class="how-to-use subsection">
             <h3>How to Use It</h3>
             <p>
-            Encryption is performed by the <code>encrypt</code> function. It periodically yields
-            control to not lock up your CPU.  When done, it
+            Encryption is performed by the <code>encrypt</code> function. In JavaScript, it periodically yields
+            control to not lock up your CPU, and finally it
             calls back with <code>(err, buffer)</code>.
             </p>
 
@@ -127,12 +144,13 @@
 
 
             <ul class="code-nav nav nav-pills pull-right">
-              <li class="pull-right active"><a href="#encrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
-              <li class="pull-right"><a href="#encrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#encrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
+              <li class="pull-right active"><a href="#encrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#encrypt-python"     data-toggle="tab">Python</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="encrypt-javascript">
+              <div class="tab-pane active" id="encrypt-javascript">
 
                 <pre>triplesec.encrypt ({
 
@@ -149,7 +167,7 @@
 });</pre>
               </div><!-- /.tab-pane -->
 
-              <div class="tab-pane active" id="encrypt-coffeescript">
+              <div class="tab-pane" id="encrypt-coffeescript">
 
                 <pre>triplesec.encrypt
 
@@ -161,6 +179,17 @@
 
     ciphertext = buff.toString 'hex' unless err</pre>
               </div><!-- /.tab-pane -->
+              <div class="tab-pane" id="encrypt-python">
+
+                <pre>import triplesec
+import binascii
+
+enc = triplesec.encrypt(b"Pssst. I believe I love you.", b'top-secret-pw')
+
+# optional hex conversion
+
+ciphertext = binascii.hexlify(enc)</pre>
+              </div><!-- /.tab-pane -->              
             </div><!-- /.tab-content -->
 
           <!--
@@ -180,12 +209,13 @@
             -->
 
             <ul class="code-nav nav nav-pills pull-right">
-              <li class="pull-right active"><a href="#decrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
-              <li class="pull-right"><a href="#decrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#decrypt-coffeescript" data-toggle="tab">CoffeeScript</a></li>
+              <li class="pull-right active"><a href="#decrypt-javascript"     data-toggle="tab">JavaScript</a></li>
+              <li class="pull-right"><a href="#decrypt-python" data-toggle="tab">Python</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="decrypt-javascript">
+              <div class="tab-pane active" id="decrypt-javascript">
 
 
           <pre>triplesec.decrypt ({
@@ -204,7 +234,7 @@
 
 var plaintext = buff.toString();</pre>
               </div><!-- /.tab-pane -->
-              <div class="tab-pane active" id="decrypt-coffeescript">
+              <div class="tab-pane" id="decrypt-coffeescript">
 
 
           <pre>triplesec.decrypt
@@ -216,10 +246,30 @@ var plaintext = buff.toString();</pre>
 , (err, buff) ->
 
     console.log buff.toString() unless err</pre>
-              </div><!-- /.tab-pane -->              
+              </div><!-- /.tab-pane -->    
+              <div class="tab-pane" id="decrypt-python">
+
+
+                <pre># next line necessary if coming from hex
+
+enc = binascii.unhexlify(ciphertext)
+
+plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
+              </div><!-- /.tab-pane -->                        
             </div><!-- /.tab-content -->
 
           </div><!-- /.how-to-use -->
+
+          <div class="command-line subsection">
+            <h3>Command Line</h3>
+            <p>
+              If you <code>pip install TripleSec</code> to get the python
+              version of TripleSec, you'll be pleasantly surprised to discover
+              the <code>triplesec</code> command line program. For usage info,
+              run it without any arguments. Or read the <a href="https://github.com/keybase/python-triplesec">python-triplesec</a>
+              page on github.
+            </p>
+          </div>
 
           <div class="anatomy subsection">
             <h3>Anatomy of Output</h3>
@@ -241,13 +291,10 @@ var plaintext = buff.toString();</pre>
                   random salt value, generate four separate secret keys, one
                   for each cipher (see Step 3), and two final keys for
                   signing the ciphertext (see Step 4).  This "key stretching" is done via
-                  <a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>.
-                  The "PRF" passed to PBKDF2 is the XOR
-                  of <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a>-<a href="http://en.wikipedia.org/wiki/Sha-2">SHA-512</a> and HMAC-<a href="http://en.wikipedia.org/wiki/SHA-3">SHA3</a>. We use the XOR composition here 
-                  to boost the pseudorandom property of the 
-                  underlying two HMACs, therefore adding resilience to a break
-                  of either SHA-512 or SHA3 (which are fundamentally different algorithms).
-                  The output of this step is five separate keys, 
+                  standard <a href="http://www.tarsnap.com/scrypt.html">scrypt</a>,
+                  with parameters <em>N</em>=2<sup>15</sup>,
+                  <em>r</em>=8, <em>p</em>=1, and output length of 96 bytes.
+                  The output of this step is five seperate keys, 
                   used below.
                 </li>
 
@@ -300,7 +347,7 @@ var plaintext = buff.toString();</pre>
                   <b>HMAC (or "sign") the ciphertext.</b> Finally, TripleSec "signs" the ciphertext
                   to ensure that no adversary tampers with it. The data to be signed
                   is everything generated to date: a small header that encapsulates the version
-                  of the algorithm (now at <code>1</code>); the salt used in key derivation; and
+                  of the algorithm (now at <code>3</code>); the salt used in key derivation; and
                   the output of the AES stage of the cascading encryption above.  TripleSec "macs" with a <b>concatenation</b> of two HMACs: 
                   HMAC-SHA-512, and HMAC-SHA3, each run with a seperate key.
                   The final output is a concatenation of:
@@ -330,10 +377,10 @@ var plaintext = buff.toString();</pre>
 
             <p>
               Similarly, TripleSec protects against a break in HMAC-SHA-512 by always
-              combining it with an HMAC based on <a href="http://keccak.noekeon.org/">Keccak hash algorithm</a> (soon to become the <a href="http://en.wikipedia.org/wiki/SHA-3">SHA-3</a> standard).  Note that TripleSec combines these HMACs in two different ways.
-              For PBKDF2 in Stage 1, TripleSec XORs the result of the two HMACs for pseudorandomness. For "signing" in Stage 4, TripleSec concatenates the
+              combining it with an HMAC based on <a href="http://keccak.noekeon.org/">Keccak hash algorithm</a> (soon to become the <a href="http://en.wikipedia.org/wiki/SHA-3">SHA-3</a> standard). 
+              TripleSec concatenates the
               two results to preserve collision-resistance.  Unlike the suspect
-              compositions in TLS and SSH, these simple compositions don't require
+              compositions in TLS and SSH, this simple composition doesn't require
               either SHA-512 or SHA-3 to be strongly collision-resistant; rather,
               just weakly collision-resistant in line with the
               <a href="http://cseweb.ucsd.edu/~mihir/papers/kmd5.pdf">original construction</a>.  See <a href="http://tuprints.ulb.tu-darmstadt.de/2094/1/thesis.lehmann.pdf">Anja Lehmann's</a> dissertation
@@ -350,7 +397,7 @@ var plaintext = buff.toString();</pre>
                 User data uploaded to a remote cloud-hosted server is nearly impossible to delete,
                 so any encryption scheme has to be future-proof.  The amount of time
                 spent encrypting reasonably-sized plaintexts pales in comparison to 
-                (1) PBKDF2, which is intentionally slow; and (2) how long it will sit on the server.
+                (1) <em>scrypt</em>, which is intentionally slow; and (2) how long it will sit on the server.
                 Why not go the extra mile?
               </p>
               <h5>What's triplesec.Buffer?</h5>
@@ -376,14 +423,14 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>How are passphrases salted?</h5>
               <p class="answer">
-                PBKDF2 takes as input a salt in addition to a secret passphrase,
+                <em>scrypt</em> takes as input a salt in addition to a secret passphrase,
                 to prevent an adversary from cracking many TripleSec-encrypted ciphtertexts
                 in parallel.  TripleSec salts passphrases with a 
-                random 8-byte sequence that's included with the ciphertext.  By 
+                random 16-byte sequence that's included with the ciphertext.  By 
                 default, TripleSec's <code>triplesec.Encryptor</code> object
                 uses the same salt until you call <code>triplesec.Encryptor.resalt</code>.
                 The advantage of salt reuse is that it's faster, since it avoids the intentionally
-                slow PBKDF2 step. On the other hand, an adversary can tell
+                slow <em>scrypt</em> step. On the other hand, an adversary can tell
                 if two different ciphertexts were encrypted in the same session if
                 the salt is not reset.
               </p>
@@ -413,10 +460,10 @@ var plaintext = buff.toString();</pre>
               </p>
               <h5>If the input message size is <i>n</i>, how big is the ciphertext?</h5>
               <p class="answer">
-                <i>n</i> + 200.  The additive term is broken down as:
+                <i>n</i> + 208.  The additive term is broken down as:
                 <ul>
-                  <li>8 bytes for the header (which is <code>[0x1c94d7de, 0x1]</code>).</li>
-                  <li>8 bytes for PBKDF2 salt</i>
+                  <li>8 bytes for the header (which is <code>[0x1c94d7de, 0x3]</code>).</li>
+                  <li>16 bytes for <em>scrypt</em> salt</i>
                   <li>64 bytes for the HMAC-SHA512 signature</i>
                   <li>64 bytes for the HMAC-SHA3 signature</i>
                   <li>16 bytes for AES-256 IV</i>
@@ -520,9 +567,8 @@ var plaintext = buff.toString();</pre>
               Our email addresses are right here. Please enter the password <code>peppermint patty</code> in the demo box,
               and this as the ciphertext:
             </p>
-            <pre>1c94d7de000000018bcc834fefa40a8a8bb16adb750ebc68a443e2144b79a270d546a5040da5b68d73bc36feb2e36f015ba5c165e71947153e9ad41be84bf049433582e2e2da250d81e35dd65988a01eae8a15bf0d693a0c332835134d6d2e7474e4fd0d424e544e3329901c040490deca520077d19da5bd8842ba2a35ffc2fa9ec7cbac16a09011a22dc588cc5ba473c464fcdbdc21894360a5943ac7131bfcfafedbf6306575aaee684bd1356a78323e84f782b3272e1789c4f1b9d00029ebd7dd81099d72d9ab9efb2f60deb790c51df5cea7049a59e26210830f8cf5d37b17f156e9f6d4c87c9c5b81b30f59a55d0e201ef202cc4d5bfba948d94a2c626e864337c1fe9980e41646751d853c83923269f2579f376cfd30</pre>
+            <pre>1c94d7de000000032b8a8920e478a898dd73e11e498a53b69e5c70cc673ee0eb5fd5cf8949e8dc22dac7fb2ef4c459e7851a2984bf5d8fb48210c26f79c5becbbb53335c18a6d19a2aa964252c71b25bf06b1f83078e5d83aaeac53679148036f9d6a23637439f3a8e3586714b053e302d102611d246c9ddd2fb7a0778398a7cd32515c81589e9accebeff9094bb20c3a1dfd4c24c064a2a7429e658e28b67fa98011b88124e87646002f8ab8639581f20445a6b2dcf0f375469d4f3a02b758130312f738562985ee232bcb6c57fc27ae81b2fd027edb26fb62204b80791cbced0716e72a577e7552a508cf28f40a88149979beb43ebf1a949473c89682237a0958ab626d6fe5d8dea1457dcccb6b054ba0a3799d32085d05fe966c8abcde64914</pre>
 
-            <p>Or see the discussion on <a href="https://news.ycombinator.com/item?id=6401057">Hacker News</a>.</p>
           </div>
 
         </div><!-- /.outer-grid's 2nd column -->

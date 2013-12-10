@@ -112,8 +112,8 @@ class Decryptor extends Base
   # @param {callback} cb Callback with a {Object} that maps
   # keytypes to {WordArrays} when done.
   generate_keys : ({progress_hook}, cb) ->
-    await @kdf { @salt, progress_hook }, defer keys
-    cb keys
+    await @kdf { @salt, progress_hook }, defer err, keys
+    cb err, keys
 
   #----------------------
 
@@ -141,7 +141,7 @@ class Decryptor extends Base
     @ct = WordArray.from_buffer data
     await @read_header esc defer()
     await @read_salt esc defer()
-    await @generate_keys { progress_hook }, defer @keys
+    await @generate_keys { progress_hook }, esc defer @keys
     await @verify_sig @keys.hmac, esc defer()
     await @unshift_iv AES.ivSize, "AES", esc defer iv
     await @run_aes { iv, input : @ct, key : @keys.aes, progress_hook }, esc defer ct2

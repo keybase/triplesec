@@ -11,33 +11,48 @@ ctr           = require './ctr'
 util          = require './util'
 prng          = require './prng'
 {make_esc}    = require 'iced-error'
+{HMAC_SHA256} = require './hmac'
 
 #========================================================================
 
-# @property {Object} V A lookup table of all supported versions. Only v1 yet.
+# @property {Object} V A lookup table of all supported versions.
 V = 
   "1" : 
-    header        : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
-    salt_size     : 8                  # 8 bytes of salt is good enough!
-    kdf           :                    # The key derivation...
-      klass       : PBKDF2             #   algorithm klass
-      opts        :                    #   ..and options
-        c         : 1024               #   The number of iterations
-        klass     : XOR                #   The HMAC to use as a subroutine
-    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+    header           : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
+    salt_size        : 8                  # 8 bytes of salt is good enough!
+    xsalsa20_rev     : true               # XSalsa20 Endian Reverse
+    kdf              :                    # The key derivation...
+      klass          : PBKDF2             #   algorithm klass
+      opts           :                    #   ..and options
+        c            : 1024               #   The number of iterations
+        klass        : XOR                #   The HMAC to use as a subroutine
+    hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
   "2" : 
-    header        : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
-    salt_size     : 16                 # 16 bytes of salt for various uses
-    pbkdf2_iters  : 1024               # Since we're using XOR, this is enough..
-    kdf           :                    # The key derivation...
-      klass       : Scrypt             #   algorithm klass
-      opts        :                    #   ..and options
-        c         : 64                 #   The number of iterations
-        klass     : XOR                #   The HMAC to use as a subroutine
-        N         : 12                 #   log_2 of the work factor
-        r         : 8                  #   The memory use factor
-        p         : 1                  #   the parallelization factor
-    hmac_key_size : 768/8              # The size of the key to split over the two HMACs.
+    header           : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
+    salt_size        : 16                 # 16 bytes of salt for various uses
+    xsalsa20_rev     : true               # XSalsa20 Endian Reverse
+    kdf              :                    # The key derivation...
+      klass          : Scrypt             #   algorithm klass
+      opts           :                    #   ..and options
+        c            : 64                 #   The number of iterations
+        klass        : XOR                #   The HMAC to use as a subroutine
+        N            : 12                 #   log_2 of the work factor
+        r            : 8                  #   The memory use factor
+        p            : 1                  #   the parallelization factor
+    hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
+  "3" : 
+    header           : [ 0x1c94d7de, 3 ]  # The magic #, and also the version #
+    salt_size        : 16                 # 16 bytes of salt for various uses
+    xsalsa20_rev     : false              # XSalsa20 Endian Reverse
+    kdf              :                    # The key derivation...
+      klass          : Scrypt             #   algorithm klass
+      opts           :                    #   ..and options
+        c            : 1                  #   The number of iterations
+        klass        : HMAC_SHA256        #   The HMAC to use as a subroutine
+        N            : 15                 #   log_2 of the work factor
+        r            : 8                  #   The memory use factor
+        p            : 1                  #   the parallelization factor
+    hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
 
 #========================================================================
 
@@ -72,8 +87,16 @@ class Base
   #   The object will map cipher-name to a {WordArray} that is the generated key.
   #
   kdf : ({salt, extra_keymaterial, progress_hook}, cb) ->
+
+    await @_check_scrubbed @key, "in KDF", cb, defer()
+
     # Check the cache first
     salt_hex = salt.to_hex()
+
+    # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
+    key = @key.clone()
+
+    await @_check_scrubbed key, "KDF", cb, defer()
 
     if not (keys = @derived_keys[salt_hex])?
       @_kdf = new @version.kdf.klass @version.kdf.opts
@@ -84,20 +107,19 @@ class Base
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
 
-      tot = extra_keymaterial or 0
-      (tot += v for k,v of lens)
+      # The order to read the keys out of the Scrypt output, and don't 
+      # depend on the properties of the hash to guarantee the order.
+      order = [ 'hmac', 'aes', 'twofish', 'salsa20' ]
 
-      # The key gets scrubbed by pbkdf2, so we need to clone our copy of it.
-      args = {
-        key : @key.clone()
-        dkLen : tot
-        progress_hook
-        salt 
-      }
+      dkLen = extra_keymaterial or 0
+      (dkLen += v for k,v of lens)
+
+      args = {dkLen, key, progress_hook, salt }
       await @_kdf.run args, defer raw
       keys = {}
       i = 0
-      for k,v of lens
+      for k in order
+        v = lens[k]
         len = v/4
         end = i + len
         keys[k] = new WordArray raw.words[i...end]
@@ -105,7 +127,7 @@ class Base
       keys.extra = (new WordArray raw.words[end...]).to_buffer()
       @derived_keys[salt_hex] = keys
 
-    cb keys
+    cb null, keys
     
   #---------------
 
@@ -136,7 +158,7 @@ class Base
   # @param {callback} okcb The callback to fire if we're OK to proceed.
   # 
   _check_scrubbed : (key, where, ecb, okcb) ->
-    if not key.is_scrubbed() then okcb()
+    if key? and not key.is_scrubbed() then okcb()
     else ecb (new Error "#{where}: Failed due to scrubbed key!"), null
 
   #---------------
@@ -170,8 +192,27 @@ class Base
   #   the ciphertext, depending on the `output_iv` option.
   run_salsa20 : ({ input, key, iv, output_iv, progress_hook }, cb) ->
     await @_check_scrubbed key, "Salsa20", cb, defer()
-    await salsa20.bulk_encrypt { input, key, iv, progress_hook}, defer ct
+
+    args = { input, progress_hook, key, iv }
+
+    # In the newer versions of TripleSec, we fix the fact that our
+    # inputs to Xsalsa20 were reversed endianwise.  It wasn't a security
+    # bug, it was just wrong.  This fixes it going forward.  We might
+    # want a slightly cleaner fix by the way...
+    if @version.xsalsa20_rev 
+      args.key = key.clone().endian_reverse()
+      args.iv = iv.clone().endian_reverse()
+
+    await salsa20.bulk_encrypt args, defer ct
+
+    # Despite the reversals, always output the original IV.
     ct = iv.clone().concat(ct) if output_iv
+
+    # Scrub the reversed IV & key since we'll never use it again. 
+    if @version.xsalsa20_rev
+      args.key.scrub()
+      args.iv.scrub()
+
     cb null, ct
 
   #---------------
@@ -185,7 +226,7 @@ class Base
   #   be a {WordArray} of the concatenation of the IV and 
   #   the ciphertext.
   run_twofish : ({input, key, iv, progress_hook}, cb) ->
-    await @_check_scrubbed key, "Twofish", cb, defer()
+    await @_check_scrubbed key, "TwoFish", cb, defer()
     block_cipher = new TwoFish key
     await ctr.bulk_encrypt { block_cipher, iv, input, progress_hook, what : "twofish" }, defer ct
     block_cipher.scrub()
@@ -219,6 +260,8 @@ class Base
         for key in key_ring
           key.scrub()
     @derived_keys = {}
+    @salt.scrub() if @salt?
+    @salt = null
     @key = null
 
 #========================================================================
@@ -318,10 +361,16 @@ class Encryptor extends Base
   #     and can be passed in.  If not provided, then we 
   # @param {callback} cb Called back when the resalting completes.
   resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
-    if salt? then @salt = WordArray.alloc salt
-    else await @rng @version.salt_size, defer @salt
-    await @kdf {extra_keymaterial, progress_hook, @salt}, defer @keys
-    cb @keys
+    err = null
+    if not salt? 
+      await @rng @version.salt_size, defer @salt
+    else if salt.length isnt @version.salt_size
+      err = new Error "Need a salt of exactly #{@version.salt_size} bytes (got #{salt.length})"
+    else
+      @salt = WordArray.alloc salt
+    unless err?
+      await @kdf {extra_keymaterial, progress_hook, @salt}, defer err, @keys
+    cb err, @keys
  
   #---------------
 
@@ -351,7 +400,7 @@ class Encryptor extends Base
     esc = make_esc cb, "Encryptor::run"
 
     if salt? or not @salt?
-      await @resalt { salt, extra_keymaterial, progress_hook }, defer() 
+      await @resalt { salt, extra_keymaterial, progress_hook }, esc defer() 
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
     await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1

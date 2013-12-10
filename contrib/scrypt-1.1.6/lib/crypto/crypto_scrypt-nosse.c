@@ -233,7 +233,7 @@ smix(uint8_t * B, size_t r, uint64_t N, uint32_t * V, uint32_t * XY)
 int
 crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
     const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t r, uint32_t p,
-    uint8_t * buf, size_t buflen, uint64_t c)
+    uint8_t * buf, size_t buflen, uint64_t c0, uint64_t c1)
 {
 	void * B0, * V0, * XY0;
 	uint8_t * B;
@@ -304,7 +304,7 @@ crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
 #endif
 
 	/* 1: (B_0 ... B_{p-1}) <-- PBKDF2(P, S, 1, p * MFLen) */
-	PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, B, p * 128 * r);
+	PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c0, B, p * 128 * r);
 
 	/* 2: for i = 0 to p - 1 do */
 	for (i = 0; i < p; i++) {
@@ -313,7 +313,7 @@ crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
 	}
 
 	/* 5: DK <-- PBKDF2(P, B, 1, dkLen) */
-	PBKDF2_SHA256(passwd, passwdlen, B, p * 128 * r, c, buf, buflen);
+	PBKDF2_SHA256(passwd, passwdlen, B, p * 128 * r, c1, buf, buflen);
 
 	/* Free memory. */
 #ifdef MAP_ANON

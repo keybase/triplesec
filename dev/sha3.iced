@@ -1,8 +1,6 @@
 
-{CryptoJS} = require 'cryptojs-2fish'
+{transform} = require '../src/sha3'
+{WordArray} = require '../src/wordarray'
 
-msg = "cc"
-wordArray = CryptoJS.enc.Hex.parse msg
-x = CryptoJS.SHA3(wordArray)
-console.log x
-console.log x.toString()
+inp = WordArray.from_hex process.argv[2]
+console.log transform(inp).to_hex()

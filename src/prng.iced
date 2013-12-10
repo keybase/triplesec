@@ -19,17 +19,23 @@ browser_rng = (n) ->
 #===============================================
 
 if window?.crypto?.getRandomValues?
-  native_rng = browser_rng
+  _native_rng = browser_rng
 else
   try
     # trick Browserify --- we don't want crypto on the browser!
     {rng} = require('cry' + 'pto')
-    native_rng = rng if rng?
+    _native_rng = rng if rng?
   catch e
     # pass
 
-if not native_rng?
+#===============================================
+
+native_rng = (x) ->
+  # We need this, otherwise, we have huge problems.  So crash the
+  # program if we don't have an RNG by now
+  if not _native_rng?
     throw new Error 'No rng found; tried requiring "crypto" and window.crypto'
+  return _native_rng x
 
 #===============================================
 
@@ -63,6 +69,8 @@ class PRNG
   # @param {callback} cb The callback to call once the needed seed is
   #    reader.  Callback with a Buffer containing the random seed.
   gen_seed : (nbits, cb) ->
+
+
     nbytes = nbits / 8
     bufs = []
     bufs.push @now_to_buffer()

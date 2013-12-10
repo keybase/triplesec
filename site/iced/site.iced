@@ -1,4 +1,7 @@
 $ ->
+  if window.location.href.indexOf('now_in_python.html') is -1
+    window.location = './triplesec_now_in_python.html'
+
   textarea_auto = (ta) ->
     ta.style.overflow = 'hidden'
     ta.style.height   = 0
@@ -45,6 +48,7 @@ $ ->
       key:  key
       rng:  triplesec.rng
       progress_hook: progress_hook
+      version: 3
     }, defer err, out
     await setTimeout defer(), 5
     if err

@@ -56,6 +56,9 @@ ul {
   margin-bottom:20px;
   padding-bottom:30px;
 }
+.brand .code-logo {
+  margin-left:30px;
+}
 .logo-container {
   float:left;
   width:163px;
@@ -107,5 +110,14 @@ pre, .output-code {
 .output-code {
   border-width: 0;
   background-color:#e8e8e8;
+}
+.install-row {
+  padding:20px 0;
+  border-top:1px solid #ddd;
+  border-bottom:1px solid #ddd;
+}
+.install-col {
+  padding:20x;
+  text-align:center;
 }
 

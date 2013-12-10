@@ -23,6 +23,11 @@ ui8a_to_buffer = (v) ->
     ret.writeUInt8(v[i], i)
   ret
 
+#----------
+
+endian_reverse = (x) ->
+  ((x >>> 24) & 0xff) | (((x >>> 16) & 0xff) << 8) | (((x >>> 8) & 0xff) << 16) | ((x & 0xff) << 24)
+
 #=======================================================================
 
 exports.WordArray = class WordArray
@@ -102,6 +107,13 @@ exports.WordArray = class WordArray
       out.writeUInt8 ch, p
       p++
     out
+
+  #--------------
+
+  endian_reverse : () ->
+    for w,i in @words
+      @words[i] = endian_reverse w
+    @
 
   #--------------
 
@@ -298,6 +310,7 @@ exports.X64WordArray = class X64WordArray
 
 exports.buffer_to_ui8a = buffer_to_ui8a
 exports.ui8a_to_buffer = ui8a_to_buffer
+exports.endian_reverse = endian_reverse
 
 #=======================================================================
 

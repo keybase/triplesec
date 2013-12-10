@@ -39,19 +39,8 @@
 static void
 usage(void)
 {
-
-	fprintf(stderr, "usage: scrypt -p<p> -N<N> -r<r> -d<dkLen> -P <pasword> -s <salt>\n");
+	fprintf(stderr, "usage: scrypt [-C<c0> -c<c1>] -p<p> -N<N> -r<r> -d<dkLen> -P <pasword> -s <salt>\n");
 	exit(1);
-}
-
-static void
-dump_out(uint8_t *arr, size_t len)
-{
-	size_t i = 0;
-	for (i = 0; i < len; i++) {
-		printf("%02x", arr[i]);
-	}
-	printf("\n");
 }
 
 int
@@ -62,9 +51,11 @@ main(int argc, char *argv[])
 	uint64_t N = 0;
 	uint32_t r = 0;
 	size_t dklen = 0;
+	uint64_t c = 1;
+	uint64_t C = 1;
 	const char *salt = NULL;
 	const char *passwd = NULL;
-	while ((ch = getopt(argc, argv, "p:r:N:s:P:d:")) != -1) {
+	while ((ch = getopt(argc, argv, "C:c:p:r:N:s:P:d:")) != -1) {
 		switch (ch) {
 			case 'p': p = atoi(optarg); break;
 			case 'N': N = atoi(optarg); break;
@@ -72,17 +63,19 @@ main(int argc, char *argv[])
 			case 'P': passwd = strdup(optarg); break;
 			case 's': salt = strdup(optarg); break;
 			case 'd': dklen = atoi(optarg); break;
+			case 'c': c = atoi(optarg); break;
+			case 'C': C = atoi(optarg); break;
 			default : usage(); break;
 		}
 	}
-	if (!p || !N || !r || !salt || !passwd || !dklen) {
+	if (!p || !N || !r || !salt || !passwd || !dklen || !c || !C) {
 		fprintf(stderr, "Need all 6 parameters specified\n");
 		usage();
 	}
 	N = (1 << N);
 	uint8_t *outbuf = malloc(dklen);
-	crypto_scrypt(passwd, strlen(passwd), salt, strlen(salt), N, r, p, outbuf, dklen);
-	dump_out(outbuf, dklen);
+	crypto_scrypt(passwd, strlen(passwd), salt, strlen(salt), N, r, p, outbuf, dklen, C, c);
+	dump_buf("result", outbuf, dklen);
 }
 
 int
