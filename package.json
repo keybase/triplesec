@@ -16,7 +16,7 @@
   },
   "main" : "lib/main",
   "devDependencies" : {
-    "browserify" : "~3.0.0",
+    "browserify" : "~3.1.0",
     "icsify" : "~0.0.5",
     "iced-utils" : "~0.1.1",
     "iced-test" : "~0.0.8",
