@@ -15,7 +15,6 @@ _browser_rng_primitive = null
 # @return {Buffer} A buffer of `n` random bytes.
 browser_rng = (n) ->
   v = new Uint8Array n
-  console.log _browser_rng_primitive
   _browser_rng_primitive v
   new Buffer v
 
