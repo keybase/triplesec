@@ -1,5 +1,7 @@
 
 mods =  
+  drbg : require '../files/drbg.iced'
+  triplesec : require '../files/triplesec.iced'
   scrypt : require '../files/scrypt.iced'
   scrypt_xor : require '../files/scrypt_xor.iced'
   wordarray : require '../files/wordarray.iced'
@@ -9,8 +11,6 @@ mods =
   salsa20 : require '../files/salsa20.iced'
   aes_ctr : require '../files/aes_ctr.iced'
   pbkdf2 : require '../files/pbkdf2.iced'
-  triplesec : require '../files/triplesec.iced'
-  drbg : require '../files/drbg.iced'
   sha : require '../files/sha.iced'
   combine : require '../files/combine.iced'
 

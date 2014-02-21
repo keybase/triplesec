@@ -15,15 +15,20 @@ _browser_rng_primitive = null
 # @return {Buffer} A buffer of `n` random bytes.
 browser_rng = (n) ->
   v = new Uint8Array n
+  console.log _browser_rng_primitive
   _browser_rng_primitive v
   new Buffer v
 
 #===============================================
 
 # Also can use Microsoft's IE RNG gatherer
-if (f = window?.crypto?.getRandomValues)? or (f = window?.msCrypto?.getRandomValues)?
-  _browser_rng_primitive = f
-  _native_rng = browser_rng
+_browser_rng_primitive = if (m = window?.crypto?.getRandomValues)? then m.bind(window.crypto)
+else if (m = window?.msCrypto?.getRandomValues)? then m.bind(window.msCrypto)
+else null
+
+#-----------
+
+if _browser_rng_primitive? then _native_rng = browser_rng
 else
   try
     # trick Browserify --- we don't want crypto on the browser!
