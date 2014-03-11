@@ -9,5 +9,4 @@ exports.run = (T,cb) ->
     hasher.update input
     output = hasher.finalize().to_hex()
     T.equal output, row.digest, "test vector MD5/#{i}"
-    T.waypoint i
   cb()
