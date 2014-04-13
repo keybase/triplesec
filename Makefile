@@ -128,6 +128,8 @@ $(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 		test/data/sha256_long.js \
 		test/data/sha224_long.js \
 		test/data/sha224_short.js \
+		test/data/sha384_long.js \
+		test/data/sha384_short.js \
 		test/data/triplesec_spec_v1.js \
 		test/data/triplesec_spec_v2.js \
 		test/data/triplesec_spec_v3.js \

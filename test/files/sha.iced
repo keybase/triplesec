@@ -11,6 +11,9 @@ data_mods =
   sha256 :
     long : require '../data/sha256_long'
     short : require '../data/sha256_short'
+  sha384 :
+    long : require '../data/sha384_long'
+    short : require '../data/sha384_short'
   sha512:
     long : require '../data/sha512_long'
     short : require '../data/sha512_short'
@@ -36,6 +39,10 @@ exports.test_sha256 = (T,cb) ->
 
 exports.test_sha224 = (T,cb) ->
   run_test T, require('../../lib/sha224').SHA224, 'sha224'
+  cb()
+
+exports.test_sha384 = (T,cb) ->
+  run_test T, require('../../lib/sha384').SHA384, 'sha384'
   cb()
 
 run_test = (T, klass, alg) ->

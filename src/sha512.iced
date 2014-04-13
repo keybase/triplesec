@@ -12,7 +12,9 @@
 
 class Global
 
-  convert : (raw) -> (new X64Word(raw[i],raw[i+1]) for i in [0...raw.length] by 2)
+  @convert : (raw) -> (new X64Word(raw[i],raw[i+1]) for i in [0...raw.length] by 2)
+  convert : (raw) -> Global.convert raw
+
   
   constructor : ->
     @K = @convert [
@@ -67,6 +69,7 @@ class Global
 
 #=======================================================================
 
+exports.Global = Global
 glbl = new Global()
 
 #=======================================================================
