@@ -6,3 +6,6 @@ spec/
 logo/
 rel/
 site/
+dev/
+triplesec_standalone.html
+browser/

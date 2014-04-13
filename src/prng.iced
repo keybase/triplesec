@@ -5,6 +5,8 @@ more_entropy = require 'more-entropy'
 {XOR} = require './combine'
 util = require './util'
 
+_browser_rng_primitive = null
+
 #===============================================
 
 # A wrapper around the standard browser PRNG.
@@ -13,13 +15,19 @@ util = require './util'
 # @return {Buffer} A buffer of `n` random bytes.
 browser_rng = (n) ->
   v = new Uint8Array n
-  window.crypto.getRandomValues v
+  _browser_rng_primitive v
   new Buffer v
 
 #===============================================
 
-if window?.crypto?.getRandomValues?
-  _native_rng = browser_rng
+# Also can use Microsoft's IE RNG gatherer
+_browser_rng_primitive = if (m = window?.crypto?.getRandomValues)? then m.bind(window.crypto)
+else if (m = window?.msCrypto?.getRandomValues)? then m.bind(window.msCrypto)
+else null
+
+#-----------
+
+if _browser_rng_primitive? then _native_rng = browser_rng
 else
   try
     # trick Browserify --- we don't want crypto on the browser!

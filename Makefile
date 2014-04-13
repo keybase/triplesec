@@ -38,7 +38,8 @@ $(BUILD_STAMP): \
 	lib/sha224.js \
         lib/sha384.js \
 	lib/sha1.js \
-	lib/scrypt.js
+	lib/scrypt.js \
+	lib/md5.js
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)
@@ -105,12 +106,17 @@ test/data/pbkdf2_sha512_sha3_spec.js: spec/pbkdf2_sha512_sha3.json
 test/data/scrypt_xor_spec.js: spec/scrypt_xor.json 
 	$(ICED) test/gen/spec2js.iced "../../spec/scrypt_xor.json" > $@
 
+test/json/md5.json: test/gen/gen_md5.iced
+	@mkdir -p test/json
+	$(ICED) $< > $@
+
 $(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 		test/data/salsa20_key128.js \
 		test/data/salsa20_key256.js \
 		test/data/pbkdf2.js \
 		test/data/drbg_hmac_no_reseed.js \
 		test/json/HMAC_DRBG_reseed.json \
+		test/json/md5.json \
 		test/data/drbg_hmac_reseed.js \
 		test/data/sha3_short.js \
 		test/data/sha3_long.js \
