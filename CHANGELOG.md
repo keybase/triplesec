@@ -1,3 +1,9 @@
+## 3.0.8 (2014-04-13)
+
+Features:
+
+  - SHA384 implementation
+
 ## 3.0.7 (2014-03-11)
 
 Features:
