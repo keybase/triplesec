@@ -11,6 +11,8 @@
 #================================================================
 
 class SHA384 extends SHA512
+  @output_size : 384/8 # in bytes!
+  output_size : SHA384.output_size
 
   _doReset: () ->
     @_hash = new X64WordArray Global.convert [

@@ -1,3 +1,9 @@
+## 3.0.10 (2014-04-14)
+
+Bugfixes:
+
+  - SHA224 and SHA384 were reporting incorrect hash lengths 
+
 ## 3.0.9 (2014-04-14)
 
 Bugfixes:

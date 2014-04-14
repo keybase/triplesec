@@ -11,6 +11,8 @@
 #================================================================
 
 class SHA224 extends SHA256
+  @output_size : 224/8 # in bytes!
+  output_size : SHA224.output_size
 
   _doReset: () ->
     @_hash = new WordArray [
