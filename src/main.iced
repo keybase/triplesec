@@ -11,7 +11,7 @@ exports.hash =
   SHA1    : require('./sha1').SHA1
   SHA224  : require('./sha224').SHA224
   SHA256  : require('./sha256').SHA256
-  SHA384  : require('./sha256').SHA384
+  SHA384  : require('./sha384').SHA384
   SHA512  : require('./sha512').SHA512
   SHA3    : require('./sha3').SHA3
   MD5     : require('./md5').MD5
