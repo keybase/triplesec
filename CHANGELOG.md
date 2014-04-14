@@ -1,3 +1,9 @@
+## 3.0.9 (2014-04-14)
+
+Bugfixes:
+
+  - Fix bug in SHA384 inclusion
+
 ## 3.0.8 (2014-04-13)
 
 Features:
