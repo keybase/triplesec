@@ -1,8 +1,8 @@
-## 3.0.11
+## 3.0.11 (2014-05-18)
 
 Features:
 
-   - Word array comparison, via cmp_ule.
+   - Buffer comparison as an unsigned big-endian number
 
 ## 3.0.10 (2014-04-14)
 
