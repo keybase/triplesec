@@ -249,25 +249,7 @@ exports.WordArray = class WordArray
   # Return 1 if @ if greater than b2
   # Return 0 if equal
   # Assumes two clamped buffers
-  cmp_ule : (wa2) ->
-    i = j = 0
-    b1 = @to_buffer()
-    b2 = wa2.to_buffer()
-    I = b1.length
-    J = b2.length
-
-    i++ while (i < I and b1.readUInt8(i) is 0)
-    j++ while (j < J and b2.readUInt8(j) is 0)
-
-    if (I - i) > (J - j) then return 1
-    else if (J - j) > (I - i) then return -1
-
-    while (i < I)
-      if (x = b1.readUInt8(i)) < (y = b2.readUInt8(j)) then return -1
-      else if y < x then return 1
-      i++
-      j++
-    return 0
+  cmp_ule : (wa2) -> util.buffer_cmp_ule @to_buffer(), wa2.to_buffer()
 
   #--------------
 
