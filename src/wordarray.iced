@@ -244,7 +244,40 @@ exports.WordArray = class WordArray
   scrub : () ->
     util.scrub_vec @words
 
+  # Compare for ordering when both are considered as unsigned big-endian integers.
+  # Return -1 if @ is less than b2.
+  # Return 1 if @ if greater than b2
+  # Return 0 if equal
+  # Assumes two clamped buffers
+  cmp_ule : (b2) ->
+    i = j = 0
+    I = @words.length
+    J = b2.words.length
+
+    if I < J
+      lim = J - I
+      for j in [0...lim]
+        if b2.words[j] > 0 
+          return -1
+    else if J < I
+      lim = I - J
+      for i in [0...lim]
+        if @words[i] > 0
+          return 1
+
+    while (i < I) and (j < J)
+      if @words[i] < b2.words[j]
+        return -1
+      else if @words[i] > b2.words[j]
+        return 1
+      else
+        i++
+        j++
+
+    return 0
+
   #--------------
+
 
   # @param{number} low The low word to include in the output slice
   # @param{number} hi The hi word to include in the output slice (exclusive)
