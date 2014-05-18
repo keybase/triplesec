@@ -28,19 +28,21 @@ exports.compare_utf8 = (T,cb) ->
 
 #------------------------------------------------------------
 
+test_cmp = (T,a,b) ->
+  T.equal a.cmp_ule(b), "-1", "< worked"
+  T.equal b.cmp_ule(a), "1", "> worked"
+
+#------------------------------------------------------------
+
 exports.test_cmp_ule_1 = (T,cb) ->
   b0 = WordArray.from_hex "00abcd"
   b1 = WordArray.from_hex "abcdef"
   b2 = WordArray.from_hex "000abcdef00122344556"
   b3 = WordArray.from_hex "999999999999999999"
   b4 = WordArray.from_hex "99999999999999999a"
-  T.equal b0.cmp_ule(b1), -1, "< worked"
-  T.equal b1.cmp_ule(b0), 1, "> worked"
-  T.equal b0.cmp_ule(b2), -1, "< worked"
-  T.equal b2.cmp_ule(b0), 1, "< worked"
-  T.equal b3.cmp_ule(b4), -1, "< worked"
-  T.equal b4.cmp_ule(b3), 1, "> worked"
-  T.equal b4.cmp_ule(b2), 1, "> worked"
-  T.equal b2.cmp_ule(b4), -1, "< worked"
+  test_cmp T, b0, b1
+  test_cmp T, b0, b2
+  test_cmp T, b3, b4
+  test_cmp T, b2, b4
   cb()
 

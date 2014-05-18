@@ -1,3 +1,9 @@
+## 3.0.11
+
+Features:
+
+   - Word array comparison, via cmp_ule.
+
 ## 3.0.10 (2014-04-14)
 
 Bugfixes:
