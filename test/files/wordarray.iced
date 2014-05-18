@@ -40,9 +40,15 @@ exports.test_cmp_ule_1 = (T,cb) ->
   b2 = WordArray.from_hex "000abcdef00122344556"
   b3 = WordArray.from_hex "999999999999999999"
   b4 = WordArray.from_hex "99999999999999999a"
+  b5 = WordArray.from_hex "d0"
+  b6 = WordArray.from_hex "00e0"
+  b7 = WordArray.from_hex "0000000000000000000000000000000000000000000000000000000000000f"
   test_cmp T, b0, b1
   test_cmp T, b0, b2
   test_cmp T, b3, b4
   test_cmp T, b2, b4
+  test_cmp T, b5, b6
+  test_cmp T, b7, b5
+  test_cmp T, b7, b6
   cb()
 
