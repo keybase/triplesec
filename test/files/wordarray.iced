@@ -5,6 +5,8 @@ compare = (T, s) ->
   s2 = WordArray.from_utf8(s).to_utf8()
   T.equal s, s2, "utf8 string: #{s}"
 
+#------------------------------------------------------------
+
 exports.compare_utf8 = (T,cb) ->
   strings = [
     "a"
@@ -23,3 +25,30 @@ exports.compare_utf8 = (T,cb) ->
   for s in strings
     compare T, s
   cb()
+
+#------------------------------------------------------------
+
+test_cmp = (T,a,b) ->
+  T.equal a.cmp_ule(b), "-1", "< worked"
+  T.equal b.cmp_ule(a), "1", "> worked"
+
+#------------------------------------------------------------
+
+exports.test_cmp_ule_1 = (T,cb) ->
+  b0 = WordArray.from_hex "00abcd"
+  b1 = WordArray.from_hex "abcdef"
+  b2 = WordArray.from_hex "000abcdef00122344556"
+  b3 = WordArray.from_hex "999999999999999999"
+  b4 = WordArray.from_hex "99999999999999999a"
+  b5 = WordArray.from_hex "d0"
+  b6 = WordArray.from_hex "00e0"
+  b7 = WordArray.from_hex "0000000000000000000000000000000000000000000000000000000000000f"
+  test_cmp T, b0, b1
+  test_cmp T, b0, b2
+  test_cmp T, b3, b4
+  test_cmp T, b2, b4
+  test_cmp T, b5, b6
+  test_cmp T, b7, b5
+  test_cmp T, b7, b6
+  cb()
+
