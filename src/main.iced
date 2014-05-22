@@ -20,6 +20,6 @@ exports.modes =
   CTR     : require('./ctr')
 exports.scrypt  = require('./scrypt').scrypt
 exports.pbkdf2 = require('./pbkdf2').pbkdf2
-hmac = require('./hmac')
+exports.hmac = hmac = require('./hmac')
 exports.HMAC_SHA256 = hmac.HMAC_SHA256
 exports.HMAC = hmac.HMAC

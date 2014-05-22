@@ -1,3 +1,9 @@
+## 3.0.13
+
+Features:
+
+  - Expose other hmac features
+
 ## 3.0.12 (2014-05-22)
 
 Features:
