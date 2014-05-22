@@ -7,6 +7,7 @@ exports.util      = require('./util')
 exports.ciphers   =
   AES     : require('./aes').AES
   TwoFish : require('./twofish').TwoFish
+  Salsa20 : require('./salsa20').Salsa20
 exports.hash =
   SHA1    : require('./sha1').SHA1
   SHA224  : require('./sha224').SHA224
@@ -15,6 +16,8 @@ exports.hash =
   SHA512  : require('./sha512').SHA512
   SHA3    : require('./sha3').SHA3
   MD5     : require('./md5').MD5
+exports.modes = 
+  CTR     : require('./ctr')
 exports.scrypt  = require('./scrypt').scrypt
 exports.pbkdf2 = require('./pbkdf2').pbkdf2
 hmac = require('./hmac')

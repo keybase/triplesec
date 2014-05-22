@@ -1,3 +1,9 @@
+## 3.0.11 (2014-05-22)
+
+Features:
+
+  - Expose Salsa20 and CTR to modules
+
 ## 3.0.10 (2014-04-14)
 
 Bugfixes:
