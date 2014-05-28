@@ -36,7 +36,7 @@ $(BUILD_STAMP): \
 	lib/combine.js \
 	lib/sha256.js \
 	lib/sha224.js \
-        lib/sha384.js \
+	lib/sha384.js \
 	lib/sha1.js \
 	lib/scrypt.js \
 	lib/md5.js

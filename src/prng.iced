@@ -78,7 +78,6 @@ class PRNG
   #    reader.  Callback with a Buffer containing the random seed.
   gen_seed : (nbits, cb) ->
 
-
     nbytes = nbits / 8
     bufs = []
     bufs.push @now_to_buffer()
