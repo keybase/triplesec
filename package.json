@@ -26,12 +26,13 @@
     "optimist": "~0.6.0",
     "rsp2json": "~0.0.1",
     "codo": "~2.0.2",
-    "uglify-js": "~2.4.7"
+    "uglify-js": "~2.4.7",
+    "iced-coffee-script": "~1.7.1"
   },
   "dependencies": {
-    "more-entropy": "~0.0.2",
-    "iced-coffee-script": "~1.7.1",
     "iced-error": "~0.0.6",
+    "iced-runtime": "0.0.1",
+    "more-entropy": "~0.0.2",
     "progress": "~1.1.2"
   },
   "author": "keybase",
