@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTjzgrAAoJEJgKPw0B/gTf3rUH/3B30cG2Q6cVZlPendFU/L0h
-q/zKa7G/dsrO/mADgkkGli9OiLshEMmHeqlNqsnOmhlL0Qwrv74ACaHnLFIQgR0h
-rx15SBynHGrwNuX75gyD8no/vV/mVmZXMpTclqjEp+qlTpZ8jm8XEiJxG8Vq51p3
-VGj4rCKNQtAPYfLtn5GQZJqFV/Yho+zld5YXXDWx+s4hklQVgqe3gGDK0WSRB25L
-MK3UA3iphtdQoZ5jAdOM2N7qRC+4DUP9F07npDt6sedXNH+19s6of1Yd6jsKzezl
-5xuLaGngXG7FKxHP2wQNFFNlXqTA4hki3cp3/VBjDmCklosg97d0vyEk788zsb8=
-=Jnox
+iQEcBAABCgAGBQJTj0HTAAoJEJgKPw0B/gTfwr4H/jPwzd5lrfRhVcN5CXPlj3Gv
+hbn7UqWIfAjZuTRAfbyYAhNSxt92dskyrxmBSxxAvxmdyjdTrCPgKzXxvBmJPLD3
+NMjmBTaTHf0K+yk6liaB+A5VdBF9taaTWcbjNsdPHb5S4Ym26v4JAaqAuCUHSEzn
+7ZsE7AnZIqGGZToGwhVpP/WPT1LqIFv7wXPj4GPhQYQoI4pVArr1CPRHeUSGACOz
+XFQ/57hxj/ZQ70M6RMx3LYg3FeFzbrvFT/LLclJ+JvPzqfUUOmq1v7wTNC6EKX6q
++yOnoQzzkkOE080boLswlkVwC9+O8UG2EhrhjvuzaK8i2wHHwum4f1yTCJ7+PQQ=
+=DXAf
 -----END PGP SIGNATURE-----
 
 ```
@@ -27,7 +27,7 @@ size     exec  file                                              contents
 40               .codoopts                                       ab9ae466cd6b7b7c049badd71932d170b4c01771bc2501c0b017d4566fabee9d                                                                 
 327              .gitignore                                      d0ef9b0cc5c998e6b375863f9d30b689bb5ed7301727595931cbf77cb792d935                                                                 
 91               .npmignore                                      27935a3b682bdb0d10f8d28fea3c3b59a78eff54e7d6c231a73315e41f33b7ac                                                                 
-48               .travis.yml                                     e6c07cdc24c5a030d24e746f55cd513691c63b6a70a7f2e6f04f1e81c0a800ff                                                                 
+38               .travis.yml                                     e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
 644              CHANGELOG.md                                    caf18f970c3127cc0af4bcd0ec32e19bec6aa8d56f90fb94e8c38145d9ff754e                                                                 
 1080             LICENSE                                         99a379caf346f0f4ccafb8ef3e33cc195cd237e3442bad9616aad1184a2f78a7                                                                 
 4189             Makefile                                        8c68c68ebb3b10119668a3f33d401851d9e31825764bd48309ccc61c07e08903                                                                 
@@ -198,21 +198,15 @@ size     exec  file                                              contents
                  logo/                                                                                                                                                                            
 303893             logo2.psd                                     54d35c194d8b0e7016aee2dbc88f3e200428093c93a50f68f388986838f98cbd|49ab23a75a09eb172a9d9e25b9406f5e5f0234f996385f5dc01037cf9cd60b18
 1472353            logo_base.psd                                 14f46d0e5c6543d2f0c61d584c5e73a17399502284802e7052aa5cc19f6d4d86|cf867e398eda379d65a5897ebb96531f86da21ec857a860c271a8d1fe8c6eb8c
-1049             package.json                                    60f753e4d4d7b3666f549c6c4d08d5f866f79b3ead19edbd15b76d87cb664b89                                                                 
+1053             package.json                                    c1b59d0211716aa5c881e8003ec31b2b9709644bc1544f8e20c325bc8162e04f                                                                 
                  ref/                                                                                                                                                                             
 335                gen_combine_test_vectors.iced                 00ead4e5fc355528e39dd341b1bbb1839d28674654fbba9cabfff9cac1c087e0                                                                 
 2133               gen_pbkdf2_sha512_sha3_spec.iced              281204dcd37cb2f3a00b0442d70222a6aa3573ad7a333b4c682f4b90108abb27                                                                 
 2615               gen_scrypt_xor_spec.iced                      35f8cfcce008c9120229cb262ec3ee5146d47bc29b97313c9a6e19d20a890376                                                                 
 1513               gen_triplesec_spec.iced                       94082c782f84c1709909beae636ed06067fe9416291feded3f164e959b1e88c5                                                                 
                  rel/                                                                                                                                                                             
-180568             triplesec-0.0.1-min.js                        2964c0882922a4a642aa781191a6366c2056534ece100ecd3a45818f10a9816f                                                                 
-281019             triplesec-0.0.1.js                            8e164e6ea599ecffc9c90668f5e324f82d815b44f43493336e98a67c8d6c5175                                                                 
-181200             triplesec-1.0.0-min.js                        4e7ec27b313953e02c4aa5f66ad99b1301dce453d089d9bc8641c7a8fdb0e702                                                                 
-282022             triplesec-1.0.0.js                            553a45011cbb3a05d31a76876b38c78cdc5b68360967bb88403c885dab746a85                                                                 
-176240             triplesec-1.0.4-min.js                        9abad750d93c1ba885c4140a0ffdad6eff14bfe182c8d77d0d1d47cc4cc16292                                                                 
-279110             triplesec-1.0.4.js                            700b27046850032d85e591fcd0a2d45cb32c8b696acd8c277352ca6bb5c6105b                                                                 
-160015             triplesec-3.0.0-min.js                        6aee27a6db60ffdf39cbcd96cc28608558abb22868583859b5c2786087a30032                                                                 
-244341             triplesec-3.0.0.js                            85795b472625a93f5a5f0548babad27e02532cadf616f431ddb2ef391dfe4cb2                                                                 
+191235             triplesec-3.0.14-min.js                       6f5f32514ee91ef53fa530cbd04f242e3952b243979d4181dc82d8efac0c096b                                                                 
+294060             triplesec-3.0.14.js                           3c30015176f57893acfc4bcd2ad53094ecce94b19c8949421b066fffeb89e667                                                                 
                  site/                                                                                                                                                                            
                    css/                                                                                                                                                                           
 97339    x           bootstrap.min.css                           1cbda21998b65e08a7e936114cabd7f7783d0f590dd6efdd58c7faa8b6e7b9aa                                                                 
