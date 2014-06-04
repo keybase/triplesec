@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTj0S6AAoJEJgKPw0B/gTfUGcH/j83f762GQvagDgkZQ8OIX2D
-NWpwWP1GG/P6C5jlBoOT3FAodVQR4RQdj43y6WMWeKNENQwvTs5xFbSKbmaAyaTm
-ENmVhRHO4a5IZAXAAxTgrg2kYIo0Yupk6WnLvP1ler+dGj9H92vY+WMafVwz6uz/
-fu4qtbyzB+cbXB21gUuvMxcn8vj/98qtclJ7VJ3rHeciGgVfOm01VjdzhceCyv3d
-6xkAea1GpoUFmUfRo0IBwq+k7k911gs1o+4g6CSY6TOTWluB/a/MqCN70VMI9aiX
-su5F2NFbUe6nlMDQg5I1ag43Oc5sDV7J8BtFVmC808/yri31wsPQkQ1o6lWVy4w=
-=HzKU
+iQEcBAABCgAGBQJTj0TvAAoJEJgKPw0B/gTfTX0H/A7yY4r3TPVQMmFhE1V8rhqO
+x3PgNc73MMFBcGozWIUcn7sBZHQiJMfZC1CjpQpc1O1feoqXe6pcHEzQ80J5PRao
+xVMF+0QGBtkGqMczxnrIseRLwah9bRamgVFnTxIy5as83M39esCrsdU2DNkFl0Nc
+2WnG2vUc5Q0GxW1dSrNa5dyEorR3OW1E+n2W6nN7oroXPPVJj8vIg6x5LCvbklrC
+CmS00X7vVi9UkFpmreAuvrNiBNSsnLC+LoYcEsHflOEXlMuxMerfvaZa0iu4IZAK
+MwddwCkwauxPNL/GogTKdInqyvmNDQGP/kVrGNqOUiup0M54ifrjLgmN5BdW1ns=
+=Qr7o
 -----END PGP SIGNATURE-----
 
 ```
@@ -28,7 +28,7 @@ size     exec  file                                              contents
 327              .gitignore                                      d0ef9b0cc5c998e6b375863f9d30b689bb5ed7301727595931cbf77cb792d935                                                                 
 91               .npmignore                                      27935a3b682bdb0d10f8d28fea3c3b59a78eff54e7d6c231a73315e41f33b7ac                                                                 
 38               .travis.yml                                     e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
-644              CHANGELOG.md                                    caf18f970c3127cc0af4bcd0ec32e19bec6aa8d56f90fb94e8c38145d9ff754e                                                                 
+766              CHANGELOG.md                                    6676df95704ffe04855863f20f207130a46a547536d0640412b0122b668c47a5                                                                 
 1080             LICENSE                                         99a379caf346f0f4ccafb8ef3e33cc195cd237e3442bad9616aad1184a2f78a7                                                                 
 4189             Makefile                                        8c68c68ebb3b10119668a3f33d401851d9e31825764bd48309ccc61c07e08903                                                                 
 1727             README.md                                       a9d1937c23d7d8ddd430d925058a6362d17ada102b79e5dc997d8e7797a0d350                                                                 
