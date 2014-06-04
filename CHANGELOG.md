@@ -1,3 +1,10 @@
+## 3.0.14-3.0.16 (2014-05-26)
+
+Bugfixes:
+
+  - Various small changes to package.json to debug install problems with npm
+ 
+
 ## 3.0.13 (2014-05-26)
 
 Features:
