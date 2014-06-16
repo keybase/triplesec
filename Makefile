@@ -39,7 +39,8 @@ $(BUILD_STAMP): \
 	lib/sha384.js \
 	lib/sha1.js \
 	lib/scrypt.js \
-	lib/md5.js
+	lib/md5.js \
+	lib/ripemd160.js
 	date > $@
 
 $(BROWSER): lib/main.js $(BUILD_STAMP)

@@ -1,6 +1,7 @@
 
 mods =  
   main : require '../files/md5.iced'
+  ripemd160 : require '../files/ripemd160.iced'
   drbg : require '../files/drbg.iced'
   triplesec : require '../files/triplesec.iced'
   scrypt : require '../files/scrypt.iced'
