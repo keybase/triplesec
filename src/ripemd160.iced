@@ -77,8 +77,6 @@ class RIPEMD160 extends Hasher
 
   _doProcessBlock: (M, offset) ->
 
-    console.log "A"
-    console.log M
     # Swap endian
     for i in [0...16]
       # Shortcuts
@@ -90,8 +88,6 @@ class RIPEMD160 extends Hasher
         (((M_offset_i << 8)  | (M_offset_i >>> 24)) & 0x00ff00ff) |
         (((M_offset_i << 24) | (M_offset_i >>> 8))  & 0xff00ff00)
       )
-    console.log "B"
-    console.log M
 
     # Shortcut
     H  = @_hash.words
@@ -162,10 +158,6 @@ class RIPEMD160 extends Hasher
   #------------------
 
   _doFinalize: () ->
-    console.log "do finalize..."
-    console.log @_data
-    console.log @_data.sigBytes
-    console.log @blockSize
     # Shortcuts
     data = @_data
     dataWords = data.words
@@ -179,14 +171,7 @@ class RIPEMD160 extends Hasher
       (((nBitsTotal << 8)  | (nBitsTotal >>> 24)) & 0x00ff00ff) |
       (((nBitsTotal << 24) | (nBitsTotal >>> 8))  & 0xff00ff00)
     )
-    console.log "XXX"
-    console.log dataWords.length
-    console.log nBitsTotal
-    console.log nBitsLeft
     data.sigBytes = (dataWords.length + 1) * 4
-
-    console.log "after padding!"
-    console.log data
 
     # Hash final blocks
     @_process()
