@@ -1,5 +1,5 @@
 {WordArray} = require '../../lib/wordarray'
-{data} = require '../data/ripemd160'
+{data} = require '../fixed-data/ripemd160'
 {RIPEMD160} = require '../../lib/ripemd160'
 
 exports.test = (T,cb) ->
