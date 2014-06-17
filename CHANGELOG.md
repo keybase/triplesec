@@ -1,3 +1,9 @@
+## 3.0.17
+
+Features:
+
+  - RipeMD160 support
+
 ## 3.0.14-3.0.16 (2014-05-26)
 
 Bugfixes:
