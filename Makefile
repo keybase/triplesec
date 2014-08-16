@@ -31,7 +31,6 @@ $(BUILD_STAMP): \
 	lib/dec.js \
 	lib/prng.js \
 	lib/drbg.js \
-	lib/lock.js \
 	lib/sha3.js \
 	lib/combine.js \
 	lib/sha256.js \

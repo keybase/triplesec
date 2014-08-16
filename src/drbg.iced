@@ -4,7 +4,7 @@ hmac = require './hmac'
 sha512 = require './sha512'
 sha3 = require './sha3'
 {WordArray} = require './wordarray'
-{Lock} = require './lock'
+{Lock} = require 'iced-lock'
 
 #====================================================================
 
