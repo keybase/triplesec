@@ -1,3 +1,16 @@
+## 3.0.19 (2014-08-18)
+
+Bugfixes:
+
+  - Remove errant iced-coffee-script inclusion
+     - Address keybase/kbpgp#40
+
+## 3.0.18 (2014-08-16)
+
+Features:
+
+  - Upgrade more-entropy to make it more polite on energy-constrained devices
+
 ## 3.0.17 (2014-06-17)
 
 Features:
