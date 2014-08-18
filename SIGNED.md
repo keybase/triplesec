@@ -1,16 +1,15 @@
 ##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - http://gpgtools.org
+Version: GnuPG v2
 
-iQEcBAABAgAGBQJT72BcAAoJEJgKPw0B/gTfHPEIAIjy3ZRNCZ6t6d1fOBgbGDi5
-7MgGhAWpzvpQCVQG+SP3u40tpgx8t1JNWlj0AG+sHGTUXaXxNWwQcFOxW1sPdTJu
-88g5NuDY96KDfHEttRzlrQS1jpOmJRZLzsJl1KRZP8lQCYGjGn3pSnDZxItWoqO0
-aF7MfVr4pBz4tLeLnCZKfK+VEOcS8YxNa+iSvDd3Uc4KAtJaPPti8dZbJ8XP0PEO
-RaYQruq3HAwzf9OvE/UoqBjTWd0y6UzZO+cvX2/lLImB0qunTBRpd1DUitofhMg2
-xZOlgqsekgx5Twko8olMrHwOCfd8p8FqMYPtP55aPP/vnyAlzOuwddjnzsUeRRE=
-=QLix
+iQEcBAABAgAGBQJT8ocVAAoJEJgKPw0B/gTfoG4IAL3+dGuyadDDAFj0krQbYH3A
+oXQDWdA5sZ4z/lPUfIe/28x5NiJhJHNxg0Mzd+6TJEeWAmnFAk7PoF4Ivhxoc/tw
+yjgPuLmPg+UHrjN7tdEXs5vbsunNWlVjfrj482ZmhveK+CxsHefrf43KJzl7RBI5
+8I3KB/f13B6h0ajT7gVrAbUOhq/yGYPnwxFamlMknQNf60dj+OnzbWADK1AA88i1
+IcbeehHelcaBJb5uUY+RCnqem6fpXE2Y63DE4Snob0Ni75vxdIaFV4grK6tF6ZdX
+a0d57yLdl0jjyehZiOea4VBl0ibfrNIZ0cFTlOJNDi+FC03IsCSWejYcUzA9s5o=
+=ALNf
 -----END PGP SIGNATURE-----
 
 ```
@@ -28,13 +27,13 @@ size     exec  file                                              contents
 327              .gitignore                                      d0ef9b0cc5c998e6b375863f9d30b689bb5ed7301727595931cbf77cb792d935                                                                 
 91               .npmignore                                      27935a3b682bdb0d10f8d28fea3c3b59a78eff54e7d6c231a73315e41f33b7ac                                                                 
 38               .travis.yml                                     e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
-824              CHANGELOG.md                                    10a158e0b3d1cb66b188e56e29e19e17b6e3143944e781b6950961ff578fb125                                                                 
+1053             CHANGELOG.md                                    fa33800a3ed83773695db54cd6630d9a3354c00b0f030fcac12e978352d02384                                                                 
 1080             LICENSE                                         99a379caf346f0f4ccafb8ef3e33cc195cd237e3442bad9616aad1184a2f78a7                                                                 
 4194             Makefile                                        5e1270fc85c048109ba75a1063eca52257761776cbbd43b156b0e6883d5410ee                                                                 
 1727             README.md                                       a9d1937c23d7d8ddd430d925058a6362d17ada102b79e5dc997d8e7797a0d350                                                                 
 477              bower.json                                      6fc80922465164d22693bdde7f04ec59f7c4db572e8b741cc7de18fed1412b7b                                                                 
                  browser/                                                                                                                                                                         
-308859             triplesec.js                                  dbab1a55a7def9b14a185eba49b818a9e1541623e0ef6006ccbe2b21c6f62748                                                                 
+307483             triplesec.js                                  1c59c0f81a4de61b9fa340cc44c347bc0184491ef4b1413f11cbcaf6f381bc52                                                                 
                  codo/                                                                                                                                                                            
 4198               LICENSE.html                                  ff920a99aa1821e6cecd42c070a70e9948bf661b8c9e0179acc11144603e2963                                                                 
 5173               README.md.html                                c0159d7c4ee2d7b431b687709482fce97977cf281fd38ab82fc61001d54f41da                                                                 
@@ -176,7 +175,7 @@ size     exec  file                                              contents
 5535               combine.js                                    d3dd497083f435743b064cc08d253307dee7f757e80ced661cbd2d388b9af22e                                                                 
 4437               ctr.js                                        0f4169ddbcdce9519f2ffb001ad9a00dfb86141397c6f99cc63344f05945fac4                                                                 
 14390              dec.js                                        ec67bb959caa585d2b8c62cfede6411792f322123ccf0b99487095149f1001b0                                                                 
-6657               drbg.js                                       5ea9418f9b5215b101ef17fffa9f053236b509532e97ac9b36ea8aa40626ff96                                                                 
+6617               drbg.js                                       3ace8861fc42cf1ceec45ca3e7dc8f384da34a41281b06a81349baede421e1d3                                                                 
 27266              enc.js                                        7ea61d076a0c230a7a6f04ddb59a2821dc1284479432e3e1d1f8b794f0ee55bb                                                                 
 4436               hmac.js                                       f0ee7ca475b2d208537f8c1baff23ec7fe99918c7f963defe99dd50ccddc34bf                                                                 
 1182               main.js                                       a735790d331832c0d51bc0c806044f9d238849c48f2a93103b78f355194149b0                                                                 
@@ -198,7 +197,7 @@ size     exec  file                                              contents
                  logo/                                                                                                                                                                            
 303893             logo2.psd                                     54d35c194d8b0e7016aee2dbc88f3e200428093c93a50f68f388986838f98cbd|49ab23a75a09eb172a9d9e25b9406f5e5f0234f996385f5dc01037cf9cd60b18
 1472353            logo_base.psd                                 14f46d0e5c6543d2f0c61d584c5e73a17399502284802e7052aa5cc19f6d4d86|cf867e398eda379d65a5897ebb96531f86da21ec857a860c271a8d1fe8c6eb8c
-1080             package.json                                    972be3a06497a885e357456308b73737d60d55855247cae2b46920b6323c09d8                                                                 
+1080             package.json                                    d6775ad1a5f5e75c29771b780ce24d9b30fc33e145780f0d210462a3e338987f                                                                 
                  ref/                                                                                                                                                                             
 335                gen_combine_test_vectors.iced                 00ead4e5fc355528e39dd341b1bbb1839d28674654fbba9cabfff9cac1c087e0                                                                 
 2133               gen_pbkdf2_sha512_sha3_spec.iced              281204dcd37cb2f3a00b0442d70222a6aa3573ad7a333b4c682f4b90108abb27                                                                 
