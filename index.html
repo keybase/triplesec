@@ -293,7 +293,7 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
                   signing the ciphertext (see Step 4).  This "key stretching" is done via
                   standard <a href="http://www.tarsnap.com/scrypt.html">scrypt</a>,
                   with parameters <em>N</em>=2<sup>15</sup>,
-                  <em>r</em>=8, <em>p</em>=1, and output length of 96 bytes.
+                  <em>r</em>=8, <em>p</em>=1, and output length of 192 bytes.
                   The output of this step is five seperate keys, 
                   used below.
                 </li>
