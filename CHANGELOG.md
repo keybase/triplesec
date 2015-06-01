@@ -1,3 +1,8 @@
+## 3.0.20 (2015-05-31)
+
+Bugfixes:
+  - Bower matches package.json
+
 ## 3.0.19 (2014-08-18)
 
 Bugfixes:
