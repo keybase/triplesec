@@ -1,6 +1,6 @@
 {
   "name": "triplesec",
-  "version": "3.0.19",
+  "version": "3.0.20",
   "homepage": "https://keybase.io/triplesec",
   "author": "keybase",
   "description": "A CommonJS-compliant system for secure encryption of smallish secrets",
