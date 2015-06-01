@@ -1,15 +1,21 @@
 ##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABAgAGBQJT8ocVAAoJEJgKPw0B/gTfoG4IAL3+dGuyadDDAFj0krQbYH3A
-oXQDWdA5sZ4z/lPUfIe/28x5NiJhJHNxg0Mzd+6TJEeWAmnFAk7PoF4Ivhxoc/tw
-yjgPuLmPg+UHrjN7tdEXs5vbsunNWlVjfrj482ZmhveK+CxsHefrf43KJzl7RBI5
-8I3KB/f13B6h0ajT7gVrAbUOhq/yGYPnwxFamlMknQNf60dj+OnzbWADK1AA88i1
-IcbeehHelcaBJb5uUY+RCnqem6fpXE2Y63DE4Snob0Ni75vxdIaFV4grK6tF6ZdX
-a0d57yLdl0jjyehZiOea4VBl0ibfrNIZ0cFTlOJNDi+FC03IsCSWejYcUzA9s5o=
-=ALNf
+iQIcBAABCgAGBQJVa8AwAAoJEGBSsq0xpmMcBQAQAKwuy08nDkZ0/VEnyJZ0QoaL
+dLByVstRrnydRwc/dHLybBO3R8/2mSvGUIAht1JpkxoJry/NEjSFDMq+29GJT++A
+LT+BNbujmWlyEh3rA6Juxw5l2okHkSzRz2KxdJJWTDIW5ApFm7UpScb0ffXNksUI
+WVbChlULU7y+CqvcoieZN6zcyV7BRmrJEJrvbEF9bOaH4VuOU3698zp5GK4oqLI5
+htBq5ysZJzVoo2iqcrwvS+KnyxpGksqC+HHuCCJk5kfbR+2TZeGQNYr7X33ZVfCQ
+82XoNT6v+PNYZC2tBrKjrB5Y1IlArvuO3cCldppo5ew4wJ/4r2zcVbS7w0uGIcQu
+ed8//DWeGlfNdOsfGuKjPfe6ACRUJekTT0lmrYw3msfcmA73MUTFmF7L29GdcI8f
+AWcFc3rY/arLnCLAIU29zH2n2sX5HQQ0uAZ2WnDgl/YzNOLqMjToeNpdVGg5guO8
+B0Qcp1RcjA/tfQ1/muoKRRSD5UM1fAedTQpiZFx8+PgbezMX5oV9ApYPW3E1IyXW
+nVD+UYl+IrXBLebpuUty57W4VWVHVh80GcnJxW3ncoDvbAF+FVx077Z3kG8gl2EQ
+fo2bKGfWwbiMjzEr8PZ/RR0rKDuBI6f3nXRn8sd9t229pzbv3xHnlZ2D989kE3jk
+qIAETKKMbqyb/kT5A3HF
+=X86G
 -----END PGP SIGNATURE-----
 
 ```
@@ -27,11 +33,11 @@ size     exec  file                                              contents
 327              .gitignore                                      d0ef9b0cc5c998e6b375863f9d30b689bb5ed7301727595931cbf77cb792d935                                                                 
 91               .npmignore                                      27935a3b682bdb0d10f8d28fea3c3b59a78eff54e7d6c231a73315e41f33b7ac                                                                 
 38               .travis.yml                                     e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
-1053             CHANGELOG.md                                    fa33800a3ed83773695db54cd6630d9a3354c00b0f030fcac12e978352d02384                                                                 
+1119             CHANGELOG.md                                    e958d4024d1e56dac1cd70c8a424ffb9715f4c3f2b1736ce746ece3faa03f6a7                                                                 
 1080             LICENSE                                         99a379caf346f0f4ccafb8ef3e33cc195cd237e3442bad9616aad1184a2f78a7                                                                 
 4194             Makefile                                        5e1270fc85c048109ba75a1063eca52257761776cbbd43b156b0e6883d5410ee                                                                 
 1727             README.md                                       a9d1937c23d7d8ddd430d925058a6362d17ada102b79e5dc997d8e7797a0d350                                                                 
-477              bower.json                                      6fc80922465164d22693bdde7f04ec59f7c4db572e8b741cc7de18fed1412b7b                                                                 
+477              bower.json                                      59af8126b9f706f8ee917dd6eb83a78d087e6bf84942a0ce98a87ae40e14c482                                                                 
                  browser/                                                                                                                                                                         
 307483             triplesec.js                                  1c59c0f81a4de61b9fa340cc44c347bc0184491ef4b1413f11cbcaf6f381bc52                                                                 
                  codo/                                                                                                                                                                            
@@ -150,7 +156,7 @@ size     exec  file                                              contents
 3512                 scrypt.1                                    9f3e5114295ab613c2260acd11e1fcb2e32b5a3927a16bc5d6467621e75cd4a0                                                                 
 263                  scrypt_platform.h                           da0fee78e744f01d8d0e2d09067363f9c918b59aa58b41fcb9feb01ad40a5eaa                                                                 
 23                   stamp-h1                                    24fdde0aee1f49666fc7a5bd7f422dc0118e4db128bc1f606f7f047c9b245bb4                                                                 
-2897970            shabytetestvectors.zip                        0ac90b0d5fba398319d8a4697dce0eb88ae3b3eacf69473a9249e6bea46456e4|06a7a8cedefb97a19eea66ad2e7dbf0cadcb70944854dd2b6d8174fac8d48f46
+2897970            shabytetestvectors.zip                        0ac90b0d5fba398319d8a4697dce0eb88ae3b3eacf69473a9249e6bea46456e4|01085aea85e615969839b07fd026781b723433726e1a3f736f6a8f981bb7b553
                  dev/                                                                                                                                                                             
 252                dec.iced                                      20351f484f13f1ba82ca680bbb0315c78bd543093d8022b7c25c1d27404d2667                                                                 
 782                enc.iced                                      eae62a49fa0de0856b98d9d4709b460f092716ea8e965af00e2e3d080048f626                                                                 
@@ -168,7 +174,7 @@ size     exec  file                                              contents
 398                xsalsa20.iced                                 a9339eb265a32b7a6d4575d9e97c94d19b4396df20b0d1bcf34e53cea1806e38                                                                 
                  ext/                                                                                                                                                                             
 17932              twofish.js                                    79c5748f477187e96f3b45b0edf84754206d4950f963375d05685b0a479b10cc                                                                 
-29212            index.html                                      04495a957f78ec659354fcdd944ca5da7afe00ed284490352c2c314184e4093b                                                                 
+29213            index.html                                      1d6e93a0e0b2cb1cab72c387137e008ea05fa3846d02b4989f2ca413d99af807                                                                 
                  lib/                                                                                                                                                                             
 7090               aes.js                                        8759bbd38541ae4a397baad094bf394e3659305c83b3de14e0334666ef71acb5                                                                 
 5371               algbase.js                                    f10d94aab425ff23a469e55b8bf6f5f5acef5da0c6c53ce49ec313667d86bbdc                                                                 
@@ -195,9 +201,9 @@ size     exec  file                                              contents
 5071               util.js                                       096dca1787d5be57d68e7b9b46740b3ecef5e8dab2ac0c4fbdc8bb9db764f877                                                                 
 10095              wordarray.js                                  e3147fdfbd46bd435317a8a51535bdf9f4ce133a7c1017e3f2a0b3de5b91465b                                                                 
                  logo/                                                                                                                                                                            
-303893             logo2.psd                                     54d35c194d8b0e7016aee2dbc88f3e200428093c93a50f68f388986838f98cbd|49ab23a75a09eb172a9d9e25b9406f5e5f0234f996385f5dc01037cf9cd60b18
-1472353            logo_base.psd                                 14f46d0e5c6543d2f0c61d584c5e73a17399502284802e7052aa5cc19f6d4d86|cf867e398eda379d65a5897ebb96531f86da21ec857a860c271a8d1fe8c6eb8c
-1080             package.json                                    d6775ad1a5f5e75c29771b780ce24d9b30fc33e145780f0d210462a3e338987f                                                                 
+303893             logo2.psd                                     54d35c194d8b0e7016aee2dbc88f3e200428093c93a50f68f388986838f98cbd|ce92bdc2ad68ed777b7d0f40638609e419dc3bb00396241418aefac5e8fbb421
+1472353            logo_base.psd                                 14f46d0e5c6543d2f0c61d584c5e73a17399502284802e7052aa5cc19f6d4d86|c504e7f5e13cdc404668b63bba50a1c8cc715bab2321cdcf6e2becb4b7c994a8
+1080             package.json                                    9fd0bf8a55964a97c229b81f6703a5beb09d0277f92ea0600f035ba6d01ff4ac                                                                 
                  ref/                                                                                                                                                                             
 335                gen_combine_test_vectors.iced                 00ead4e5fc355528e39dd341b1bbb1839d28674654fbba9cabfff9cac1c087e0                                                                 
 2133               gen_pbkdf2_sha512_sha3_spec.iced              281204dcd37cb2f3a00b0442d70222a6aa3573ad7a333b4c682f4b90108abb27                                                                 
@@ -216,11 +222,11 @@ size     exec  file                                              contents
                    img/                                                                                                                                                                           
 9012                 anatomy.gif                                 55cca62dbb27f50ae0f8443b96294398f49fc56d2e97fa3e884ef7a41e5be39d|6647b02e41ff9b79bd5f26ac0204b3b6275e917ea9c0531a918f0e35f18267b9
 11192                anatomy.png                                 cf2edc25f9135ebbecb209559a17d725eb1a7e5d32ae57d87fa90faee60fdf7b|e69d4b51dd320368e6bcddf626d5ef23a4426827cda16ba3e126b5411597d1f1
-506179               anatomy.psd                                 3a934ad6a625ae3372d5579135ca599d7601655052e53b423c00992c2f3da51f|cd61ca4306f345193c88559b8252701adcd74b21b56e73eccd2895bc8326674a
-4596                 js-logo.png                                 16864a42af077e9c324f2a599b1489888ace8f8b30994809d86fdbbc86bfbcb6|4d4e4cb84134748bbe14312d8d754a697e3e8fa49945ef614513aed643b3ff82
-10993                logo.png                                    9ea162f0e3d89d2cac764cdce3816638618944183e20f9c3d49e9c532e709a58|43345469a8b32e8f6a296056d8cf0d3a8dbbb6fb45f47a55cff271f752e493ee
-6856                 node-logo.png                               a9dc737119733bb5821c52a7ca3c9423bf1f91e783af686d120c635f5dc4378e|805b8fbf56596fb1d6e8acdcde8ab105942d0d05ef9c85ccddaec1be5bd9dc6a
-6737                 python-logo.png                             830af9d2501a62e56b124cde9627436bc53a74d887198a6db67f7493721151ef|d5a336a633de605ffe9a73489e34d8cd74957f155e0965eab7da67b7c7919751
+506179               anatomy.psd                                 3a934ad6a625ae3372d5579135ca599d7601655052e53b423c00992c2f3da51f|f21076ce1a156efbfb558e9b1e478fe2b2a1cc4c96c57e379264dec83b4623d8
+4596                 js-logo.png                                 16864a42af077e9c324f2a599b1489888ace8f8b30994809d86fdbbc86bfbcb6|6120c2a58a36f8ea9fb8d5bda7e0f244d11ebb4ef8218b24a42dca1ef7db907a
+10993                logo.png                                    9ea162f0e3d89d2cac764cdce3816638618944183e20f9c3d49e9c532e709a58|3d3f781221012d0dc6931a9bf5c06548f4a539a93f6d9301c8efa722d96c778f
+6856                 node-logo.png                               a9dc737119733bb5821c52a7ca3c9423bf1f91e783af686d120c635f5dc4378e|a69260d25b81cef399c335535425d37b9e2e25ea7aada23307d43d3f270a5c1f
+6737                 python-logo.png                             830af9d2501a62e56b124cde9627436bc53a74d887198a6db67f7493721151ef|5c6ee5c4c4fcceda04d6457ba8d07d3cdbce713fe7df11eca2c3357ce1997f4b
                    js/                                                                                                                                                                            
 27726    x           bootstrap.min.js                            54d21b0676784d0c983bbd4093898770adefa932d89b72c8afd88183a19172a7                                                                 
 234132               iced-coffee.js                              466776bf3b42285590e264e6e5a83b54722084a27961cda1a1aa37e2107ba650                                                                 
@@ -263,26 +269,26 @@ size     exec  file                                              contents
                      Data/                                                                                                                                                                        
 12662                  Dad_and_Kids_at_Beach-small.jpg           f9bda8e3789099597638da9d138e702a196aac6a4ba276e899df251c8451229a|fdbdc25a8081921e685d7a3bfd1ea393f1b4d04f9829e8afc94e927f3dac75ba
 12523                  Dad_and_Son_at_Beach-small.jpg            7960908d5c665cc0becfb504b555fdd2c0255bdc29ef094299282765613b4822|acd99baffa39ca5c9680cfe864351c05212993c38942c1715ad6e9a107ae0fff
-263581                 Screen+Shot+2013-10-22+at+9.20.13+AM.png  336fe3cf5ebb08e481380d77f81ba3e760ab6ff242576e55c0c919de0368430f|89394a51667d8314297c6c5f0fa486ea9d33c1d6f7d47ff722418d2f239bd0c3
-38342                  Screen+Shot+2013-10-22+at+9.20.png        62f4ea73e1e03eadcb9f25f19861c1b30ac46c83849b679552854f569ea20ce8|d717d47e743a175d98339f1e72b596b961e04f03ec69ef4825fee6afa0e4d249
-9746                   mt0%402x.jpg                              91e9882bc4a7e0999576155b7f449632ddd1bab5930c40ed42f963c110323c70|67ae2d8aaab0a123307830a68432f4c62aca5294944d84dc83907ed9cfb26764
-11228                  mt10%402x.jpg                             331b21b71ccc5fd67b8626525e7e87f119dfbe47b14f58d927f9414a8cc35c76|138b3da8882a237666acfed6a3d900fc2831fe90168e72a77efb1abdcdeaebb2
-19940                  mt11%402x.jpg                             5926d6b1e5a4339e871e2902dd429e5dee26aaa5c675322016e4bbe7ca424ae1|3f8c59a7eab58bbfee86be80049e0cd53b77e8aa024f6d5e38fb2007454b291b
+263581                 Screen+Shot+2013-10-22+at+9.20.13+AM.png  336fe3cf5ebb08e481380d77f81ba3e760ab6ff242576e55c0c919de0368430f|4b83eae4302fe09a993aaebbb912f37547f0dd4d214466782617876b707fbf3a
+38342                  Screen+Shot+2013-10-22+at+9.20.png        62f4ea73e1e03eadcb9f25f19861c1b30ac46c83849b679552854f569ea20ce8|db8af97f959e3e9c05b599b5384883f0af0e1ff3f1c38b6dd164a1808f0f2e67
+9746                   mt0%402x.jpg                              91e9882bc4a7e0999576155b7f449632ddd1bab5930c40ed42f963c110323c70|e5d161964a4eecb1381580dff734fb65661887036aab286e58f6a2bddabf8398
+11228                  mt10%402x.jpg                             331b21b71ccc5fd67b8626525e7e87f119dfbe47b14f58d927f9414a8cc35c76|7e8a6747ba3f58b0c2aec7bdd4d7e151491eddc6080adbd13623b057da9b79db
+19940                  mt11%402x.jpg                             5926d6b1e5a4339e871e2902dd429e5dee26aaa5c675322016e4bbe7ca424ae1|630ac1b728515d49a6da092fa7931f4a06300d90ba5cce97bb4e221b1c999cfc
 18074                  mt12%402x.jpg                             3f7d17b935fd5bbc3737b26ba872ff18619fb76e951b2ef1137948f9774a45cb|6732843fc3ac225f8acc3f24174e5955c266b1ff8d2096c0354659b02c6e1418
 17162                  mt13%402x.jpg                             c6e2039f1dcc557b9fe1411f15d51b89dff1bdeba113697fa204117e93fa553d|7c08e113d0ce41c2e467514338399b63aba694685fab1cf78f1d049799425071
-26892                  mt1%402x.jpg                              43a40cb5ac1f2e52fa170ce494bc78adee903110e1c956111dbb83be7caf72f5|7aa7e9c723a56b52ffeb0f40812553f5a9b418479e3b9f21d081c3a858b7e67e
-22206                  mt2%402x.jpg                              0c59362aeb915115df983532f14de351f89c0660ae17e28c915e4a9b609c43f2|9f69128df5687c2cc6d58a69cf5d2e4903cef44e0608f4061918f1a2d9954b62
-23417                  mt3%402x.jpg                              d919012ee011e30e9660cfaa74c89d03d99f718b863e5da50d62e61bd8571f9f|f4eb026612e95a996c738f227498066047222bc60fa36fdbb39a24045b0e6cbb
+26892                  mt1%402x.jpg                              43a40cb5ac1f2e52fa170ce494bc78adee903110e1c956111dbb83be7caf72f5|6f9faf90ddd5119b1548b3d4f89596c7f645a3b4f04a6f4a53e763f11a261396
+22206                  mt2%402x.jpg                              0c59362aeb915115df983532f14de351f89c0660ae17e28c915e4a9b609c43f2|6ff88d3c42dae82ae8a23bbacfc063d8a8d49cdada61098805f86e49eeb7c354
+23417                  mt3%402x.jpg                              d919012ee011e30e9660cfaa74c89d03d99f718b863e5da50d62e61bd8571f9f|46ff9a9c99b0f29276efab49c4fce32fc8325feecdbc54407c938f026ad7027c
 9166                   mt5%402x.jpg                              faa6cb8b993d80bcbf10fb0ceb107440a245b0f21e7b4bca9335b2d9103da6cd|961dee81f486bdbaa33fec66e3d72c44beee68b6fe88ab548a406655d951a7b9
 8806                   mt6%402x.jpg                              bfabec0c0264f17826d0577f489048420cc220dc072aad4a692ed425923f1b69|d667b635a73c6d923c14dc78a54bdb45126403b3f6b4f873ec031fcb88c236ab
 10698                  mt7%402x.jpg                              92adee676b8841a6783b86cd051128c736173f9082ecc2f21acdc7bc22f4b146|51b6ee02d6887c04f2734cf6da1d9813e3491ed087aae5c83571ac0badb3e4c2
-11163                  mt8%402x.jpg                              0a7c0e545e1398f5fc5f331845eac11f9e8fc861823d38fb8fc3b825d0b2f9a0|32870bf8a0fb098db20176f89584b66f177648a44c349a3c4a3ef743a29f41be
-10797                  mt9%402x.jpg                              f318010ffd271938598cc100d88fbb4599b9ae8ce753c66a605f07f09cca6bbe|05d9cb5de088afd2ed849b62e38dd4510efc4f2251f0f2a9ff2ba7b0930e06d2
-9544                   st0-1.jpg                                 2b2cc7419a1949d65ae57bc03c886d896bf136e01dd440d5d049ed295e312f32|824124b4591097c72f02ca50e7ffc43d361bbb2891ecffa867acd3419e49ef2d
+11163                  mt8%402x.jpg                              0a7c0e545e1398f5fc5f331845eac11f9e8fc861823d38fb8fc3b825d0b2f9a0|f026c05afb6877fed27a3b0aa6b16518bf931dd84d9de92aec3f3610c3377d34
+10797                  mt9%402x.jpg                              f318010ffd271938598cc100d88fbb4599b9ae8ce753c66a605f07f09cca6bbe|eb060a25b46ace8659b5fb569409226befeba09c7b9921e3e6d118c340d12b36
+9544                   st0-1.jpg                                 2b2cc7419a1949d65ae57bc03c886d896bf136e01dd440d5d049ed295e312f32|c244861e58af8f9482abdc768c7b34521b67078de8784092b35b2891d4e5a792
 4753                   st0.jpg                                   85484db86af4ab5001082dec68176155a199ae28dd3a906ddefeb1d2c6598866|277572d9d0757549b7d9cd5de2cbcc41b2d2e1bd8d2af29b0a9bbc95b1f87a67
-23110                  st1.jpg                                   376bbb682a07247c9ab277ddb1b923fb2799bfa77b49898b28204ba5b9c3eb1e|3cddcf110b368352b3e4f3c78fdae62444a551173a1bb14226d46a2d1683481b
-12505                  st2.jpg                                   3ba967ee81b780dd3db3ae0d95303279719d00da252b2ccc6db0e8e0abbdbc91|7581712b35e366412dda2ce6f4528218b06e1017182eadb84d7ba3aad7fba1a6
-22683                  st3.jpg                                   e581298673f6e79b19d50bfae271fb5ebc354803bb55e10d1b7ed557e393a136|25f2b4b1e02769b7f1106a46e403723b84f96a8e688d29d61facc7dcb26f5e12
+23110                  st1.jpg                                   376bbb682a07247c9ab277ddb1b923fb2799bfa77b49898b28204ba5b9c3eb1e|f145f8e5c4a922b21aba74a308da611aaf85d229efc9d09ab6506bd726c54158
+12505                  st2.jpg                                   3ba967ee81b780dd3db3ae0d95303279719d00da252b2ccc6db0e8e0abbdbc91|8cd05af6bc6b86b4ef34118a7ca35c5eea9ed23fbcd86c4c601f40d395a8748e
+22683                  st3.jpg                                   e581298673f6e79b19d50bfae271fb5ebc354803bb55e10d1b7ed557e393a136|dd58a4180a787c7f17a92923f24b2b40d12e214148fe2401589b491ee9ff5a23
 7887                   st5.jpg                                   119140a17fce4c3002b463b8ce2b90f724fb4a06645c91919a5c86b41feabb6c|4d4907d898bbab781cbedca357381c153d7ed934b13554183a15e381a6cc9cdb
 4994                   st6.jpg                                   e7368af401262ecb066542075e1657825bb62ec7326585bf2914266a32c3cc5e|4a7c46e52991ad1cf672bdc6304d1d2154da31fae70e61986e8855bbd2f93296
 80266                Index.zip                                   b8a8ba1a06dba475123fad1def924df82a0c2cbeaaa59ec6a61882b566c3f320|19ec16079992385ef484b59de6a8022293a8964ce843c81b7ec35bb3fc486a3d
@@ -291,8 +297,8 @@ size     exec  file                                              contents
 36                     DocumentIdentifier                        bacbe6f1a81681c42132fcc21f08dc60d1dc68ff9d445c0a377492ee0aa862da                                                                 
 217                    Properties.plist                          a29f0f83ef51e3b0acc4af1f3168b805cd6b32b770af0c9e976af7520ed594de|ceb6d80e7d848202197aa2a5b620ae95b8ed66e3e8f7105988f111c9a5e808af
 957                  preview-micro.jpg                           46dfccc8dae23b81e822ae4647c6ee45ae3faa1ebe01435e70ccb0fc01091827|5b7a83dd276cf6c5e159027c10b489d1feb66c507141ad7cec72ff876a6ea1e5
-2890                 preview-web.jpg                             50f3dae82bfbf9a8e9ea76cb53899cab23f7fd7bf8c104ef9f2de2d1596baa36|6afa70650b90cc40953352d96fcfffa23fc28b93e0dfc44948b641c9fa3dbf6e
-36640                preview.jpg                                 56d6b4b34a92c4e7edfad0ca1b34fa667c62fabfbb060115d5a8814534e4950d|e1c450c485974622d7e7d3cb5d684b36fce8f4d1f6e55ce062a2fbf0e6ce6d54
+2890                 preview-web.jpg                             50f3dae82bfbf9a8e9ea76cb53899cab23f7fd7bf8c104ef9f2de2d1596baa36|85433ca05e7c2479f29199108953ddb9191c755c1eca9a3348b73c7a23b9b6ed
+36640                preview.jpg                                 56d6b4b34a92c4e7edfad0ca1b34fa667c62fabfbb060115d5a8814534e4950d|304161fd25d7a3d32a93e37f2bd38bbbbe942c0a28f6cd4f081ed2a6532e2fdf
                  test/                                                                                                                                                                            
                    browser/                                                                                                                                                                       
 382                  bench.html                                  d5a018bf0c0b37cdd263893f500e0799930cf0b80a52235e1160b1c0dd0a29b4                                                                 
