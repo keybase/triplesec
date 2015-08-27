@@ -1,3 +1,8 @@
+## 3.0.22 (2015-08-27)
+
+Bugfix:
+  - Do the same for Encryptor, so fix a bug
+
 ## 3.0.21 (2015-08-27)
 
 Features:

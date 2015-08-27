@@ -434,7 +434,7 @@ class Encryptor extends Base
   # Clone a copy of this object that can survive scrubbing
   #
   clone : () ->
-    ret = new Encryptor { key : @key?.clone(), @rng, @version }
+    ret = new Encryptor { key : @key?.to_buffer(), @rng, @version }
     ret.derived_keys = @clone_derived_keys()
     ret
 
