@@ -27,6 +27,7 @@ V =
         c            : 1024               #   The number of iterations
         klass        : XOR                #   The HMAC to use as a subroutine
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
+    version          : 1                  # for lookups
   "2" :
     header           : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
     salt_size        : 16                 # 16 bytes of salt for various uses
@@ -40,6 +41,7 @@ V =
         r            : 8                  #   The memory use factor
         p            : 1                  #   the parallelization factor
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
+    version          : 2                  # for lookups
   "3" :
     header           : [ 0x1c94d7de, 3 ]  # The magic #, and also the version #
     salt_size        : 16                 # 16 bytes of salt for various uses
@@ -53,6 +55,7 @@ V =
         r            : 8                  #   The memory use factor
         p            : 1                  #   the parallelization factor
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
+    version          : 3                  # for lookups
 
 #========================================================================
 
@@ -261,8 +264,13 @@ class Base
     @key.scrub() if @key?
     if @derived_keys?
       for salt,key_ring of @derived_keys
-        for key in key_ring
-          key.scrub()
+
+        # MK 2015-08-27
+        # This is somewhat of a bug, but we never sucessfully scrubbed these
+        # extra keymaterial bytes beforehand, and applications now depend on it.
+        for algo,key of key_ring when algo isnt 'extra'
+            key.scrub()
+
     @derived_keys = {}
     @salt.scrub() if @salt?
     @salt = null
@@ -277,7 +285,9 @@ class Base
     if @derived_keys?
       ret = {}
       for salt,key_ring of @derived_keys
-        ret[salt] = (key.clone() for key in key_ring)
+        ret[salt] = {}
+        for algo,key of key_ring
+          ret[salt][algo] = if Buffer.isBuffer(key) then util.copy_buffer(key) else key.clone()
     ret
 
 #========================================================================
@@ -434,7 +444,7 @@ class Encryptor extends Base
   # Clone a copy of this object that can survive scrubbing
   #
   clone : () ->
-    ret = new Encryptor { key : @key?.to_buffer(), @rng, @version }
+    ret = new Encryptor { key : @key?.to_buffer(), @rng, version : @version?.version }
     ret.derived_keys = @clone_derived_keys()
     ret
 

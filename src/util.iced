@@ -26,6 +26,14 @@ exports.scrub_buffer = (b) ->
 
 #----------------------------------------------
 
+exports.copy_buffer = (b) ->
+  ret = new Buffer b.length
+  for i in [0...b.length]
+    ret.writeUInt8(b.readUInt8(i), i)
+  return ret
+
+#----------------------------------------------
+
 exports.scrub_vec = (v) ->
   for i in [0...v.length]
     v[i] = 0
@@ -72,7 +80,7 @@ exports.buffer_cmp_ule = (b1, b2) ->
 # @param {number} n_input_bytes The number of bytes in the input
 # @param {Function} update Function to call to update internal state. Call with a lo
 #    and high position **in words**, for which window of the input to operate on.
-# @param {Function} finalize Function to call to finalize computation 
+# @param {Function} finalize Function to call to finalize computation
 #    and yield a result.
 # @param {number} default_n The default number of words per batch to operate
 #    on if none is given explicitly as n

@@ -1,3 +1,8 @@
+## 3.0.23 (2015-08-27)
+
+Bugfix:
+  - Fix more issues in cloning, and also bugs in scrubbing derived keys
+
 ## 3.0.22 (2015-08-27)
 
 Bugfix:
