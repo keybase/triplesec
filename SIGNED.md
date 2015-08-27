@@ -3,19 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - https://gpgtools.org
 
-iQIcBAABCgAGBQJVa8AwAAoJEGBSsq0xpmMcBQAQAKwuy08nDkZ0/VEnyJZ0QoaL
-dLByVstRrnydRwc/dHLybBO3R8/2mSvGUIAht1JpkxoJry/NEjSFDMq+29GJT++A
-LT+BNbujmWlyEh3rA6Juxw5l2okHkSzRz2KxdJJWTDIW5ApFm7UpScb0ffXNksUI
-WVbChlULU7y+CqvcoieZN6zcyV7BRmrJEJrvbEF9bOaH4VuOU3698zp5GK4oqLI5
-htBq5ysZJzVoo2iqcrwvS+KnyxpGksqC+HHuCCJk5kfbR+2TZeGQNYr7X33ZVfCQ
-82XoNT6v+PNYZC2tBrKjrB5Y1IlArvuO3cCldppo5ew4wJ/4r2zcVbS7w0uGIcQu
-ed8//DWeGlfNdOsfGuKjPfe6ACRUJekTT0lmrYw3msfcmA73MUTFmF7L29GdcI8f
-AWcFc3rY/arLnCLAIU29zH2n2sX5HQQ0uAZ2WnDgl/YzNOLqMjToeNpdVGg5guO8
-B0Qcp1RcjA/tfQ1/muoKRRSD5UM1fAedTQpiZFx8+PgbezMX5oV9ApYPW3E1IyXW
-nVD+UYl+IrXBLebpuUty57W4VWVHVh80GcnJxW3ncoDvbAF+FVx077Z3kG8gl2EQ
-fo2bKGfWwbiMjzEr8PZ/RR0rKDuBI6f3nXRn8sd9t229pzbv3xHnlZ2D989kE3jk
-qIAETKKMbqyb/kT5A3HF
-=X86G
+iQEcBAABCgAGBQJV327LAAoJEJgKPw0B/gTfYSUH/17XWJ6GwEYG9ZFOi4U7PAU/
+xEqEQ4mcyI9MKCMsO7aeoD2DdjitOF/Yu1qVI5nY8vtSwEC7ASteG+qwP/OCzzUn
+XTe8ZDNKPRzcUWgoaaiu4Mpyq8d7Y7M9Ebo4C+sAp0G7K2k4h/130TBGJk1G2vJv
+FUFW63fQiT4kQBBmHJtFdfqlXEDLic/sFlS/FV2FOTWLv+BwdXHrzVFLeg0kWjxD
+7b29U3IEk4R9y+j2bPNro/sKwax6cOP0g1SySOxGIyJJ6lq2p9Ya5b3ysOfp1SCm
+02xgkuz8x3IFNco/xBt+UZNfZTeARRU+FuEKj3NmOi1zZ9XLtcKFzQoOKXv75bM=
+=9+c9
 -----END PGP SIGNATURE-----
 
 ```
@@ -33,13 +27,13 @@ size     exec  file                                              contents
 327              .gitignore                                      d0ef9b0cc5c998e6b375863f9d30b689bb5ed7301727595931cbf77cb792d935                                                                 
 91               .npmignore                                      27935a3b682bdb0d10f8d28fea3c3b59a78eff54e7d6c231a73315e41f33b7ac                                                                 
 38               .travis.yml                                     e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
-1119             CHANGELOG.md                                    e958d4024d1e56dac1cd70c8a424ffb9715f4c3f2b1736ce746ece3faa03f6a7                                                                 
+1195             CHANGELOG.md                                    8943df13595376a3d406b957888e1396963b578654a5eb7c03c103cacc3ff890                                                                 
 1080             LICENSE                                         99a379caf346f0f4ccafb8ef3e33cc195cd237e3442bad9616aad1184a2f78a7                                                                 
 4194             Makefile                                        5e1270fc85c048109ba75a1063eca52257761776cbbd43b156b0e6883d5410ee                                                                 
 1727             README.md                                       a9d1937c23d7d8ddd430d925058a6362d17ada102b79e5dc997d8e7797a0d350                                                                 
 477              bower.json                                      59af8126b9f706f8ee917dd6eb83a78d087e6bf84942a0ce98a87ae40e14c482                                                                 
                  browser/                                                                                                                                                                         
-307483             triplesec.js                                  1c59c0f81a4de61b9fa340cc44c347bc0184491ef4b1413f11cbcaf6f381bc52                                                                 
+309653             triplesec.js                                  e568d24bbfe2725d296f32c4ec34e2ac9cd87216a9e0945558c99176e184eb45                                                                 
                  codo/                                                                                                                                                                            
 4198               LICENSE.html                                  ff920a99aa1821e6cecd42c070a70e9948bf661b8c9e0179acc11144603e2963                                                                 
 5173               README.md.html                                c0159d7c4ee2d7b431b687709482fce97977cf281fd38ab82fc61001d54f41da                                                                 
@@ -180,9 +174,9 @@ size     exec  file                                              contents
 5371               algbase.js                                    f10d94aab425ff23a469e55b8bf6f5f5acef5da0c6c53ce49ec313667d86bbdc                                                                 
 5535               combine.js                                    d3dd497083f435743b064cc08d253307dee7f757e80ced661cbd2d388b9af22e                                                                 
 4437               ctr.js                                        0f4169ddbcdce9519f2ffb001ad9a00dfb86141397c6f99cc63344f05945fac4                                                                 
-14390              dec.js                                        ec67bb959caa585d2b8c62cfede6411792f322123ccf0b99487095149f1001b0                                                                 
+14709              dec.js                                        1599c1a59750ae8a0f12b7a33743567a6c8e86d07813087e206e58634eff93f1                                                                 
 6617               drbg.js                                       3ace8861fc42cf1ceec45ca3e7dc8f384da34a41281b06a81349baede421e1d3                                                                 
-27266              enc.js                                        7ea61d076a0c230a7a6f04ddb59a2821dc1284479432e3e1d1f8b794f0ee55bb                                                                 
+28205              enc.js                                        8d6ba73156101b079d3e69e743660bd6208b8a63bbfe7bd8d8238d42bb51e960                                                                 
 4436               hmac.js                                       f0ee7ca475b2d208537f8c1baff23ec7fe99918c7f963defe99dd50ccddc34bf                                                                 
 1182               main.js                                       a735790d331832c0d51bc0c806044f9d238849c48f2a93103b78f355194149b0                                                                 
 8256               md5.js                                        88dea60888418599d5f727c113eac4eb80fd03e14d5fa27dcc30e8a9132baa0d                                                                 
@@ -203,7 +197,7 @@ size     exec  file                                              contents
                  logo/                                                                                                                                                                            
 303893             logo2.psd                                     54d35c194d8b0e7016aee2dbc88f3e200428093c93a50f68f388986838f98cbd|ce92bdc2ad68ed777b7d0f40638609e419dc3bb00396241418aefac5e8fbb421
 1472353            logo_base.psd                                 14f46d0e5c6543d2f0c61d584c5e73a17399502284802e7052aa5cc19f6d4d86|c504e7f5e13cdc404668b63bba50a1c8cc715bab2321cdcf6e2becb4b7c994a8
-1080             package.json                                    9fd0bf8a55964a97c229b81f6703a5beb09d0277f92ea0600f035ba6d01ff4ac                                                                 
+1081             package.json                                    f7e45e703d2a02cf43ca76517ffaeba015fe9a67557940c57dc4aafa259676f4                                                                 
                  ref/                                                                                                                                                                             
 335                gen_combine_test_vectors.iced                 00ead4e5fc355528e39dd341b1bbb1839d28674654fbba9cabfff9cac1c087e0                                                                 
 2133               gen_pbkdf2_sha512_sha3_spec.iced              281204dcd37cb2f3a00b0442d70222a6aa3573ad7a333b4c682f4b90108abb27                                                                 
@@ -244,9 +238,9 @@ size     exec  file                                              contents
 7029               algbase.iced                                  7324d3b7bf64e5f22b803bcd8a411185ca289d082556c08496047fd05e26129d                                                                 
 5599               combine.iced                                  5ab64e5d628a28630c0345ae4bf21b19af145b1e8397160b88196c7684d9b0e0                                                                 
 4201               ctr.iced                                      1bebe2e43e184d43ea8eb11c4a26d9c79295316a7602f66f8c6662ad7c024356                                                                 
-6380               dec.iced                                      04bd13ac6d5c2f6f0398f8d40f29e6357cc38f73e3e5c6a6d2ecf91fca9b2391                                                                 
+6623               dec.iced                                      596a52184a079b4d20f5201768ff877c0cc2c114226b02bcc64b525deec5eea0                                                                 
 5018               drbg.iced                                     205780016dd5bc3dfc9d139ff39edb8ba3848a595b28226b3ec846ea13d09ecc                                                                 
-17485              enc.iced                                      ac847c50067133ab432fbac6e6bc27a32c0b925372e689f4212ee39292eeaa40                                                                 
+17917              enc.iced                                      e40835ddad05f5336171e0d6c2da182b1d9749aa545a8f447f1ead8948f434d8                                                                 
 4780               hmac.iced                                     5e8acb9ec364a324bcaf0f6ac10a7f1270fd58b17a325c890f5b7c3991ed98dd|82641fb4dd7bce9e3dcc22bb82c15daf34ef1630ee997f40a9a947b540448634
 963                main.iced                                     c1bd2351fef79c3d95ccaa80f9c065c8092126b0a968e15a2bc2d74f074d381c                                                                 
 7139               md5.iced                                      e966b4f5bf28ae51ae1c8e4230f8d850c8cd2eeb50479665a8b5ae3595f2bc08                                                                 
@@ -286,11 +280,11 @@ size     exec  file                                              contents
 10797                  mt9%402x.jpg                              f318010ffd271938598cc100d88fbb4599b9ae8ce753c66a605f07f09cca6bbe|eb060a25b46ace8659b5fb569409226befeba09c7b9921e3e6d118c340d12b36
 9544                   st0-1.jpg                                 2b2cc7419a1949d65ae57bc03c886d896bf136e01dd440d5d049ed295e312f32|c244861e58af8f9482abdc768c7b34521b67078de8784092b35b2891d4e5a792
 4753                   st0.jpg                                   85484db86af4ab5001082dec68176155a199ae28dd3a906ddefeb1d2c6598866|277572d9d0757549b7d9cd5de2cbcc41b2d2e1bd8d2af29b0a9bbc95b1f87a67
-23110                  st1.jpg                                   376bbb682a07247c9ab277ddb1b923fb2799bfa77b49898b28204ba5b9c3eb1e|f145f8e5c4a922b21aba74a308da611aaf85d229efc9d09ab6506bd726c54158
-12505                  st2.jpg                                   3ba967ee81b780dd3db3ae0d95303279719d00da252b2ccc6db0e8e0abbdbc91|8cd05af6bc6b86b4ef34118a7ca35c5eea9ed23fbcd86c4c601f40d395a8748e
+23110                  st1.jpg                                   376bbb682a07247c9ab277ddb1b923fb2799bfa77b49898b28204ba5b9c3eb1e|53b386c3546adaf12e1a356b0c88feed70aa57a7faa7beb16d3dbc4b2d9ac10a
+12505                  st2.jpg                                   3ba967ee81b780dd3db3ae0d95303279719d00da252b2ccc6db0e8e0abbdbc91|643ec42ea603a4ed7bfdeece9fb03ddd25a6b89c955db79dda73bb237a679124
 22683                  st3.jpg                                   e581298673f6e79b19d50bfae271fb5ebc354803bb55e10d1b7ed557e393a136|dd58a4180a787c7f17a92923f24b2b40d12e214148fe2401589b491ee9ff5a23
 7887                   st5.jpg                                   119140a17fce4c3002b463b8ce2b90f724fb4a06645c91919a5c86b41feabb6c|4d4907d898bbab781cbedca357381c153d7ed934b13554183a15e381a6cc9cdb
-4994                   st6.jpg                                   e7368af401262ecb066542075e1657825bb62ec7326585bf2914266a32c3cc5e|4a7c46e52991ad1cf672bdc6304d1d2154da31fae70e61986e8855bbd2f93296
+4994                   st6.jpg                                   e7368af401262ecb066542075e1657825bb62ec7326585bf2914266a32c3cc5e|d247dafaf573449fae93ae494bf6f5eabcb6aa82c28316d5804e43a6872a9fba
 80266                Index.zip                                   b8a8ba1a06dba475123fad1def924df82a0c2cbeaaa59ec6a61882b566c3f320|19ec16079992385ef484b59de6a8022293a8964ce843c81b7ec35bb3fc486a3d
                      Metadata/                                                                                                                                                                    
 262                    BuildVersionHistory.plist                 f640ae8dec1539080537aad6df0b9103a315f68283c9a311a2bf14c5208446b7                                                                 
@@ -306,7 +300,7 @@ size     exec  file                                              contents
 154399               bench.js                                    91e9a0b4e7b2aaac0fdac0269883987c1091e010863f37688f8405015f517bf0                                                                 
 287                  index.html                                  b63a4dd158b04544b47cfa00f03ab56ead47fb81c9ac98105c527a918de9cc29                                                                 
 794                  main.iced                                   e365336e7fcde32f7217b31e2ff35ee5fdcac7b82399bba5fc19c0222fcbd322                                                                 
-7241063              test.js                                     73ffd516ba857c877d581dda943277846886f251714d040dad19a966b1b1d737                                                                 
+7237886              test.js                                     803e305ba929f580a82e5a1f0e1b74bee9b0d0a461c21a8803e81f30e51d62f7                                                                 
                    files/                                                                                                                                                                         
 1759                 aes.iced                                    50477b9b24f00360183b0401eba67af5b0a00a00e2a42c3af630f14eb91e6c0d                                                                 
 1192                 aes_ctr.iced                                a9d708f710d8dbc4a4737b76e7a109345110bf1fc42d80c1013f9392132f2e1f                                                                 
@@ -320,7 +314,7 @@ size     exec  file                                              contents
 7687                 scrypt.iced                                 7b063ff3cbf7f3902834c1ea7dd5a1079ab8e30c1122941d1e0757e184f2100b                                                                 
 431                  scrypt_xor.iced                             07fc6f3a34e85611f7ccf990fe8d3d97b46ff6a0848ecfeec4e7cd6781027f14                                                                 
 1590                 sha.iced                                    a3421ce9f32d907b81fe38f7c2ed04c1d3360d5e6bcbcf6ad67bdcdf9b70a304                                                                 
-3808                 triplesec.iced                              4ab72937ce44075e97cb3d3818d6986fc3061598c141fa580f182ba97ff58d05                                                                 
+4442                 triplesec.iced                              97082ef19c382c882ebf789f2e4f8d288d28097e77ffb932e7052e88ac78766d                                                                 
 720                  twofish.iced                                5aa63d0b5f15a624322af8bb627e73a345831c26acc801f7e26194c037e9b7a4                                                                 
 1311                 wordarray.iced                              e0f5111b643b034bdc3ff626eeb58e1b1b3004c39c58ab2ace2e600aecee8129                                                                 
                    fixed-data/                                                                                                                                                                    
