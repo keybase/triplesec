@@ -30,8 +30,8 @@ class Decryptor extends Base
   #----------------------
 
   # @private
-  # 
-  # Read the header of the ciphertext. 
+  #
+  # Read the header of the ciphertext.
   # @param {callback} cb Callback with `null` on success and an Error object
   # if there was an error.
   #
@@ -40,7 +40,7 @@ class Decryptor extends Base
       new Error "Ciphertext underrun in header"
     else if not (@version = V[wa.words[1]])?
       new Error "bad header; couldn't find a good version (got #{wa.words[1]})"
-    else if (wa.words[0] isnt @version.header[0]) 
+    else if (wa.words[0] isnt @version.header[0])
       new Error "Bad header: unrecognized magic value"
     else null
     cb err
@@ -56,7 +56,7 @@ class Decryptor extends Base
   # @param {callback} cb A callback to call when completed. Callback
   # with null in the case of success, or an Error object in the case
   # of failure.
-  # 
+  #
   verify_sig : (key, cb) ->
     if not (received = @ct.unshift(Concat.get_output_size()/4))?
       err = new Error "Ciphertext underrun in signature"
@@ -92,7 +92,7 @@ class Decryptor extends Base
   # out of the ciphertext.
   #
   # @param {callback} cb A callback to call when completed. Call
-  # with `null` if there's a success (and `@salt`) is set, or 
+  # with `null` if there's a success (and `@salt`) is set, or
   # an `Error` if there was a problem.
   #
   read_salt : (cb) ->
@@ -132,7 +132,7 @@ class Decryptor extends Base
   # @param {callback} cb Fired with an `(err,res)` pair.
   #
   run : ({data, progress_hook}, cb) ->
-    
+
     # esc = "Error Short-Circuiter".  In the case of an error,
     # we'll forget about the rest of the function and just call back
     # the outer-level cb with the error.  If no error, then proceed as normal.
@@ -151,6 +151,18 @@ class Decryptor extends Base
     await @run_salsa20 { iv, input : @ct, key : @keys.salsa20, output_iv : false, progress_hook }, esc defer pt
     cb null, pt.to_buffer()
 
+  #----------------------
+
+  #
+  # @method clone
+  #
+  # Clone a copy of this object that can survive scrubbing
+  #
+  clone : () ->
+    ret = new Decryptor { key : @key?.clone(), @rng, @version }
+    ret.derived_keys = @clone_derived_keys()
+    ret
+
 #========================================================================
 
 # Given a key and an input ciphertext, decrypt and produce a plaintext.
@@ -162,7 +174,7 @@ class Decryptor extends Base
 #
 # @param {Buffer} key The encryption/decryption key.
 # @param {Buffer} data The incoming ciphtertext
-# @param cb [callback] Fired with an `(err,res)` pair.  
+# @param cb [callback] Fired with an `(err,res)` pair.
 #
 decrypt = ( { key, data, progress_hook } , cb) ->
   dec = (new Decryptor { key })

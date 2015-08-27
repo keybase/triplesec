@@ -16,8 +16,8 @@ prng          = require './prng'
 #========================================================================
 
 # @property {Object} V A lookup table of all supported versions.
-V = 
-  "1" : 
+V =
+  "1" :
     header           : [ 0x1c94d7de, 1 ]  # The magic #, and also the version #
     salt_size        : 8                  # 8 bytes of salt is good enough!
     xsalsa20_rev     : true               # XSalsa20 Endian Reverse
@@ -27,7 +27,7 @@ V =
         c            : 1024               #   The number of iterations
         klass        : XOR                #   The HMAC to use as a subroutine
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
-  "2" : 
+  "2" :
     header           : [ 0x1c94d7de, 2 ]  # The magic #, and also the version #
     salt_size        : 16                 # 16 bytes of salt for various uses
     xsalsa20_rev     : true               # XSalsa20 Endian Reverse
@@ -40,7 +40,7 @@ V =
         r            : 8                  #   The memory use factor
         p            : 1                  #   the parallelization factor
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
-  "3" : 
+  "3" :
     header           : [ 0x1c94d7de, 3 ]  # The magic #, and also the version #
     salt_size        : 16                 # 16 bytes of salt for various uses
     xsalsa20_rev     : false              # XSalsa20 Endian Reverse
@@ -63,11 +63,11 @@ exports.CURRENT_VERSION = CURRENT_VERSION = 3
 # A base class for the {Encryptor} and {Decryptor} classes.
 # Handles a lot of the particulars of signing, key generation,
 # and encryption/decryption.
-class Base 
+class Base
 
   #---------------
 
-  # @param {WordArray} key The private encryption key  
+  # @param {WordArray} key The private encryption key
   constructor : ( { key, version } ) ->
     @version = V[if version? then version else CURRENT_VERSION]
     throw new Error "unknown version: #{version}" unless @version?
@@ -105,13 +105,13 @@ class Base
     if not (keys = @derived_keys[salt_hex])?
       @_kdf = new @version.kdf.klass @version.kdf.opts
 
-      lens = 
+      lens =
         hmac    : @version.hmac_key_size
         aes     : AES.keySize
         twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
 
-      # The order to read the keys out of the Scrypt output, and don't 
+      # The order to read the keys out of the Scrypt output, and don't
       # depend on the properties of the hash to guarantee the order.
       order = [ 'hmac', 'aes', 'twofish', 'salsa20' ]
 
@@ -132,7 +132,7 @@ class Base
       @derived_keys[salt_hex] = keys
 
     cb null, keys
-    
+
   #---------------
 
   # Set or change the key on this encryptor, causing a scrubbing of the
@@ -142,25 +142,25 @@ class Base
   #
   set_key : (key) ->
     if key?
-      wakey = WordArray.from_buffer(key) 
+      wakey = WordArray.from_buffer(key)
       if not @key or not @key.equal wakey
         @scrub()
         @key = wakey
     else
       @scrub()
-    
+
   #---------------
 
   # @private
-  # 
+  #
   # Check that a key isn't scrubbed. If it is, it's a huge problem, and we should short-circuit
   # encryption.
-  # 
+  #
   # @param {WordArray} key The key to check for having been scrubbed.
   # @param {String} where Where the check is happening.
   # @param {callback} ecb The callback to fire with an Error, in the case of a scrubbed key.
   # @param {callback} okcb The callback to fire if we're OK to proceed.
-  # 
+  #
   _check_scrubbed : (key, where, ecb, okcb) ->
     if key? and not key.is_scrubbed() then okcb()
     else ecb (new Error "#{where}: Failed due to scrubbed key!"), null
@@ -192,7 +192,7 @@ class Base
   # @param {WordArray} iv The Salsa20-specific IV (24 bytes as per XSalsa20)
   # @param {bool} output_iv Whether or not to output the IV with the ciphertext
   # @param {callback} cb Callback on completion with `(err, res)`.  `res` will
-  #   be a {WordArray} of the ciphertext or a concatenation of the IV and 
+  #   be a {WordArray} of the ciphertext or a concatenation of the IV and
   #   the ciphertext, depending on the `output_iv` option.
   run_salsa20 : ({ input, key, iv, output_iv, progress_hook }, cb) ->
     await @_check_scrubbed key, "Salsa20", cb, defer()
@@ -203,7 +203,7 @@ class Base
     # inputs to Xsalsa20 were reversed endianwise.  It wasn't a security
     # bug, it was just wrong.  This fixes it going forward.  We might
     # want a slightly cleaner fix by the way...
-    if @version.xsalsa20_rev 
+    if @version.xsalsa20_rev
       args.key = key.clone().endian_reverse()
       args.iv = iv.clone().endian_reverse()
 
@@ -212,7 +212,7 @@ class Base
     # Despite the reversals, always output the original IV.
     ct = iv.clone().concat(ct) if output_iv
 
-    # Scrub the reversed IV & key since we'll never use it again. 
+    # Scrub the reversed IV & key since we'll never use it again.
     if @version.xsalsa20_rev
       args.key.scrub()
       args.iv.scrub()
@@ -227,7 +227,7 @@ class Base
   # @param {WordArray} key The Twofish-specific encryption key (32 bytes)
   # @param {WordArray} iv The Twofish-specific IV (16 bytes)
   # @param {callback} cb Callback on completion with `(err, res)`.  `res` will
-  #   be a {WordArray} of the concatenation of the IV and 
+  #   be a {WordArray} of the concatenation of the IV and
   #   the ciphertext.
   run_twofish : ({input, key, iv, progress_hook}, cb) ->
     await @_check_scrubbed key, "TwoFish", cb, defer()
@@ -244,7 +244,7 @@ class Base
   # @param {WordArray} key The AES-specific encryption key (32 bytes)
   # @param {WordArray} iv The AES-specific IV (16 bytes)
   # @param {callback} cb Callback on completion with `(err, res)`.  `res` will
-  #   be a {WordArray} of the concatenation of the IV and 
+  #   be a {WordArray} of the concatenation of the IV and
   #   the ciphertext.
   run_aes : ({input, key, iv, progress_hook}, cb) ->
     await @_check_scrubbed key, "AES", cb, defer()
@@ -268,6 +268,18 @@ class Base
     @salt = null
     @key = null
 
+  #---------------
+
+  # Clone a copy that can survive a scrubbing
+  #
+  clone_derived_keys : () ->
+    ret = null
+    if @derived_keys?
+      for salt,key_ring of @derived_keys
+        ret[salt] = (key.clone() for key in key_ring)
+    ret
+
+
 #========================================================================
 
 # ### Encryptor
@@ -276,24 +288,24 @@ class Base
 # instance of this object for each secret key you are dealing with.  Reusing
 # the same Encryptor object will allow you to avoid rerunning PBKDF2 with
 # each encryption.  If you want to use new salt with every encryption,
-# you can call `resalt` as needed.   The `run` method is called to 
+# you can call `resalt` as needed.   The `run` method is called to
 # run the encryption engine.
 #
 # Here is an example of multiple encryptions with salt reuse, in CoffeeScript:
-# @example 
+# @example
 # ```coffeescript
 # key = new Buffer "pitying web andiron impacts bought"
 # data = new Buffer "this is my secret data"
-# eng = new Encryptor { key } 
+# eng = new Encryptor { key }
 # eng.run { data }, (err, res) ->
 #    console.log "Ciphertext 1: " + res.toString('hex')
 #    data = Buffer.concat data, new Buffer " which just got bigger"
 #    eng.run { data }, (err, res) ->
 #      console.log "Ciphertext 2: " + res.toString('hex')
 #```
-# 
+#
 # Or equivalently in JavaScript:
-# @example 
+# @example
 # ```javascript
 # var key = new Buffer("pitying web andiron impacts bought");
 # var data = new Buffer("this is my secret data");
@@ -309,11 +321,11 @@ class Base
 #
 # In the previous two examples, the same salt was used for both ciphertexts.
 # To resalt (and regenerate encryption keys):
-# @example 
+# @example
 # ```coffeescript
 # key = new Buffer "pitying web andiron impacts bought"
 # data = new Buffer "this is my secret data"
-# eng = new Encryptor { key } 
+# eng = new Encryptor { key }
 # eng.run { data }, (err, res) ->
 #    console.log "Ciphertext 1: " + res.toString('hex')
 #    data = Buffer.concat data, new Buffer " which just got bigger"
@@ -321,12 +333,12 @@ class Base
 #      eng.run { data }, (err, res) ->
 #        console.log "Ciphertext 2: " + res.toString('hex')
 #```
-# 
+#
 #
 class Encryptor extends Base
 
   #---------------
- 
+
   # @param {Buffer} key The secret key
   # @param {Function} rng Call it with the number of Rando bytes you need. It should callback with a WordArray of random bytes
   # @param {Object} version The version object to follow
@@ -337,7 +349,7 @@ class Encryptor extends Base
   #---------------
 
   # @private
-  # 
+  #
   # Pick random IVS, one for each crypto algoritm. Call back
   # with an Object, mapping cipher engine name to a {WordArray}
   # containing the IV.
@@ -362,11 +374,11 @@ class Encryptor extends Base
   #
   # @param {Function} progress_hook A standard progress hook.
   # @param {Buffer} salt The optional salt to provide, if it's deterministic
-  #     and can be passed in.  If not provided, then we 
+  #     and can be passed in.  If not provided, then we
   # @param {callback} cb Called back when the resalting completes.
   resalt : ({salt, extra_keymaterial, progress_hook}, cb) ->
     err = null
-    if not salt? 
+    if not salt?
       await @rng @version.salt_size, defer @salt
     else if salt.length isnt @version.salt_size
       err = new Error "Need a salt of exactly #{@version.salt_size} bytes (got #{salt.length})"
@@ -375,12 +387,12 @@ class Encryptor extends Base
     unless err?
       await @kdf {extra_keymaterial, progress_hook, @salt}, defer err, @keys
     cb err, @keys
- 
+
   #---------------
 
   # @method run
   #
-  # The main point of entry into the TripleSec Encryption system.  The 
+  # The main point of entry into the TripleSec Encryption system.  The
   # steps of the algorithm are:
   #
   #  1. Encrypt PT with Salsa20
@@ -388,11 +400,11 @@ class Encryptor extends Base
   #  1. Encrypt the result of 2 with AES-256-CTR
   #  1. MAC with (HMAC-SHA512 || HMAC-SHA3)
   #
-  # @param {Buffer} data the data to encrypt 
+  # @param {Buffer} data the data to encrypt
   # @param {Buffer} salt The optional salt to provide, if it's deterministic
-  #     and can be passed in.  If not provided, then we 
+  #     and can be passed in.  If not provided, then we
   # @param {Function} progress_hook Call this to update the U/I about progress
-  # @param {number} extra_keymaterial The number of extra bytes to generate 
+  # @param {number} extra_keymaterial The number of extra bytes to generate
   #    along with the crypto keys (default : 0)
   # @param {callback} cb With an (err,res) pair, res is the buffer with the encrypted data
   #
@@ -404,7 +416,7 @@ class Encryptor extends Base
     esc = make_esc cb, "Encryptor::run"
 
     if salt? or not @salt?
-      await @resalt { salt, extra_keymaterial, progress_hook }, esc defer() 
+      await @resalt { salt, extra_keymaterial, progress_hook }, esc defer()
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
     await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
@@ -415,11 +427,22 @@ class Encryptor extends Base
     util.scrub_buffer data
     cb null, ret
 
+
+  #
+  # @method clone
+  #
+  # Clone a copy of this object that can survive scrubbing
+  #
+  clone : () ->
+    ret = new Encryptor { key : @key?.clone(), @rng, @version }
+    ret.derived_keys = @clone_derived_keys()
+    ret
+
 #========================================================================
 
 #
 # @method encrypt
-# 
+#
 # A convenience wrapper for:
 #
 # 1. Creating a new Encryptor instance with the given key
@@ -446,7 +469,7 @@ encrypt = ({ key, data, rng, progress_hook, version}, cb) ->
 
 exports.V = V
 exports.encrypt = encrypt
-exports.Base = Base 
-exports.Encryptor = Encryptor 
+exports.Base = Base
+exports.Encryptor = Encryptor
 
 #========================================================================

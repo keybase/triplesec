@@ -1,3 +1,9 @@
+## 3.0.21 (2015-08-27)
+
+Features:
+
+  - Encryptor / Decryptor clone support
+
 ## 3.0.20 (2015-05-31)
 
 Bugfixes:
