@@ -159,7 +159,7 @@ class Decryptor extends Base
   # Clone a copy of this object that can survive scrubbing
   #
   clone : () ->
-    ret = new Decryptor { key : @key?.clone(), @rng, @version }
+    ret = new Decryptor { key : @key?.to_buffer(), @rng, @version }
     ret.derived_keys = @clone_derived_keys()
     ret
 

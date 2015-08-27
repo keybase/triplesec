@@ -275,10 +275,10 @@ class Base
   clone_derived_keys : () ->
     ret = null
     if @derived_keys?
+      ret = {}
       for salt,key_ring of @derived_keys
         ret[salt] = (key.clone() for key in key_ring)
     ret
-
 
 #========================================================================
 
