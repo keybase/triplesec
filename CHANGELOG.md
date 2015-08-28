@@ -1,3 +1,8 @@
+## 3.0.25 (2015-08-27)
+
+Bugfix:
+  - unbreak due to bad version of IcedCoffeeScript. Fix with v108.0.8
+
 ## 3.0.24 (2015-08-27)
 
 Bugfix:

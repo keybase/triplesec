@@ -21,7 +21,7 @@
     "colors": "~0.6.2",
     "cryptojs-1sp": "3.1.2-a",
     "deep-equal": "~0.1.0",
-    "iced-coffee-script": "108.0.7",
+    "iced-coffee-script": "108.0.8",
     "iced-test": "~0.0.8",
     "iced-utils": "~0.1.1",
     "icsify": "^0.7.0",
