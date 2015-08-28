@@ -287,7 +287,9 @@ class Base
       for salt,key_ring of @derived_keys
         ret[salt] = {}
         for algo,key of key_ring
-          ret[salt][algo] = if Buffer.isBuffer(key) then util.copy_buffer(key) else key.clone()
+          # Let's just pass a reference to the extra key material,
+          # since it's a buffer that we don't scrub() above.
+          ret[salt][algo] = if (algo is 'extra') then key else key.clone()
     ret
 
 #========================================================================

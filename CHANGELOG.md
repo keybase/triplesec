@@ -1,3 +1,8 @@
+## 3.0.24 (2015-08-27)
+
+Bugfix:
+  - Don't copy() extra key material, since we're not scrubbing it.
+
 ## 3.0.23 (2015-08-27)
 
 Bugfix:
