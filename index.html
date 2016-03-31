@@ -288,7 +288,7 @@ plaintext = triplesec.decrypt(enc, b'top-secret-pw').decode()</pre>
 
                 <li>
                   <b>Key derivation.</b> Given a user-provided password, and a
-                  random salt value, generate four separate secret keys, one
+                  random salt value, generate three separate secret keys, one
                   for each cipher (see Step 3), and two final keys for
                   signing the ciphertext (see Step 4).  This "key stretching" is done via
                   standard <a href="http://www.tarsnap.com/scrypt.html">scrypt</a>,
