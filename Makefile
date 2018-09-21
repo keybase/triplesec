@@ -139,7 +139,7 @@ $(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 	date > $@
 
 release: browser/triplesec.js
-	V=`jsonpipe < package.json | grep version | awk '{ print $$2 }' | sed -e s/\"//g` ; \
+	V=`jq -r .version < package.json` ; \
 	cp $< rel/triplesec-$$V.js ; \
 	$(UGLIFYJS) -c < rel/triplesec-$$V.js > rel/triplesec-$$V-min.js 
 
