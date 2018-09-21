@@ -19,8 +19,6 @@ timer = new Timer()
 #====================================================================
 
 blkcpy = (D,S,d_offset,s_offset,len) -> 
-  "use asm";
-
   # This seemed like a good idea, but it was horrendously slow.
   #D.set(S.subarray((s_offset << 4), ((s_offset + len)) << 4), (d_offset << 4))
   j = (d_offset << 4) | 0
@@ -51,8 +49,6 @@ blkcpy = (D,S,d_offset,s_offset,len) ->
 #----------
 
 blkxor = (D,S,s_offset,len) ->
-  "use asm";
-  
   len = (len << 4) | 0
   i = 0
   j = (s_offset << 4) | 0
