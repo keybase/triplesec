@@ -126,10 +126,10 @@ sign = ({key, input, hash_class}) ->
 # @param {String} what What to call this hasher for the sake of the progress hook.
 # @param {callback} cb Callback with the generated hash, in a {WordArray}
 # 
-bulk_sign = ({key, input, progress_hook, klass, what}, cb) ->
+bulk_sign = ({key, input, progress_hook, klass, what, combine_klasses}, cb) ->
   klass or= HMAC
   what or= "hmac_sha512"
-  eng = new klass key
+  eng = new klass key, combine_klasses
   input.clamp()
   slice_args = 
     update    : (lo,hi) -> eng.update input[lo...hi]

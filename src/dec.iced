@@ -145,8 +145,9 @@ class Decryptor extends Base
     await @verify_sig @keys.hmac, esc defer()
     await @unshift_iv AES.ivSize, "AES", esc defer iv
     await @run_aes { iv, input : @ct, key : @keys.aes, progress_hook }, esc defer ct2
-    await @unshift_iv TwoFish.ivSize, "2fish", esc defer iv
-    await @run_twofish { iv, input : @ct, key : @keys.twofish, progress_hook }, esc defer ct1
+    if @version.use_twofish
+      await @unshift_iv TwoFish.ivSize, "2fish", esc defer iv
+      await @run_twofish { iv, input : @ct, key : @keys.twofish, progress_hook }, esc defer _
     await @unshift_iv Salsa20.ivSize, "Salsa", esc defer iv
     await @run_salsa20 { iv, input : @ct, key : @keys.salsa20, output_iv : false, progress_hook }, esc defer pt
     cb null, pt.to_buffer()

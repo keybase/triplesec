@@ -14,7 +14,9 @@ exports.hash =
   SHA256    : require('./sha256').SHA256
   SHA384    : require('./sha384').SHA384
   SHA512    : require('./sha512').SHA512
+  KECCAK    : require('./keccak').KECCAK
   SHA3      : require('./sha3').SHA3
+  SHA3STD   : require('./sha3std').SHA3STD
   MD5       : require('./md5').MD5
   RIPEMD160 : require('./ripemd160').RIPEMD160
 exports.modes = 

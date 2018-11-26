@@ -23,8 +23,8 @@ test_vector = (T, v, i, cb) ->
   v.salt = WordArray.from_hex v.salt
   v.klass = XOR
   await pbkdf2 v, defer dk
-  T.equal v.dk, dk.to_hex(), "Test vector #{i}"
-  T.waypoint "Test vector #{i}"
+  T.equal v.dk, dk.to_hex(), "PBKDF Test vector #{i}"
+  T.waypoint "PBKDF Test vector #{i}"
   cb()
 
 exports.test_pbkdf2_sha512_sha3 = (T,cb) ->
