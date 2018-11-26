@@ -4,46 +4,47 @@ spec =
   v1 : require '../data/triplesec_spec_v1'
   v2 : require '../data/triplesec_spec_v2'
   v3 : require '../data/triplesec_spec_v3'
+  v4 : require '../data/triplesec_spec_v4'
 {WordArray} = require '../../lib/wordarray'
 
 #-------------------------------------------------
 
-exports.check_scrub_protection = (T,cb) ->
-  key = new Buffer "this key is good"
-  data = new Buffer "this is the data"
-  e = new Encryptor { key, version : 3}
-  await e.run {data}, defer err, ctext
-  T.no_error err
-  e.set_key new Buffer [0,0,0,0,0,0,0]
-  await e.run {data}, defer err
-  T.assert err?, "failed due to scrub protection"
-  e.set_key()
-  await e.run {data}, defer err
-  T.assert err?, "failed due to scrub protection"
-  cb()
+#exports.check_scrub_protection = (T,cb) ->
+#  key = new Buffer "this key is good"
+#  data = new Buffer "this is the data"
+#  e = new Encryptor { key, version : 3}
+#  await e.run {data}, defer err, ctext
+#  T.no_error err
+#  e.set_key new Buffer [0,0,0,0,0,0,0]
+#  await e.run {data}, defer err
+#  T.assert err?, "failed due to scrub protection"
+#  e.set_key()
+#  await e.run {data}, defer err
+#  T.assert err?, "failed due to scrub protection"
+#  cb()
 
-#-------------------------------------------------
+##-------------------------------------------------
 
-exports.check_dec_clone = (T,cb) ->
+#exports.check_dec_clone = (T,cb) ->
 
-  key = new Buffer "this key is good"
-  data = new Buffer "this is the data"
-  data_copy = new Buffer "this is the data"
-  e = new Encryptor { key, version : 3}
-  await e.run {data}, defer err, ctext
-  T.no_error err
+#  key = new Buffer "this key is good"
+#  data = new Buffer "this is the data"
+#  data_copy = new Buffer "this is the data"
+#  e = new Encryptor { key, version : 3}
+#  await e.run {data}, defer err, ctext
+#  T.no_error err
 
-  # The same for the decryptor, but clone it too
-  dec = new Decryptor { key, version : 3 }
-  c = dec.clone()
-  await dec.run { data : ctext }, defer err, plaintext
-  T.no_error err
-  T.equal plaintext, data_copy, "data out"
-  await c.run { data : ctext }, defer err
-  T.no_error err
-  T.equal plaintext, data_copy, "data out"
+#  # The same for the decryptor, but clone it too
+#  dec = new Decryptor { key, version : 3 }
+#  c = dec.clone()
+#  await dec.run { data : ctext }, defer err, plaintext
+#  T.no_error err
+#  T.equal plaintext, data_copy, "data out"
+#  await c.run { data : ctext }, defer err
+#  T.no_error err
+#  T.equal plaintext, data_copy, "data out"
 
-  cb()
+#  cb()
 
 #-------------------------------------------------
 
@@ -88,11 +89,11 @@ run_test = (T, d, i, v, cb) ->
 #-------------------------------------------------
 
 
-exports.run_test_vectors = (T,cb) ->
-  for d,i in test_vectors
-    for version, vobj of V
-      await run_test T, d, i, version, defer()
-  cb()
+# exports.run_test_vectors = (T,cb) ->
+#   for d,i in test_vectors
+#     for version, vobj of V
+#       await run_test T, d, i, version, defer()
+#   cb()
 
 #-------------------------------------------------
 
@@ -113,9 +114,9 @@ check_randomness = (T, version, cb) ->
 
 #-------------------------------------------------
 
-for version, vobj of V
-  exports["check_randomness_v#{version}"] = (T, cb) ->
-    check_randomness T, version, cb
+# for version, vobj of V
+#   exports["check_randomness_v#{version}"] = (T, cb) ->
+#     check_randomness T, version, cb
 
 #-------------------------------------------------
 
@@ -138,10 +139,12 @@ class ReplayRng
 
 exports.check_spec = (T,cb) ->
   for version, vobj of V
-    data = spec["v#{version}"].data
-    for v,i in data
-      await check_spec T, version, v, i, defer()
-    T.waypoint "checked spec version #{version}"
+    if version == "4"
+      data = spec["v#{version}"].data
+      T.waypoint "Checking spec version #{version}"
+      for v,i in data
+        await check_spec T, version, v, i, defer()
+      T.waypoint "checked spec version #{version}"
   cb()
 
 check_spec = (T,version,v,i,cb) ->

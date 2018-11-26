@@ -6,6 +6,8 @@ salsa20       = require './salsa20'
 ctr           = require './ctr'
 {XOR,Concat}  = require './combine'
 {SHA512}      = require './sha512'
+{SHA3STD}     = require './sha3std'
+{KECCAK}      = require './keccak'
 {PBKDF2}      = require './pbkdf2'
 {Scrypt}      = require './scrypt'
 util          = require './util'
@@ -26,6 +28,8 @@ V =
       opts           :                    #   ..and options
         c            : 1024               #   The number of iterations
         klass        : XOR                #   The HMAC to use as a subroutine
+    use_twofish      : true               # Whether to use Twofish algorithm
+    hmac_hashes      : [ SHA512, KECCAK ] # Hashes to use for HMACing data
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
     version          : 1                  # for lookups
   "2" :
@@ -40,6 +44,8 @@ V =
         N            : 12                 #   log_2 of the work factor
         r            : 8                  #   The memory use factor
         p            : 1                  #   the parallelization factor
+    use_twofish      : true               # Whether to use Twofish algorithm
+    hmac_hashes      : [ SHA512, KECCAK ] # Hashes to use for HMACing data
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
     version          : 2                  # for lookups
   "3" :
@@ -54,12 +60,30 @@ V =
         N            : 15                 #   log_2 of the work factor
         r            : 8                  #   The memory use factor
         p            : 1                  #   the parallelization factor
+    use_twofish      : true               # Whether to use Twofish algorithm
+    hmac_hashes      : [ SHA512, KECCAK ] # Hashes to use for HMACing data
     hmac_key_size    : 768/8              # The size of the key to split over the two HMACs.
     version          : 3                  # for lookups
+  "4" :
+    header           : [ 0x1c94d7de, 4 ]   # The magic #, and also the version #
+    salt_size        : 16                  # 16 bytes of salt for various uses
+    xsalsa20_rev     : false               # XSalsa20 Endian Reverse
+    kdf              :                     # The key derivation...
+      klass          : Scrypt              #   algorithm klass
+      opts           :                     #   ..and options
+        c            : 1                   #   The number of iterations
+        klass        : HMAC_SHA256         #   The HMAC to use as a subroutine
+        N            : 15                  #   log_2 of the work factor
+        r            : 8                   #   The memory use factor
+        p            : 1                   #   the parallelization factor
+    hmac_key_size    : 768/8               # The size of the key to split over the two HMACs.
+    use_twofish      : false               # Whether to use Twofish algorithm
+    hmac_hashes      : [ SHA512, SHA3STD ] # Hashes to use for HMACing data
+    version          : 4                   # for lookups
 
 #========================================================================
 
-exports.CURRENT_VERSION = CURRENT_VERSION = 3
+exports.CURRENT_VERSION = CURRENT_VERSION = 4
 
 #========================================================================
 
@@ -111,12 +135,16 @@ class Base
       lens =
         hmac    : @version.hmac_key_size
         aes     : AES.keySize
-        twofish : TwoFish.keySize
         salsa20 : salsa20.Salsa20.keySize
+      if @version.use_twofish
+        lens.twofish = TwoFish.keySize
 
       # The order to read the keys out of the Scrypt output, and don't
       # depend on the properties of the hash to guarantee the order.
-      order = [ 'hmac', 'aes', 'twofish', 'salsa20' ]
+      if @version.use_twofish
+        order = [ 'hmac', 'aes', 'twofish', 'salsa20' ]
+      else
+        order = [ 'hmac', 'aes', 'salsa20' ]
 
       dkLen = extra_keymaterial or 0
       (dkLen += v for k,v of lens)
@@ -182,7 +210,8 @@ class Base
   sign : ({input, key, salt, progress_hook}, cb) ->
     await @_check_scrubbed key, "HMAC", cb, defer()
     input = (new WordArray @version.header ).concat(salt).concat(input)
-    await Concat.bulk_sign { key, input, progress_hook}, defer(out)
+    combine_klasses = @version.hmac_hashes
+    await Concat.bulk_sign { key, input, progress_hook, combine_klasses }, defer(out)
     input.scrub()
     cb null, out
 
@@ -369,12 +398,13 @@ class Encryptor extends Base
   # @param {Function} progress_hook A standard progress hook.
   # @param {callback} cb Called back when the resalting completes.
   pick_random_ivs : ({progress_hook}, cb) ->
-    iv_lens =
-      aes : AES.ivSize
-      twofish : TwoFish.ivSize
-      salsa20 : salsa20.Salsa20.ivSize
+    # Use an array for deterministic order of IV generation
+    iv_lens = []
+    iv_lens.push ['aes', AES.ivSize]
+    iv_lens.push ['twofish', TwoFish.ivSize] if @version.use_twofish
+    iv_lens.push ['salsa20', salsa20.Salsa20.ivSize]
     ivs = {}
-    for k,v of iv_lens
+    for [k,v] in iv_lens
       await @rng v, defer ivs[k]
     cb ivs
 
@@ -431,9 +461,10 @@ class Encryptor extends Base
       await @resalt { salt, extra_keymaterial, progress_hook }, esc defer()
     await @pick_random_ivs { progress_hook }, defer ivs
     pt   = WordArray.from_buffer data
-    await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer ct1
-    await @run_twofish { input : ct1, key : @keys.twofish, progress_hook, iv : ivs.twofish }, esc defer ct2
-    await @run_aes     { input : ct2, key : @keys.aes,     progress_hook, iv : ivs.aes     }, esc defer ct3
+    await @run_salsa20 { input : pt,  key : @keys.salsa20, progress_hook, iv : ivs.salsa20, output_iv : true }, esc defer mid
+    if @version.use_twofish
+      await @run_twofish { input : mid, key : @keys.twofish, progress_hook, iv : ivs.twofish }, esc defer mid
+    await @run_aes     { input : mid, key : @keys.aes,     progress_hook, iv : ivs.aes     }, esc defer ct3
     await @sign        { input : ct3, key : @keys.hmac,    progress_hook, @salt            }, esc defer sig
     ret = (new WordArray(@version.header)).concat(@salt).concat(sig).concat(ct3).to_buffer()
     util.scrub_buffer data

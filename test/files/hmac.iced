@@ -91,5 +91,5 @@ test_vectors = [
 exports.run_vector = (T,cb) ->
   for v,i in test_vectors
     res = ((new HMAC(v.key)).finalize(v.data)).to_hex()
-    T.equal res, v.res, "Test vector #{i}: #{JSON.stringify v}"
+    T.equal res, v.res, "HMAC Test vector #{i}: #{JSON.stringify v}"
   cb()
