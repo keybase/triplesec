@@ -32,8 +32,6 @@ $(BUILD_STAMP): \
 	lib/prng.js \
 	lib/drbg.js \
 	lib/sha3.js \
-	lib/keccak.js \
-	lib/sha3std.js \
 	lib/combine.js \
 	lib/sha256.js \
 	lib/sha224.js \
