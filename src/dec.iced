@@ -142,14 +142,22 @@ class Decryptor extends Base
     await @read_header esc defer()
     await @read_salt esc defer()
     await @generate_keys { progress_hook }, esc defer @keys
+    console.log 'salsa', @keys.salsa20.to_hex()
+    console.log 'twofish', @keys.twofish.to_hex()
+    console.log 'hmac', @keys.hmac.to_hex()
+    console.log 'aes', @keys.aes.to_hex()
     await @verify_sig @keys.hmac, esc defer()
+    console.log '0', @ct.to_hex()
     await @unshift_iv AES.ivSize, "AES", esc defer iv
-    await @run_aes { iv, input : @ct, key : @keys.aes, progress_hook }, esc defer ct2
+    await @run_aes { iv, input : @ct, key : @keys.aes, progress_hook }, esc defer _
+    console.log '1', @ct.to_hex()
     if @version.use_twofish
       await @unshift_iv TwoFish.ivSize, "2fish", esc defer iv
       await @run_twofish { iv, input : @ct, key : @keys.twofish, progress_hook }, esc defer _
+    console.log '2', @ct.to_hex()
     await @unshift_iv Salsa20.ivSize, "Salsa", esc defer iv
     await @run_salsa20 { iv, input : @ct, key : @keys.salsa20, output_iv : false, progress_hook }, esc defer pt
+    console.log '3', pt.to_hex()
     cb null, pt.to_buffer()
 
   #----------------------
