@@ -139,12 +139,11 @@ class ReplayRng
 
 exports.check_spec = (T,cb) ->
   for version, vobj of V
-    if version == "4"
-      data = spec["v#{version}"].data
-      T.waypoint "Checking spec version #{version}"
-      for v,i in data
-        await check_spec T, version, v, i, defer()
-      T.waypoint "checked spec version #{version}"
+    data = spec["v#{version}"].data
+    T.waypoint "Checking spec version #{version}"
+    for v,i in data
+      await check_spec T, version, v, i, defer()
+    T.waypoint "checked spec version #{version}"
   cb()
 
 check_spec = (T,version,v,i,cb) ->
