@@ -235,14 +235,10 @@ class Base
     # inputs to Xsalsa20 were reversed endianwise.  It wasn't a security
     # bug, it was just wrong.  This fixes it going forward.  We might
     # want a slightly cleaner fix by the way...
-    console.log "PSK", args.key.to_hex()
-    console.log "PSIV", args.iv.to_hex()
     if @version.xsalsa20_rev
       args.key = key.clone().endian_reverse()
       args.iv = iv.clone().endian_reverse()
 
-    console.log "SK", args.key.to_hex()
-    console.log "SIV", args.iv.to_hex()
     await salsa20.bulk_encrypt args, defer ct
 
     # Despite the reversals, always output the original IV.
