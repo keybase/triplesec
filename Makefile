@@ -47,12 +47,7 @@ $(BUILD_STAMP): \
 $(BROWSER): lib/main.js $(BUILD_STAMP)
 	$(BROWSERIFY) -s triplesec $< > $@
 
-build: $(BUILD_STAMP) $(BROWSER) site
-
-site: site/js/site.js
-
-site/js/site.js: site/iced/site.iced
-	$(ICED) -I window --print $< > $@
+build: $(BUILD_STAMP) $(BROWSER)
 
 test-server: $(TEST_STAMP) $(BUILD_STAMP)
 	$(ICED) test/run.iced
