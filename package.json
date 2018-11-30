@@ -1,6 +1,6 @@
 {
   "name": "triplesec",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "A CommonJS-compliant system for secure encryption of smallish secrets",
   "homepage": "https://github.com/keybase/triplesec",
   "repository": {
@@ -34,7 +34,7 @@
     "iced-runtime": "^1.0.2",
     "more-entropy": ">=0.0.7",
     "progress": "~1.1.2",
-    "sha3": "^2.0.0",
+    "sha3": "2.0.0",
     "uglify-js": "^3.1.9"
   },
   "author": "keybase",
