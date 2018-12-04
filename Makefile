@@ -37,6 +37,8 @@ $(BUILD_STAMP): \
 	lib/sha224.js \
 	lib/sha384.js \
 	lib/sha1.js \
+	lib/keccak.js \
+	lib/sha3std.js \
 	lib/scrypt.js \
 	lib/md5.js \
 	lib/ripemd160.js
@@ -93,6 +95,8 @@ spec/triplesec_v2.json: ref/gen_triplesec_spec.iced
 	$(ICED) $< -v 2 > $@
 spec/triplesec_v3.json: ref/gen_triplesec_spec.iced
 	$(ICED) $< -v 3 > $@
+spec/triplesec_v4.json: ref/gen_triplesec_spec.iced
+	$(ICED) $< -v 4 > $@
 spec/pbkdf2_sha512_sha3.json: ref/gen_pbkdf2_sha512_sha3_spec.iced
 	$(ICED) $< $ > $@
 spec/scrypt_xor.json: ref/gen_scrypt_xor_spec.iced
@@ -133,6 +137,7 @@ $(TEST_STAMP): test/data/twofish_ecb_tbl.js \
 		test/data/triplesec_spec_v1.js \
 		test/data/triplesec_spec_v2.js \
 		test/data/triplesec_spec_v3.js \
+		test/data/triplesec_spec_v4.js \
 		test/data/pbkdf2_sha512_sha3_spec.js \
 		test/data/scrypt_xor_spec.js \
 		test/browser/test.js 

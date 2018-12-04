@@ -1,8 +1,5 @@
 
 hmac = require './hmac'
-{XOR} = require './combine'
-sha512 = require './sha512'
-sha3 = require './sha3'
 {WordArray} = require './wordarray'
 {Lock} = require 'iced-lock'
 

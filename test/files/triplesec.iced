@@ -4,6 +4,7 @@ spec =
   v1 : require '../data/triplesec_spec_v1'
   v2 : require '../data/triplesec_spec_v2'
   v3 : require '../data/triplesec_spec_v3'
+  v4 : require '../data/triplesec_spec_v4'
 {WordArray} = require '../../lib/wordarray'
 
 #-------------------------------------------------
@@ -139,6 +140,7 @@ class ReplayRng
 exports.check_spec = (T,cb) ->
   for version, vobj of V
     data = spec["v#{version}"].data
+    T.waypoint "Checking spec version #{version}"
     for v,i in data
       await check_spec T, version, v, i, defer()
     T.waypoint "checked spec version #{version}"

@@ -1,3 +1,7 @@
+## 4.0.0 (2018-10-27)
+Features:
+  - Version 4 (see https://keybase.io/triplesec)
+
 ## 3.0.27 (2018-09-21)
 
 Bugfix:

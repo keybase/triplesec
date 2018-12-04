@@ -29,8 +29,8 @@ exports.test_sha512 = (T,cb) ->
   run_test T, require('../../lib/sha512').SHA512, 'sha512'
   cb()
 
-exports.test_sha3 = (T,cb) ->
-  run_test T, require('../../lib/sha3').SHA3, 'sha3'
+exports.test_keccak = (T,cb) ->
+  run_test T, require('../../lib/keccak').KECCAK, 'sha3'
   cb()
 
 exports.test_sha256 = (T,cb) ->

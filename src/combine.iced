@@ -1,6 +1,6 @@
 {HMAC,bulk_sign} = require './hmac'
 {SHA512} = require './sha512'
-{SHA3} = require './sha3'
+{KECCAK} = require './keccak'
 {WordArray} = require './wordarray'
 
 #=============================================
@@ -55,7 +55,7 @@ class Concat extends CombineBase
   #
   # @param {WordArray} key The key to use, split up over the klasses
   # @param {Vector<Class>} klasses The classes to combine.
-  constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
+  constructor : (key, klasses = [ SHA512, KECCAK ] ) ->
     subkeys = key.split(klasses.length)
     @hashers = for klass,i in klasses 
       subkey = subkeys[i]
@@ -66,7 +66,7 @@ class Concat extends CombineBase
 
   # The default output size if you use the default arguments,
   # which is HMAC(SHA512) || HMAC(SHA3).
-  @get_output_size : () -> SHA512.output_size + SHA3.output_size
+  @get_output_size : () -> SHA512.output_size + KECCAK.output_size
 
   # @private _coalesce
   # 
@@ -109,7 +109,7 @@ class XOR extends CombineBase
 
   # @param {WordArray} key The key to use, repeated for each klass
   # @param {Vector<Class>} klasses The classes to combine.
-  constructor : (key, klasses = [ SHA512, SHA3 ] ) ->
+  constructor : (key, klasses = [ SHA512, KECCAK ] ) ->
     @hashers = (new HMAC(key, klass) for klass in klasses)
     super()
 
@@ -123,7 +123,7 @@ class XOR extends CombineBase
 
   # The default output size if you use the default arguments,
   # which is Math.min(HMAC(SHA512), HMAC(SHA3))
-  @get_output_size : () -> Math.max SHA512.output_size, SHA3.output_size
+  @get_output_size : () -> Math.max SHA512.output_size, KECCAK.output_size
 
   # @private _coalesce
   # 
