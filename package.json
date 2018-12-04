@@ -16,8 +16,7 @@
   },
   "main": "lib/main",
   "devDependencies": {
-    "browserify": "~3.1.0",
-    "codo": "~2.0.2",
+    "browserify": "^16.2.3",
     "colors": "~0.6.2",
     "cryptojs-1sp": "3.1.2-a",
     "deep-equal": "~0.1.0",
