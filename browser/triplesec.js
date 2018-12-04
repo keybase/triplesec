@@ -705,7 +705,7 @@
       return (function(__iced_k) {
         __iced_deferrals = new iced.Deferrals(__iced_k, {
           parent: ___iced_passed_deferral,
-          filename: "/Users/max/src/keybase/triplesec/src/ctr.iced"
+          filename: "/home/me/code/triplesec/src/ctr.iced"
         });
         cipher.bulk_encrypt({
           input: input,
@@ -801,7 +801,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                filename: "/home/me/code/triplesec/src/dec.iced",
                 funcname: "Decryptor.verify_sig"
               });
               _this.sign({
@@ -851,7 +851,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+            filename: "/home/me/code/triplesec/src/dec.iced",
             funcname: "Decryptor.generate_keys"
           });
           _this.kdf({
@@ -886,7 +886,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+            filename: "/home/me/code/triplesec/src/dec.iced",
             funcname: "Decryptor.run"
           });
           _this.read_header(esc(__iced_deferrals.defer({
@@ -899,7 +899,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+              filename: "/home/me/code/triplesec/src/dec.iced",
               funcname: "Decryptor.run"
             });
             _this.read_salt(esc(__iced_deferrals.defer({
@@ -910,7 +910,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                filename: "/home/me/code/triplesec/src/dec.iced",
                 funcname: "Decryptor.run"
               });
               _this.generate_keys({
@@ -928,7 +928,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                  filename: "/home/me/code/triplesec/src/dec.iced",
                   funcname: "Decryptor.run"
                 });
                 _this.verify_sig(_this.keys.hmac, esc(__iced_deferrals.defer({
@@ -939,7 +939,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                    filename: "/home/me/code/triplesec/src/dec.iced",
                     funcname: "Decryptor.run"
                   });
                   _this.unshift_iv(AES.ivSize, "AES", esc(__iced_deferrals.defer({
@@ -955,7 +955,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                      filename: "/home/me/code/triplesec/src/dec.iced",
                       funcname: "Decryptor.run"
                     });
                     _this.run_aes({
@@ -978,7 +978,7 @@
                         (function(__iced_k) {
                           __iced_deferrals = new iced.Deferrals(__iced_k, {
                             parent: ___iced_passed_deferral,
-                            filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                            filename: "/home/me/code/triplesec/src/dec.iced",
                             funcname: "Decryptor.run"
                           });
                           _this.unshift_iv(TwoFish.ivSize, "2fish", esc(__iced_deferrals.defer({
@@ -994,7 +994,7 @@
                           (function(__iced_k) {
                             __iced_deferrals = new iced.Deferrals(__iced_k, {
                               parent: ___iced_passed_deferral,
-                              filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                              filename: "/home/me/code/triplesec/src/dec.iced",
                               funcname: "Decryptor.run"
                             });
                             _this.run_twofish({
@@ -1020,7 +1020,7 @@
                       (function(__iced_k) {
                         __iced_deferrals = new iced.Deferrals(__iced_k, {
                           parent: ___iced_passed_deferral,
-                          filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                          filename: "/home/me/code/triplesec/src/dec.iced",
                           funcname: "Decryptor.run"
                         });
                         _this.unshift_iv(Salsa20.ivSize, "Salsa", esc(__iced_deferrals.defer({
@@ -1036,7 +1036,7 @@
                         (function(__iced_k) {
                           __iced_deferrals = new iced.Deferrals(__iced_k, {
                             parent: ___iced_passed_deferral,
-                            filename: "/Users/max/src/keybase/triplesec/src/dec.iced",
+                            filename: "/home/me/code/triplesec/src/dec.iced",
                             funcname: "Decryptor.run"
                           });
                           _this.run_salsa20({
@@ -1095,7 +1095,7 @@
       return (function(__iced_k) {
         __iced_deferrals = new iced.Deferrals(__iced_k, {
           parent: ___iced_passed_deferral,
-          filename: "/Users/max/src/keybase/triplesec/src/dec.iced"
+          filename: "/home/me/code/triplesec/src/dec.iced"
         });
         dec.run({
           data: data,
@@ -1255,7 +1255,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/drbg.iced",
+            filename: "/home/me/code/triplesec/src/drbg.iced",
             funcname: "ADRBG.generate"
           });
           _this.lock.acquire(__iced_deferrals.defer({
@@ -1270,7 +1270,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/triplesec/src/drbg.iced",
+                  filename: "/home/me/code/triplesec/src/drbg.iced",
                   funcname: "ADRBG.generate"
                 });
                 _this.gen_seed(256, __iced_deferrals.defer({
@@ -1294,7 +1294,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/triplesec/src/drbg.iced",
+                    filename: "/home/me/code/triplesec/src/drbg.iced",
                     funcname: "ADRBG.generate"
                   });
                   _this.gen_seed(256, __iced_deferrals.defer({
@@ -1472,7 +1472,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+            filename: "/home/me/code/triplesec/src/enc.iced",
             funcname: "Base.kdf"
           });
           _this._check_scrubbed(_this.key, "in KDF", cb, __iced_deferrals.defer({
@@ -1487,7 +1487,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+              filename: "/home/me/code/triplesec/src/enc.iced",
               funcname: "Base.kdf"
             });
             _this._check_scrubbed(key, "KDF", cb, __iced_deferrals.defer({
@@ -1525,7 +1525,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                    filename: "/home/me/code/triplesec/src/enc.iced",
                     funcname: "Base.kdf"
                   });
                   _this._kdf.run(args, __iced_deferrals.defer({
@@ -1593,7 +1593,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+            filename: "/home/me/code/triplesec/src/enc.iced",
             funcname: "Base.sign"
           });
           _this._check_scrubbed(key, "HMAC", cb, __iced_deferrals.defer({
@@ -1608,7 +1608,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+              filename: "/home/me/code/triplesec/src/enc.iced",
               funcname: "Base.sign"
             });
             Concat.bulk_sign({
@@ -1642,7 +1642,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+            filename: "/home/me/code/triplesec/src/enc.iced",
             funcname: "Base.run_salsa20"
           });
           _this._check_scrubbed(key, "Salsa20", cb, __iced_deferrals.defer({
@@ -1665,7 +1665,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+              filename: "/home/me/code/triplesec/src/enc.iced",
               funcname: "Base.run_salsa20"
             });
             salsa20.bulk_encrypt(args, __iced_deferrals.defer({
@@ -1700,7 +1700,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+            filename: "/home/me/code/triplesec/src/enc.iced",
             funcname: "Base.run_twofish"
           });
           _this._check_scrubbed(key, "TwoFish", cb, __iced_deferrals.defer({
@@ -1714,7 +1714,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+              filename: "/home/me/code/triplesec/src/enc.iced",
               funcname: "Base.run_twofish"
             });
             ctr.bulk_encrypt({
@@ -1749,7 +1749,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+            filename: "/home/me/code/triplesec/src/enc.iced",
             funcname: "Base.run_aes"
           });
           _this._check_scrubbed(key, "AES", cb, __iced_deferrals.defer({
@@ -1763,7 +1763,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+              filename: "/home/me/code/triplesec/src/enc.iced",
               funcname: "Base.run_aes"
             });
             ctr.bulk_encrypt({
@@ -1884,7 +1884,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                  filename: "/home/me/code/triplesec/src/enc.iced",
                   funcname: "Encryptor.pick_random_ivs"
                 });
                 _this.rng(v, __iced_deferrals.defer({
@@ -1920,7 +1920,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                filename: "/home/me/code/triplesec/src/enc.iced",
                 funcname: "Encryptor.resalt"
               });
               _this.rng(_this.version.salt_size, __iced_deferrals.defer({
@@ -1944,7 +1944,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                  filename: "/home/me/code/triplesec/src/enc.iced",
                   funcname: "Encryptor.resalt"
                 });
                 _this.kdf({
@@ -1984,7 +1984,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                filename: "/home/me/code/triplesec/src/enc.iced",
                 funcname: "Encryptor.run"
               });
               _this.resalt({
@@ -2005,7 +2005,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+              filename: "/home/me/code/triplesec/src/enc.iced",
               funcname: "Encryptor.run"
             });
             _this.pick_random_ivs({
@@ -2024,7 +2024,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                filename: "/home/me/code/triplesec/src/enc.iced",
                 funcname: "Encryptor.run"
               });
               _this.run_salsa20({
@@ -2048,7 +2048,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                      filename: "/home/me/code/triplesec/src/enc.iced",
                       funcname: "Encryptor.run"
                     });
                     _this.run_twofish({
@@ -2073,7 +2073,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                    filename: "/home/me/code/triplesec/src/enc.iced",
                     funcname: "Encryptor.run"
                   });
                   _this.run_aes({
@@ -2094,7 +2094,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/triplesec/src/enc.iced",
+                      filename: "/home/me/code/triplesec/src/enc.iced",
                       funcname: "Encryptor.run"
                     });
                     _this.sign({
@@ -2153,7 +2153,7 @@
       return (function(__iced_k) {
         __iced_deferrals = new iced.Deferrals(__iced_k, {
           parent: ___iced_passed_deferral,
-          filename: "/Users/max/src/keybase/triplesec/src/enc.iced"
+          filename: "/home/me/code/triplesec/src/enc.iced"
         });
         enc.run({
           data: data,
@@ -2296,7 +2296,7 @@
       return (function(__iced_k) {
         __iced_deferrals = new iced.Deferrals(__iced_k, {
           parent: ___iced_passed_deferral,
-          filename: "/Users/max/src/keybase/triplesec/src/hmac.iced"
+          filename: "/home/me/code/triplesec/src/hmac.iced"
         });
         util.bulk(input.sigBytes, slice_args, {
           what: what,
@@ -2457,6 +2457,8 @@
 
     KECCAK.prototype.output_size = KECCAK.output_size;
 
+    KECCAK.prototype.pad = 0x01;
+
     KECCAK.prototype._doReset = function() {
       var i;
       return this._state = (function() {
@@ -2555,7 +2557,7 @@
       nBitsTotal = this._nDataBytes * 8;
       nBitsLeft = data.sigBytes * 8;
       blockSizeBits = this.blockSize * 32;
-      dataWords[nBitsLeft >>> 5] |= 0x1 << (24 - nBitsLeft % 32);
+      dataWords[nBitsLeft >>> 5] |= this.pad << (24 - nBitsLeft % 32);
       dataWords[((Math.ceil((nBitsLeft + 1) / blockSizeBits) * blockSizeBits) >>> 5) - 1] |= 0x80;
       data.sigBytes = dataWords.length * 4;
       this._process();
@@ -2953,7 +2955,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/triplesec/src/pbkdf2.iced",
+                  filename: "/home/me/code/triplesec/src/pbkdf2.iced",
                   funcname: "PBKDF2._gen_T_i"
                 });
                 util.default_delay(0, 0, __iced_deferrals.defer({
@@ -3025,7 +3027,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/triplesec/src/pbkdf2.iced",
+                  filename: "/home/me/code/triplesec/src/pbkdf2.iced",
                   funcname: "PBKDF2.run"
                 });
                 _this._gen_T_i({
@@ -3078,7 +3080,7 @@
       return (function(__iced_k) {
         __iced_deferrals = new iced.Deferrals(__iced_k, {
           parent: ___iced_passed_deferral,
-          filename: "/Users/max/src/keybase/triplesec/src/pbkdf2.iced"
+          filename: "/home/me/code/triplesec/src/pbkdf2.iced"
         });
         eng.run({
           key: key,
@@ -3190,7 +3192,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/prng.iced",
+            filename: "/home/me/code/triplesec/src/prng.iced",
             funcname: "PRNG.gen_seed"
           });
           _this.meg.generate(nbits, __iced_deferrals.defer({
@@ -3802,7 +3804,7 @@
       return (function(__iced_k) {
         __iced_deferrals = new iced.Deferrals(__iced_k, {
           parent: ___iced_passed_deferral,
-          filename: "/Users/max/src/keybase/triplesec/src/salsa20.iced"
+          filename: "/home/me/code/triplesec/src/salsa20.iced"
         });
         cipher.bulk_encrypt({
           input: input,
@@ -3970,7 +3972,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/scrypt.iced",
+            filename: "/home/me/code/triplesec/src/scrypt.iced",
             funcname: "Scrypt.pbkdf2"
           });
           pbkdf2({
@@ -4056,7 +4058,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/triplesec/src/scrypt.iced",
+                  filename: "/home/me/code/triplesec/src/scrypt.iced",
                   funcname: "Scrypt.smix"
                 });
                 default_delay(0, 0, __iced_deferrals.defer({
@@ -4098,7 +4100,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/triplesec/src/scrypt.iced",
+                    filename: "/home/me/code/triplesec/src/scrypt.iced",
                     funcname: "Scrypt.smix"
                   });
                   default_delay(0, 0, __iced_deferrals.defer({
@@ -4135,7 +4137,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/triplesec/src/scrypt.iced",
+            filename: "/home/me/code/triplesec/src/scrypt.iced",
             funcname: "Scrypt.run"
           });
           _this.pbkdf2({
@@ -4194,7 +4196,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/triplesec/src/scrypt.iced",
+                    filename: "/home/me/code/triplesec/src/scrypt.iced",
                     funcname: "Scrypt.run"
                   });
                   _this.smix({
@@ -4219,7 +4221,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/triplesec/src/scrypt.iced",
+                filename: "/home/me/code/triplesec/src/scrypt.iced",
                 funcname: "Scrypt.run"
               });
               _this.pbkdf2({
@@ -4271,7 +4273,7 @@
       return (function(__iced_k) {
         __iced_deferrals = new iced.Deferrals(__iced_k, {
           parent: ___iced_passed_deferral,
-          filename: "/Users/max/src/keybase/triplesec/src/scrypt.iced"
+          filename: "/home/me/code/triplesec/src/scrypt.iced"
         });
         eng.run({
           key: key,
@@ -4728,7 +4730,7 @@
 },{"./sha512":23,"./wordarray":26}],22:[function(require,module,exports){
 // Generated by IcedCoffeeScript 108.0.8
 (function() {
-  var Hasher, SHA3STD, WordArray, sha3lib, transform,
+  var Hasher, KECCAK, SHA3STD, WordArray, transform,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -4736,7 +4738,7 @@
 
   Hasher = require('./algbase').Hasher;
 
-  sha3lib = require('sha3');
+  KECCAK = require('./keccak').KECCAK;
 
   SHA3STD = (function(_super) {
     __extends(SHA3STD, _super);
@@ -4745,59 +4747,11 @@
       return SHA3STD.__super__.constructor.apply(this, arguments);
     }
 
-    SHA3STD.outputLength = 512;
-
-    SHA3STD.prototype.outputLength = SHA3STD.outputLength;
-
-    SHA3STD.blockSize = (1600 - 2 * SHA3STD.outputLength) / 32;
-
-    SHA3STD.prototype.blockSize = SHA3STD.blockSize;
-
-    SHA3STD.output_size = SHA3STD.outputLength / 8;
-
-    SHA3STD.prototype.output_size = SHA3STD.output_size;
-
-    SHA3STD.prototype.reset = function() {
-      this._hash = new sha3lib.SHA3(512);
-      return this;
-    };
-
-    SHA3STD.prototype.get_output_size = function() {
-      return this.output_size;
-    };
-
-    SHA3STD.prototype.update = function(messageUpdate) {
-      this._hash.update(messageUpdate.to_buffer());
-      return this;
-    };
-
-    SHA3STD.prototype.finalize = function(messageUpdate) {
-      if (messageUpdate) {
-        this._hash.update(messageUpdate.to_buffer());
-      }
-      return WordArray.from_buffer(this._hash.digest());
-    };
-
-    SHA3STD.prototype.scrub = function() {
-      this.reset();
-      return this;
-    };
-
-    SHA3STD.prototype.copy_to = function(obj) {
-      SHA3STD.__super__.copy_to.call(this, obj);
-      return obj._hash = this._hash;
-    };
-
-    SHA3STD.prototype.clone = function() {
-      var out;
-      out = new SHA3STD();
-      this.copy_to(out);
-      return out;
-    };
+    SHA3STD.prototype.pad = 0x06;
 
     return SHA3STD;
 
-  })(Hasher);
+  })(KECCAK);
 
   transform = function(x) {
     var out;
@@ -4812,7 +4766,7 @@
 
 }).call(this);
 
-},{"./algbase":2,"./wordarray":26,"sha3":40}],23:[function(require,module,exports){
+},{"./algbase":2,"./keccak":9,"./wordarray":26}],23:[function(require,module,exports){
 // Generated by IcedCoffeeScript 108.0.8
 (function() {
   var Global, Hasher, SHA512, X64Word, X64WordArray, glbl, _ref,
@@ -5399,7 +5353,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/util.iced"
+              filename: "/home/me/code/triplesec/src/util.iced"
             });
             setImmediate(__iced_deferrals.defer({
               lineno: 45
@@ -5410,7 +5364,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/triplesec/src/util.iced"
+              filename: "/home/me/code/triplesec/src/util.iced"
             });
             setTimeout(__iced_deferrals.defer({
               lineno: 47
@@ -5494,7 +5448,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/triplesec/src/util.iced",
+                filename: "/home/me/code/triplesec/src/util.iced",
                 funcname: "bulk"
               });
               delay(i, total_words, __iced_deferrals.defer({
@@ -5520,7 +5474,7 @@
 }).call(this);
 
 }).call(this,require("buffer").Buffer,require("timers").setImmediate)
-},{"buffer":27,"iced-runtime":33,"timers":53}],26:[function(require,module,exports){
+},{"buffer":27,"iced-runtime":33,"timers":40}],26:[function(require,module,exports){
 (function (Buffer){
 // Generated by IcedCoffeeScript 108.0.8
 (function() {
@@ -8087,7 +8041,7 @@ function fromByteArray (uint8) {
 
 
 
-},{"util":55}],30:[function(require,module,exports){
+},{"util":42}],30:[function(require,module,exports){
 // Generated by IcedCoffeeScript 108.0.11
 (function() {
   var Lock, NamedLock, SingleFlightTable, SingleFlighter, Table, iced, __iced_k, __iced_k_noop,
@@ -9416,32 +9370,6 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],40:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=exports.SHA3Hash=exports.SHA3=exports.Keccak=void 0;var _buffer=require("buffer");var _sponge=_interopRequireDefault(require("./sponge"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}var createHash=function createHash(_ref){var padding=_ref.padding;return function Hash(){var _this=this;var size=arguments.length>0&&arguments[0]!==undefined?arguments[0]:512;if(!this||this.constructor!==Hash){return new Hash(size)}var sponge=new _sponge.default({capacity:size,padding:padding});this.update=function(input){if(_buffer.Buffer.isBuffer(input)){sponge.absorb(input);return _this}if(typeof input==="string"){return _this.update(_buffer.Buffer.from(input,"utf8"))}throw new TypeError("Not a string or buffer")};this.digest=function(){var format=arguments.length>0&&arguments[0]!==undefined?arguments[0]:"binary";var buffer=sponge.squeeze();if(format&&format!=="binary"){return buffer.toString(format)}return buffer};this.reset=function(){sponge.reset();return _this};return this}};var Keccak=createHash({padding:1});exports.Keccak=Keccak;var SHA3=createHash({padding:6});exports.SHA3=SHA3;var SHA3Hash=Keccak;exports.SHA3Hash=SHA3Hash;SHA3.SHA3Hash=SHA3Hash;var _default=SHA3;exports.default=_default;
-},{"./sponge":41,"buffer":27}],41:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var _buffer=require("buffer");var _permute=_interopRequireDefault(require("./permute"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}var allowedCapacityValues=[224,256,384,512];var writeState=function writeState(I,O){for(var i=0;i<I.length;i+=8){var o=i/4;O[o]^=I[i+7]<<24|I[i+6]<<16|I[i+5]<<8|I[i+4];O[o+1]^=I[i+3]<<24|I[i+2]<<16|I[i+1]<<8|I[i]}};var readHash=function readHash(I,n){var O=_buffer.Buffer.allocUnsafe(n);for(var o=0;o<n;o+=8){var i=o/4;O[o]=I[i+1];O[o+1]=I[i+1]>>>8;O[o+2]=I[i+1]>>>16;O[o+3]=I[i+1]>>>24;O[o+4]=I[i];O[o+5]=I[i]>>>8;O[o+6]=I[i]>>>16;O[o+7]=I[i]>>>24}return O};var Sponge=function Sponge(_ref){var _this=this;var capacity=_ref.capacity,padding=_ref.padding;if(!allowedCapacityValues.includes(capacity)){throw new Error("Unsupported hash length")}var keccak=(0,_permute.default)();var stateSize=200;var hashSize=capacity/8;var queueSize=stateSize-hashSize*2;var queueOffset=0;var state=new Uint32Array(stateSize/4);var queue=_buffer.Buffer.allocUnsafe(queueSize);this.absorb=function(buffer){for(var i=0;i<buffer.length;i++){queue[queueOffset]=buffer[i];queueOffset+=1;if(queueOffset>=queueSize){writeState(queue,state);keccak(state);queueOffset=0}}return _this};this.squeeze=function(){var output={queue:_buffer.Buffer.allocUnsafe(queueSize),state:new Uint32Array(stateSize/4)};queue.copy(output.queue);for(var i=0;i<state.length;i++){output.state[i]=state[i]}output.queue.fill(0,queueOffset);output.queue[queueOffset]|=padding;output.queue[queueSize-1]|=128;writeState(output.queue,output.state);keccak(output.state);return readHash(output.state,hashSize)};this.reset=function(){queue.fill(0);state.fill(0);queueOffset=0;return _this};return this};var _default=Sponge;exports.default=_default;
-},{"./permute":44,"buffer":27}],42:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var _copy=_interopRequireDefault(require("../copy"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}var chi=function chi(_ref){var A=_ref.A,C=_ref.C;for(var y=0;y<25;y+=5){for(var x=0;x<5;x++){(0,_copy.default)(A,y+x)(C,x)}for(var _x=0;_x<5;_x++){var xy=(y+_x)*2;var x1=(_x+1)%5*2;var x2=(_x+2)%5*2;A[xy]^=~C[x1]&C[x2];A[xy+1]^=~C[x1+1]&C[x2+1]}}};var _default=chi;exports.default=_default;
-},{"../copy":43}],43:[function(require,module,exports){
-"use strict";var copy=function copy(I,i){return function(O,o){var oi=o*2;var ii=i*2;O[oi]=I[ii];O[oi+1]=I[ii+1]}};module.exports=copy;
-},{}],44:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var _chi=_interopRequireDefault(require("./chi"));var _iota=_interopRequireDefault(require("./iota"));var _rhoPi=_interopRequireDefault(require("./rho-pi"));var _theta=_interopRequireDefault(require("./theta"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}var reset=function reset(){for(var _len=arguments.length,arrays=new Array(_len),_key=0;_key<_len;_key++){arrays[_key]=arguments[_key]}for(var _i=0;_i<arrays.length;_i++){var array=arrays[_i];array.fill(0)}};var permute=function permute(){var C=new Uint32Array(10);var D=new Uint32Array(10);var W=new Uint32Array(2);return function(A){for(var roundIndex=0;roundIndex<24;roundIndex++){(0,_theta.default)({A:A,C:C,D:D,W:W});(0,_rhoPi.default)({A:A,C:C,W:W});(0,_chi.default)({A:A,C:C});(0,_iota.default)({A:A,roundIndex:roundIndex})}reset(C,D,W)}};var _default=permute;exports.default=_default;
-},{"./chi":42,"./iota":45,"./rho-pi":47,"./theta":51}],45:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var _roundConstants=_interopRequireDefault(require("./round-constants"));var _xor=_interopRequireDefault(require("../xor"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}var iota=function iota(_ref){var A=_ref.A,roundIndex=_ref.roundIndex;(0,_xor.default)(A,0)(A,0,_roundConstants.default,roundIndex)};var _default=iota;exports.default=_default;
-},{"../xor":52,"./round-constants":46}],46:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var ROUND_CONSTANTS=new Uint32Array([0,1,0,32898,2147483648,32906,2147483648,2147516416,0,32907,0,2147483649,2147483648,2147516545,2147483648,32777,0,138,0,136,0,2147516425,0,2147483658,0,2147516555,2147483648,139,2147483648,32905,2147483648,32771,2147483648,32770,2147483648,128,0,32778,2147483648,2147483658,2147483648,2147516545,2147483648,32896,0,2147483649,2147483648,2147516424]);var _default=ROUND_CONSTANTS;exports.default=_default;
-},{}],47:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var _piShuffles=_interopRequireDefault(require("./pi-shuffles"));var _rhoOffsets=_interopRequireDefault(require("./rho-offsets"));var _copy=_interopRequireDefault(require("../copy"));var _rotate=_interopRequireDefault(require("../rotate"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}var rhoPi=function rhoPi(_ref){var A=_ref.A,C=_ref.C,W=_ref.W;(0,_copy.default)(A,1)(W,0);for(var i=0;i<24;i++){var j=_piShuffles.default[i];var r=_rhoOffsets.default[i];(0,_copy.default)(A,j)(C,0);(0,_copy.default)((0,_rotate.default)(W,r),0)(A,j);(0,_copy.default)(C,0)(W,0)}};var _default=rhoPi;exports.default=_default;
-},{"../copy":43,"../rotate":50,"./pi-shuffles":48,"./rho-offsets":49}],48:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var PI_SHUFFLES=[10,7,11,17,18,3,5,16,8,21,24,4,15,23,19,13,12,2,20,14,22,9,6,1];var _default=PI_SHUFFLES;exports.default=_default;
-},{}],49:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var RHO_OFFSETS=[1,3,6,10,15,21,28,36,45,55,2,14,27,41,56,8,25,43,62,18,39,61,20,44];var _default=RHO_OFFSETS;exports.default=_default;
-},{}],50:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;function _slicedToArray(arr,i){return _arrayWithHoles(arr)||_iterableToArrayLimit(arr,i)||_nonIterableRest()}function _nonIterableRest(){throw new TypeError("Invalid attempt to destructure non-iterable instance")}function _iterableToArrayLimit(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break}}catch(err){_d=true;_e=err}finally{try{if(!_n&&_i["return"]!=null)_i["return"]()}finally{if(_d)throw _e}}return _arr}function _arrayWithHoles(arr){if(Array.isArray(arr))return arr}var M=32;var rotate=function rotate(W,r){var _W=_slicedToArray(W,2),H=_W[0],L=_W[1];var i=r<32?0:1;var j=(i+1)%2;W[i]=H<<r|L>>>M-r;W[j]=L<<r|H>>>M-r;return W};var _default=rotate;exports.default=_default;
-},{}],51:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var _copy=_interopRequireDefault(require("../copy"));var _rotate=_interopRequireDefault(require("../rotate"));var _xor=_interopRequireDefault(require("../xor"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}var theta0=function theta0(_ref){var A=_ref.A,C=_ref.C;for(var x=0;x<5;x++){(0,_xor.default)(C,x)(A,x,A,x+5,A,x+10,A,x+15,A,x+20)}};var theta1=function theta1(_ref2){var A=_ref2.A,C=_ref2.C,D=_ref2.D,W=_ref2.W;for(var x=0;x<5;x++){(0,_copy.default)(C,(x+1)%5)(W,0);(0,_xor.default)(D,x)(C,(x+4)%5,(0,_rotate.default)(W,1),0);for(var y=0;y<25;y+=5){(0,_xor.default)(A,y+x)(A,y+x,D,x)}}};var theta=function theta(_ref3){var A=_ref3.A,C=_ref3.C,D=_ref3.D,W=_ref3.W;theta0({A:A,C:C});theta1({A:A,C:C,D:D,W:W})};var _default=theta;exports.default=_default;
-},{"../copy":43,"../rotate":50,"../xor":52}],52:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var xor=function xor(O,o){return function(){var oi=o*2;for(var _len=arguments.length,I=new Array(_len),_key=0;_key<_len;_key++){I[_key]=arguments[_key]}if(I.length>=2){var ii=I[1]*2;O[oi]=I[0][ii];O[oi+1]=I[0][ii+1]}for(var i=2;i<I.length;i+=2){var _ii=I[i+1]*2;O[oi]^=I[i][_ii];O[oi+1]^=I[i][_ii+1]}}};var _default=xor;exports.default=_default;
-},{}],53:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -9520,14 +9448,14 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":39,"timers":53}],54:[function(require,module,exports){
+},{"process/browser.js":39,"timers":40}],41:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],55:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -10117,5 +10045,5 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":54,"_process":39,"inherits":36}]},{},[10])(10)
+},{"./support/isBuffer":41,"_process":39,"inherits":36}]},{},[10])(10)
 });
