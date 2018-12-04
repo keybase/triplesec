@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/README.md.html' title='Triplesec'>
+      Triplesec
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>Encryptor</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Encryptor
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src&#47;enc.iced</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../class/Base.html'>Base</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <h3 id="encryptor">Encryptor</h3><p>The high-level Encryption engine for TripleSec.  You should allocate one
+instance of this object for each secret key you are dealing with.  Reusing
+the same Encryptor object will allow you to avoid rerunning PBKDF2 with
+each encryption.  If you want to use new salt with every encryption,
+you can call <code>resalt</code> as needed.   The <code>run</code> method is called to
+run the encryption engine.</p><p>Here is an example of multiple encryptions with salt reuse, in CoffeeScript:</p><pre><code class="language-coffeescript">key = new Buffer &quot;pitying web andiron impacts bought&quot;
+data = new Buffer &quot;this is my secret data&quot;
+eng = new Encryptor { key }
+eng.run { data }, (err, res) -&gt;
+   console.log &quot;Ciphertext 1: &quot; + res.toString(&#39;hex&#39;)
+   data = Buffer.concat data, new Buffer &quot; which just got bigger&quot;
+   eng.run { data }, (err, res) -&gt;
+     console.log &quot;Ciphertext 2: &quot; + res.toString(&#39;hex&#39;)</code></pre><p>Or equivalently in JavaScript:</p><pre><code class="language-javascript">var key = new Buffer(&quot;pitying web andiron impacts bought&quot;);
+var data = new Buffer(&quot;this is my secret data&quot;);
+var eng = new Encryptor({ key : key });
+eng.run({ data : data }, function (err, res) {
+   console.log(&quot;Ciphertext 1: &quot; + res.toString(&#39;hex&#39;));
+   data = Buffer.concat(data, new Buffer(&quot; which just got bigger&quot;));
+   eng.run({ data : data }), function (err, res) {
+     console.log(&quot;Ciphertext 2: &quot; + res.toString(&#39;hex&#39;));
+   });
+});</code></pre><p>In the previous two examples, the same salt was used for both ciphertexts.
+To resalt (and regenerate encryption keys):</p><pre><code class="language-coffeescript">key = new Buffer &quot;pitying web andiron impacts bought&quot;
+data = new Buffer &quot;this is my secret data&quot;
+eng = new Encryptor { key }
+eng.run { data }, (err, res) -&gt;
+   console.log &quot;Ciphertext 1: &quot; + res.toString(&#39;hex&#39;)
+   data = Buffer.concat data, new Buffer &quot; which just got bigger&quot;
+   eng.resalt {}, () -&gt;
+     eng.run { data }, (err, res) -&gt;
+       console.log &quot;Ciphertext 2: &quot; + res.toString(&#39;hex&#39;)</code></pre>
+
+</div>
+<div class='tags'>
+</div>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#resalt-dynamic'>
+        #
+(void)
+<b>resalt</b><span>({salt, extra_keymaterial, progress_hook}, cb)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Regenerate the salt. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#run-dynamic'>
+        #
+(void)
+<b>run</b><span>({data, salt, extra_keymaterial, progress_hook}, cb)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      The main point of entry into the TripleSec Encryption system. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clone-dynamic'>
+        #
+(void)
+<b>clone</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Clone a copy of this object that can survive scrubbing 
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../class/Base.html'>Base</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../class/Base.html#kdf-dynamic'>#kdf</a>
+          <a href='../class/Base.html#set_key-dynamic'>#set_key</a>
+          <a href='../class/Base.html#sign-dynamic'>#sign</a>
+          <a href='../class/Base.html#run_salsa20-dynamic'>#run_salsa20</a>
+          <a href='../class/Base.html#run_twofish-dynamic'>#run_twofish</a>
+          <a href='../class/Base.html#run_aes-dynamic'>#run_aes</a>
+          <a href='../class/Base.html#scrub-dynamic'>#scrub</a>
+          <a href='../class/Base.html#clone_derived_keys-dynamic'>#clone_derived_keys</a>
+        </p>
+      </h2>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>({key, rng, version})</span>
+      <br>
+    </p>
+    <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (
+          <tt>Buffer</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The secret key </span>
+    </li>
+    <li>
+      <span class='name'>rng</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Call it with the number of Rando bytes you need. It should callback with a WordArray of random bytes </span>
+    </li>
+    <li>
+      <span class='name'>version</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The version object to follow </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='resalt-dynamic'>
+      #
+(void)
+<b>resalt</b><span>({salt, extra_keymaterial, progress_hook}, cb)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Regenerate the salt. Reinitialize the keys. You have to do this
+once, but if you don&#39;t do it again, you&#39;ll just wind up using the
+same salt.</p><pre><code>and can be passed in.  If not provided, then we</code></pre>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook. </span>
+    </li>
+    <li>
+      <span class='name'>salt</span>
+      <span class='type'>
+        (
+          <tt>Buffer</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The optional salt to provide, if it&#39;s deterministic </span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (
+          <tt>callback</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Called back when the resalting completes. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='run-dynamic'>
+      #
+(void)
+<b>run</b><span>({data, salt, extra_keymaterial, progress_hook}, cb)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>The main point of entry into the TripleSec Encryption system.  The
+steps of the algorithm are:</p><ol>
+<li><p>Encrypt PT with Salsa20</p></li>
+<li><p>Encrypt the result of 1 with 2Fish-256-CTR</p></li>
+<li><p>Encrypt the result of 2 with AES-256-CTR</p></li>
+<li><p>MAC with (HMAC-SHA512 || HMAC-SHA3)</p><p>and can be passed in.  If not provided, then we
+along with the crypto keys (default : 0)</p></li>
+</ol>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>data</span>
+      <span class='type'>
+        (
+          <tt>Buffer</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the data to encrypt </span>
+    </li>
+    <li>
+      <span class='name'>salt</span>
+      <span class='type'>
+        (
+          <tt>Buffer</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The optional salt to provide, if it&#39;s deterministic </span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Call this to update the U/I about progress </span>
+    </li>
+    <li>
+      <span class='name'>extra_keymaterial</span>
+      <span class='type'>
+        (
+          <tt>number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The number of extra bytes to generate </span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (
+          <tt>callback</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>With an (err,res) pair, res is the buffer with the encrypted data </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clone-dynamic'>
+      #
+(void)
+<b>clone</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Clone a copy of this object that can survive scrubbing</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

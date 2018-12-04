@@ -119,16 +119,16 @@ class Scrypt
     blkcpy X,B,0,(2*@r-1), 1
 
     for i in [0...(2*@r)]
-      # /* 3: X <-- H(X \xor B_i) */
+      # 3: X <-- H(X \xor B_i)
       # blkxor(X, &B[i * 64], 64);
       blkxor X, B, i, 1
       @salsa20_8 X
 
-      # /* 4: Y_i <-- X */
+      # 4: Y_i <-- X
       # blkcpy(&Y[i * 64], X, 64);
       blkcpy Y, X, i, 0, 1
 
-    # 6: B' <-- (Y_0, Y_2 ... Y_{2r-2}, Y_1, Y_3 ... Y_{2r-1}) */
+    # 6: B' <-- (Y_0, Y_2 ... Y_{2r-2}, Y_1, Y_3 ... Y_{2r-1})
     i = 0
     while (i < @r) 
       blkcpy B, Y, i, (i*2), 1
@@ -156,10 +156,10 @@ class Scrypt
     while i < @N
       stop = Math.min(@N, i+2048)
       while i < stop
-        # /* 3: V_i <-- X */
+        # 3: V_i <-- X
         blkcpy V, X, (lim*i), 0, lim
 
-        # /* 4: X <-- H(X) */
+        # 4: X <-- H(X)
         @blockmix_salsa8(X,Y)
         i++
 
@@ -174,7 +174,7 @@ class Scrypt
         # This isntead of an explicit "integerify"
         j = fixup_uint32(X[0x10*(lim-1)]) & (@N - 1)
 
-        # /* 8: X <-- H(X \xor V_j) */
+        # 8: X <-- H(X \xor V_j)
         blkxor X, V, j*lim, lim
         @blockmix_salsa8 X, Y
 
@@ -183,7 +183,7 @@ class Scrypt
       progress_hook? i+@N
       await default_delay 0, 0, defer()
 
-    # /* 10: B' <-- X */
+    # 10: B' <-- X
     blkcpy B, X, 0, 0, lim
     cb()
 

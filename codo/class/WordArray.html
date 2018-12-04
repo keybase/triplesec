@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/README.md.html' title='Triplesec'>
+      Triplesec
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>WordArray</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        WordArray
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src&#47;wordarray.iced</td>
+        </tr>
+      </table>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#alloc-static'>
+        .
+(void)
+<b>alloc</b><span>(b)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Be somewhat flexible. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_buffer-static'>
+        .
+(void)
+<b>from_buffer</b><span>(b)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_buffer_le-static'>
+        .
+(void)
+<b>from_buffer_le</b><span>(b)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_utf8-static'>
+        .
+(void)
+<b>from_utf8</b><span>(s)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_utf8_le-static'>
+        .
+(void)
+<b>from_utf8_le</b><span>(s)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_hex-static'>
+        .
+(void)
+<b>from_hex</b><span>(s)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_hex_le-static'>
+        .
+(void)
+<b>from_hex_le</b><span>(s)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_ui8a-static'>
+        .
+(void)
+<b>from_ui8a</b><span>(v)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#from_i32a-static'>
+        .
+(void)
+<b>from_i32a</b><span>(v)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#concat-dynamic'>
+        #
+(WordArray)
+<b>concat</b><span>(wordArray)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Concatenates a word array to this word array. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clamp-dynamic'>
+        #
+(void)
+<b>clamp</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Removes insignificant bits. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clone-dynamic'>
+        #
+(WordArray)
+<b>clone</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Creates a copy of this word array. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_buffer-dynamic'>
+        #
+(void)
+<b>to_buffer</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#endian_reverse-dynamic'>
+        #
+(void)
+<b>endian_reverse</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#split-dynamic'>
+        #
+(void)
+<b>split</b><span>(n)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Split the word array into n slices Don&#39;t be too smart about slicing in between words, just puke if we can&#39;t make it work.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_utf8-dynamic'>
+        #
+(void)
+<b>to_utf8</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_hex-dynamic'>
+        #
+(void)
+<b>to_hex</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#to_ui8a-dynamic'>
+        #
+(void)
+<b>to_ui8a</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#equal-dynamic'>
+        #
+(void)
+<b>equal</b><span>(wa)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Important! Don&#39;t short-circuit since that enables a forging attack....
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#xor-dynamic'>
+        #
+(void)
+<b>xor</b><span>(wa2, {dst_offset, src_offset, n_words})</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#truncate-dynamic'>
+        #
+(void)
+<b>truncate</b><span>(n_bytes)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#unshift-dynamic'>
+        #
+(void)
+<b>unshift</b><span>(n_words)</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#is_scrubbed-dynamic'>
+        #
+(void)
+<b>is_scrubbed</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#scrub-dynamic'>
+        #
+(void)
+<b>scrub</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#cmp_ule-dynamic'>
+        #
+(void)
+<b>cmp_ule</b><span>(wa2)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Compare for ordering when both are considered as unsigned big-endian integers. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#slice-dynamic'>
+        #
+(void)
+<b>slice</b><span>(low, hi)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      @param{number} low The low word to include in the output slice @param{number} hi The hi word to include in the output slice (exclusive)
+
+    </span>
+  </li>
+</ul>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='alloc-static'>
+      .
+(void)
+<b>alloc</b><span>(b)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Be somewhat flexible. Try either a Buffer or maybe it&#39;s already
+a word array</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_buffer-static'>
+      .
+(void)
+<b>from_buffer</b><span>(b)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_buffer_le-static'>
+      .
+(void)
+<b>from_buffer_le</b><span>(b)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_utf8-static'>
+      .
+(void)
+<b>from_utf8</b><span>(s)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_utf8_le-static'>
+      .
+(void)
+<b>from_utf8_le</b><span>(s)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_hex-static'>
+      .
+(void)
+<b>from_hex</b><span>(s)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_hex_le-static'>
+      .
+(void)
+<b>from_hex_le</b><span>(s)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_ui8a-static'>
+      .
+(void)
+<b>from_ui8a</b><span>(v)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='from_i32a-static'>
+      .
+(void)
+<b>from_i32a</b><span>(v)</span>
+      <br>
+    </p>
+    
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(words, sigBytes)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Initializes a newly created word array.</p><p> @param {Array} words (Optional) An array of 32-bit words.
+ @param {number} sigBytes (Optional) The number of significant bytes in the words.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>
+wordArray = new WordArray
+wordArray = new WordArray [0x00010203, 0x04050607]
+wordArray = new WordArray [0x00010203, 0x04050607], 6</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='concat-dynamic'>
+      #
+(WordArray)
+<b>concat</b><span>(wordArray)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Concatenates a word array to this word array.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>
+  wordArray1.concat(wordArray2)</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>wordArray</span>
+      <span class='type'>
+        (
+          <tt><a href='../class/WordArray.html'>WordArray</a></tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The word array to append. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/WordArray.html'>WordArray</a></tt>
+      )
+      &mdash;
+      <span class='desc'>This word array. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clamp-dynamic'>
+      #
+(void)
+<b>clamp</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Removes insignificant bits.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clone-dynamic'>
+      #
+(WordArray)
+<b>clone</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Creates a copy of this word array.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/WordArray.html'>WordArray</a></tt>
+      )
+      &mdash;
+      <span class='desc'>The clone. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_buffer-dynamic'>
+      #
+(void)
+<b>to_buffer</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='endian_reverse-dynamic'>
+      #
+(void)
+<b>endian_reverse</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='split-dynamic'>
+      #
+(void)
+<b>split</b><span>(n)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Split the word array into n slices
+Don&#39;t be too smart about slicing in between words, just puke if we can&#39;t make it work.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_utf8-dynamic'>
+      #
+(void)
+<b>to_utf8</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_hex-dynamic'>
+      #
+(void)
+<b>to_hex</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='to_ui8a-dynamic'>
+      #
+(void)
+<b>to_ui8a</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='equal-dynamic'>
+      #
+(void)
+<b>equal</b><span>(wa)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Important! Don&#39;t short-circuit since that enables a
+forging attack....</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='xor-dynamic'>
+      #
+(void)
+<b>xor</b><span>(wa2, {dst_offset, src_offset, n_words})</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='truncate-dynamic'>
+      #
+(void)
+<b>truncate</b><span>(n_bytes)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='unshift-dynamic'>
+      #
+(void)
+<b>unshift</b><span>(n_words)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='is_scrubbed-dynamic'>
+      #
+(void)
+<b>is_scrubbed</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='scrub-dynamic'>
+      #
+(void)
+<b>scrub</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='cmp_ule-dynamic'>
+      #
+(void)
+<b>cmp_ule</b><span>(wa2)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Compare for ordering when both are considered as unsigned big-endian integers.
+Return -1 if @ is less than b2.
+Return 1 if @ if greater than b2
+Return 0 if equal
+Assumes two clamped buffers</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='slice-dynamic'>
+      #
+(void)
+<b>slice</b><span>(low, hi)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>@param{number} low The low word to include in the output slice
+@param{number} hi The hi word to include in the output slice (exclusive)</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

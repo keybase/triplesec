@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/README.md.html' title='Triplesec'>
+      Triplesec
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>src</span>
+    &raquo;
+    <span class='title'>hmac.iced</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        File:
+        hmac.iced
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src</td>
+        </tr>
+        <tr>
+          <td>
+            Classes:
+          </td>
+          <td>
+            <a href='../../class/HMAC.html'>
+              HMAC
+            </a>
+          </td>
+        </tr>
+      </table>
+      <h2>Variables Summary</h2>
+      <dl class='constants'>
+  <dt id='exports.HMAC-variable'>
+    exports.HMAC
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>HMAC</code></pre>
+    
+  </dd>
+  <dt id='exports.sign-variable'>
+    exports.sign
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>sign</code></pre>
+    
+  </dd>
+  <dt id='exports.bulk_sign-variable'>
+    exports.bulk_sign
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>bulk_sign</code></pre>
+    
+  </dd>
+</dl>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#sign-'>
+        ~
+(WordArray)
+<b>sign</b><span>({key, input, hash_class})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      A convenience method that makes a new HMAC instance, the signs, and scrubs. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#bulk_sign-'>
+        ~
+(void)
+<b>bulk_sign</b><span>({key, input, progress_hook, klass, what, combine_klasses}, cb)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sign a lot of data using the async-interface. 
+    </span>
+  </li>
+</ul>
+      <h2>Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='sign-'>
+      ~
+(WordArray)
+<b>sign</b><span>({key, input, hash_class})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>A convenience method that makes a new HMAC instance, the signs, and scrubs.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (
+          <tt><a href='../../class/WordArray.html'>WordArray</a></tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The key to when signing.  </span>
+    </li>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (
+          <tt><a href='../../class/WordArray.html'>WordArray</a></tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The input to sign. </span>
+    </li>
+    <li>
+      <span class='name'>hash_class</span>
+      <span class='type'>
+        (
+          <tt>Class</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The class to use for the hasher in the HMAC (<a href='../../class/SHA512.html'>SHA512</a> by default). </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../../class/WordArray.html'>WordArray</a></tt>
+      )
+      &mdash;
+      <span class='desc'>The signature </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='bulk_sign-'>
+      ~
+(void)
+<b>bulk_sign</b><span>({key, input, progress_hook, klass, what, combine_klasses}, cb)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Sign a lot of data using the async-interface. By default use 
+HMAC-SHA512, but this function is also available to interesting
+HMAC combinations.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>key</span>
+      <span class='type'>
+        (
+          <tt><a href='../../class/WordArray.html'>WordArray</a></tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The secret HMAC key </span>
+    </li>
+    <li>
+      <span class='name'>input</span>
+      <span class='type'>
+        (
+          <tt><a href='../../class/WordArray.html'>WordArray</a></tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The input to sign. </span>
+    </li>
+    <li>
+      <span class='name'>progress_hook</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>A standard progress hook (optional). </span>
+    </li>
+    <li>
+      <span class='name'>klass</span>
+      <span class='type'>
+        (
+          <tt>Class</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The class to allocate for this HMAC, which is HMAC (with SHA512) by default. </span>
+    </li>
+    <li>
+      <span class='name'>what</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>What to call this hasher for the sake of the progress hook. </span>
+    </li>
+    <li>
+      <span class='name'>cb</span>
+      <span class='type'>
+        (
+          <tt>callback</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Callback with the generated hash, in a <a href='../../class/WordArray.html'>WordArray</a> </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>
