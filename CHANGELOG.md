@@ -1,4 +1,9 @@
-## 4.0.0 (2018-10-27)
+## 4.0.1 (2018-11-27)
+Features:
+  - Update docs
+  - Remove sha3 library dependency
+
+## 4.0.0 (2018-11-27)
 Features:
   - Version 4 (see https://keybase.io/triplesec)
 
