@@ -94,6 +94,8 @@ exports.KECCAK = class KECCAK extends Hasher
   @output_size : KECCAK.outputLength / 8           # in bytes
   output_size : KECCAK.output_size                 # in bytes
 
+  pad : 0x01
+
   _doReset : () ->
     @_state = (new X64Word(0,0) for i in [0...25])
 
@@ -213,7 +215,7 @@ exports.KECCAK = class KECCAK extends Hasher
     blockSizeBits = @blockSize * 32
 
     # Add padding
-    dataWords[nBitsLeft >>> 5] |= 0x1 << (24 - nBitsLeft % 32)
+    dataWords[nBitsLeft >>> 5] |= @pad << (24 - nBitsLeft % 32)
     dataWords[((Math.ceil((nBitsLeft + 1) / blockSizeBits) * blockSizeBits) >>> 5) - 1] |= 0x80
     data.sigBytes = dataWords.length * 4
 
