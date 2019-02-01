@@ -335,12 +335,12 @@ class Base
 # Here is an example of multiple encryptions with salt reuse, in CoffeeScript:
 # @example
 # ```coffeescript
-# key = new Buffer "pitying web andiron impacts bought"
-# data = new Buffer "this is my secret data"
+# key = Buffer.from "pitying web andiron impacts bought"
+# data = Buffer.from "this is my secret data"
 # eng = new Encryptor { key }
 # eng.run { data }, (err, res) ->
 #    console.log "Ciphertext 1: " + res.toString('hex')
-#    data = Buffer.concat data, new Buffer " which just got bigger"
+#    data = Buffer.concat data, Buffer.from " which just got bigger"
 #    eng.run { data }, (err, res) ->
 #      console.log "Ciphertext 2: " + res.toString('hex')
 #```
@@ -348,12 +348,12 @@ class Base
 # Or equivalently in JavaScript:
 # @example
 # ```javascript
-# var key = new Buffer("pitying web andiron impacts bought");
-# var data = new Buffer("this is my secret data");
+# var key = Buffer.from("pitying web andiron impacts bought");
+# var data = Buffer.from("this is my secret data");
 # var eng = new Encryptor({ key : key });
 # eng.run({ data : data }, function (err, res) {
 #    console.log("Ciphertext 1: " + res.toString('hex'));
-#    data = Buffer.concat(data, new Buffer(" which just got bigger"));
+#    data = Buffer.concat(data, Buffer.from(" which just got bigger"));
 #    eng.run({ data : data }), function (err, res) {
 #      console.log("Ciphertext 2: " + res.toString('hex'));
 #    });
@@ -364,12 +364,12 @@ class Base
 # To resalt (and regenerate encryption keys):
 # @example
 # ```coffeescript
-# key = new Buffer "pitying web andiron impacts bought"
-# data = new Buffer "this is my secret data"
+# key = Buffer.from "pitying web andiron impacts bought"
+# data = Buffer.from "this is my secret data"
 # eng = new Encryptor { key }
 # eng.run { data }, (err, res) ->
 #    console.log "Ciphertext 1: " + res.toString('hex')
-#    data = Buffer.concat data, new Buffer " which just got bigger"
+#    data = Buffer.concat data, Buffer.from " which just got bigger"
 #    eng.resalt {}, () ->
 #      eng.run { data }, (err, res) ->
 #        console.log "Ciphertext 2: " + res.toString('hex')

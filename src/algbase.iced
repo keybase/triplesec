@@ -102,7 +102,7 @@ class BufferedBlockAlgorithm
   # @return {Object} The clone.
   #
   clone : ->
-    obj = new BufferedBlockAlgorithm()
+    obj = Buffer.fromedBlockAlgorithm()
     @copy_to obj
     obj
 

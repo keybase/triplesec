@@ -88,8 +88,8 @@ class DRBG
   _instantiate : (entropy, personalization_string) ->
     seed_material = entropy.concat personalization_string
     n = 64
-    @K = WordArray.from_buffer new Buffer (0 for i in [0...n])
-    @V = WordArray.from_buffer new Buffer (1 for i in [0...n])
+    @K = WordArray.from_buffer Buffer.from (0 for i in [0...n])
+    @V = WordArray.from_buffer Buffer.from (1 for i in [0...n])
     @_update seed_material
     entropy.scrub()
     @reseed_counter = 1

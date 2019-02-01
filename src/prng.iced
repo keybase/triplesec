@@ -16,7 +16,7 @@ _browser_rng_primitive = null
 browser_rng = (n) ->
   v = new Uint8Array n
   _browser_rng_primitive v
-  new Buffer v
+  Buffer.from v
 
 #===============================================
 
@@ -64,7 +64,7 @@ class PRNG
     d = Date.now()
     ms = d % 1000
     s = Math.floor d / 1000
-    buf = new Buffer 8
+    buf = Buffer.alloc 8
     buf.writeUInt32BE s, 0
     buf.writeUInt32BE ms, 4
     buf
@@ -83,7 +83,7 @@ class PRNG
     bufs.push @now_to_buffer()
     await @meg.generate nbits, defer words
     bufs.push @now_to_buffer()
-    bufs.push new Buffer words
+    bufs.push Buffer.from words
     bufs.push native_rng nbytes
     bufs.push @now_to_buffer()
     cat = Buffer.concat bufs

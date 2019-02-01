@@ -5,7 +5,7 @@
 #====================================================================
 
 strip = (x) -> x.split(/\s+/).join("")
-hex_to_ui8a = (x) -> buffer_to_ui8a(new Buffer (strip(x)), 'hex')
+hex_to_ui8a = (x) -> buffer_to_ui8a(Buffer.from (strip(x)), 'hex')
 ui8a_to_hex = (v) -> ui8a_to_buffer(v).toString 'hex'
 
 #--------------------
@@ -108,8 +108,8 @@ exports.test_smix = (T,cb) ->
 exports.test_pbkdf2 = (T, cb) ->
   # From http://tools.ietf.org/html/draft-josefsson-scrypt-kdf-01; Section 10
   arg = 
-    key : WordArray.from_buffer(new Buffer "passwd")
-    salt : WordArray.from_buffer(new Buffer "salt")
+    key : WordArray.from_buffer(Buffer.from "passwd")
+    salt : WordArray.from_buffer(Buffer.from "salt")
     c : 1
     dkLen : 64
   output = strip """

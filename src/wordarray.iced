@@ -18,7 +18,7 @@ buffer_to_ui8a = (b) ->
 #----------
 
 ui8a_to_buffer = (v) ->
-  ret = new Buffer v.length
+  ret = Buffer.alloc v.length
   for i in [0...v.length]
     ret.writeUInt8(v[i], i)
   ret
@@ -96,7 +96,7 @@ exports.WordArray = class WordArray
   #--------------
 
   to_buffer : () ->
-    out = new Buffer @sigBytes
+    out = Buffer.alloc @sigBytes
     p = 0
     for w in @words when (@sigBytes - p) >= 4
       w = util.fixup_uint32 w
@@ -179,10 +179,10 @@ exports.WordArray = class WordArray
 
   #--------------
 
-  @from_utf8 : (s) -> WordArray.from_buffer new Buffer(s, 'utf8')
-  @from_utf8_le : (s) -> WordArray.from_buffer_le new Buffer(s, 'utf8')
-  @from_hex : (s) -> WordArray.from_buffer new Buffer(s, 'hex')
-  @from_hex_le : (s) -> WordArray.from_buffer_le new Buffer(s, 'hex')
+  @from_utf8 : (s) -> WordArray.from_buffer Buffer.from(s, 'utf8')
+  @from_utf8_le : (s) -> WordArray.from_buffer_le Buffer.from(s, 'utf8')
+  @from_hex : (s) -> WordArray.from_buffer Buffer.from(s, 'hex')
+  @from_hex_le : (s) -> WordArray.from_buffer_le Buffer.from(s, 'hex')
   @from_ui8a : (v) -> WordArray.from_buffer ui8a_to_buffer(v)
   @from_i32a : (v) -> new WordArray(Array.apply([], v))
   

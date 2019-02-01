@@ -27,7 +27,7 @@ exports.scrub_buffer = (b) ->
 #----------------------------------------------
 
 exports.copy_buffer = (b) ->
-  ret = new Buffer b.length
+  ret = Buffer.alloc b.length
   for i in [0...b.length]
     ret.writeUInt8(b.readUInt8(i), i)
   return ret
