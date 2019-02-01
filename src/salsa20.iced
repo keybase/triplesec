@@ -70,8 +70,8 @@ class Salsa20InnerCore
 
 class Salsa20Core extends Salsa20InnerCore
 
-  sigma : WordArray.from_buffer_le new Buffer "expand 32-byte k"
-  tau : WordArray.from_buffer_le new Buffer "expand 16-byte k"
+  sigma : WordArray.from_buffer_le Buffer.from "expand 32-byte k"
+  tau : WordArray.from_buffer_le Buffer.from "expand 16-byte k"
 
   @blockSize : 64
   blockSize : Salsa20Core.blockSize
@@ -218,7 +218,7 @@ exports.Salsa20 = class Salsa20 extends Salsa20Core
   # _generateBlock generates 64 bytes from key, nonce, and counter,
   # and puts the result into this.block.
   _generateBlockBuffer : ->
-    @_buf = new Buffer @blockSize
+    @_buf = Buffer.alloc @blockSize
     v = @_generateBlock()
     for e,i in v
       @_buf.writeUInt32LE fixup_uint32(e), (i*4)

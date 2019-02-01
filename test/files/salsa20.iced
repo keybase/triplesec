@@ -43,7 +43,7 @@ exports.nonce192 = (T, cb) ->
                     0x3a, 0x58, 0xe4, 0x76, 0x48 ]
   nonce = WordArray.from_utf8 v.nonce
   key = WordArray.from_utf8 v.key
-  ctext = new Buffer(v.ciphertext).toString('hex')
+  ctext = Buffer.from(v.ciphertext).toString('hex')
   stream = new Salsa20 key, nonce
   bytes = stream.getBytes(v.ciphertext.length).toString('hex')
   T.equal bytes, ctext, "test from salsa20.go"

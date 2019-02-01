@@ -7,7 +7,7 @@
 
 make_wa_from_byte = (byte, n) ->
   bytes = (byte for i in [0...n])
-  buffer = new Buffer bytes, 'binary'
+  buffer = Buffer.from bytes, 'binary'
   WordArray.from_buffer buffer
 
 repeat_string = (s, n) ->
@@ -15,7 +15,7 @@ repeat_string = (s, n) ->
   WordArray.from_utf8 bytes
 
 make_wa_from_bytes_between = (a,b) ->
-  WordArray.from_buffer new Buffer [a..b], 'binary'
+  WordArray.from_buffer Buffer.from [a..b], 'binary'
 
 S = (x) -> WordArray.from_utf8 x
 

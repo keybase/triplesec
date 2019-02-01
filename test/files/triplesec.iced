@@ -10,12 +10,12 @@ spec =
 #-------------------------------------------------
 
 exports.check_scrub_protection = (T,cb) ->
-  key = new Buffer "this key is good"
-  data = new Buffer "this is the data"
+  key = Buffer.from "this key is good"
+  data = Buffer.from "this is the data"
   e = new Encryptor { key, version : 3}
   await e.run {data}, defer err, ctext
   T.no_error err
-  e.set_key new Buffer [0,0,0,0,0,0,0]
+  e.set_key Buffer.from [0,0,0,0,0,0,0]
   await e.run {data}, defer err
   T.assert err?, "failed due to scrub protection"
   e.set_key()
@@ -27,9 +27,9 @@ exports.check_scrub_protection = (T,cb) ->
 
 exports.check_dec_clone = (T,cb) ->
 
-  key = new Buffer "this key is good"
-  data = new Buffer "this is the data"
-  data_copy = new Buffer "this is the data"
+  key = Buffer.from "this key is good"
+  data = Buffer.from "this is the data"
+  data_copy = Buffer.from "this is the data"
   e = new Encryptor { key, version : 3}
   await e.run {data}, defer err, ctext
   T.no_error err
@@ -50,20 +50,20 @@ exports.check_dec_clone = (T,cb) ->
 
 test_vectors = [
   {
-    key : new Buffer 'this be the password'
-    data : new Buffer 'this be the secret message'
+    key : Buffer.from 'this be the password'
+    data : Buffer.from 'this be the secret message'
   },{
-    key : new Buffer [0...127]
-    data : Buffer.concat ((new Buffer [0..255]) for i in [0..4])
+    key : Buffer.from [0...127]
+    data : Buffer.concat ((Buffer.from [0..255]) for i in [0..4])
   },{
-    key : new Buffer [0...127]
-    data : Buffer.concat ((new Buffer [0..255]) for i in [0..40])
+    key : Buffer.from [0...127]
+    data : Buffer.concat ((Buffer.from [0..255]) for i in [0..40])
   }]
 
 #-------------------------------------------------
 
 run_test = (T, d, i, v, cb) ->
-  orig = new Buffer d.data
+  orig = Buffer.from d.data
   d.version = v
   await encrypt d, defer err, ct
   T.no_error err
@@ -147,10 +147,10 @@ exports.check_spec = (T,cb) ->
   cb()
 
 check_spec = (T,version,v,i,cb) ->
-  rng = new ReplayRng (new Buffer v.r, 'hex'), T
+  rng = new ReplayRng (Buffer.from v.r, 'hex'), T
   d =
-    key : new Buffer v.key, 'hex'
-    data : new Buffer v.pt, 'hex'
+    key : Buffer.from v.key, 'hex'
+    data : Buffer.from v.pt, 'hex'
     version : version
   d.rng = (n,cb) -> rng.gen(n,cb)
   await encrypt d, defer err, ct
