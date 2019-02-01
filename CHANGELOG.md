@@ -1,3 +1,7 @@
+## 4.0.3 (2019-02-01)
+
+- Bugfix
+
 ## 4.0.2 (2019-02-01)
 
 - Deprecate (new Buffer) and use Buffer.from or Buffer.alloc instead
